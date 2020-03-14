@@ -106,7 +106,7 @@ namespace FileCabinetApp
             {
                 foreach (var t in fileCabinetService.GetRecords())
                 {
-                    Console.WriteLine($"#{t.Id}, {t.FirstName}, {t.LastName}, {t.DateOfBirth.ToShortDateString()}");
+                    Console.WriteLine($"#{t.Id}, {t.FirstName}, {t.LastName}, {t.DateOfBirth.ToShortDateString()}, height: {t.Height}, wage: {t.Wage}, favourite number: {t.FavouriteNumber}");
                 }
             }
             else
@@ -117,16 +117,51 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
+            bool exact = false;
+            decimal personalWage = 0;
+            short personalHeight = 0;
+            char favouriteNumber = ' ';
             Console.WriteLine("Input first name");
             string firstName = Console.ReadLine();
             Console.WriteLine("Input last name");
             string lastName = Console.ReadLine();
-            fileCabinetService.CreateRecord(firstName, lastName, InputBirthDate());
+
+            while (!exact)
+            {
+                Console.WriteLine("Input Wage");
+                exact = decimal.TryParse(Console.ReadLine(), out decimal wage);
+                personalWage = wage;
+            }
+
+            exact = false;
+            while (!exact)
+            {
+                Console.WriteLine("Input Height");
+                exact = short.TryParse(Console.ReadLine(), out short height);
+                personalHeight = height;
+                if (height < 120 || height > 250)
+                {
+                    exact = false;
+                }
+            }
+
+            exact = false;
+            while (!exact)
+            {
+                Console.WriteLine("Input favouriteNumber");
+                exact = char.TryParse(Console.ReadLine(), out char number);
+                favouriteNumber = number;
+                if (favouriteNumber < '0' || favouriteNumber > '9')
+                {
+                    exact = false;
+                }
+            }
+
+            fileCabinetService.CreateRecord(firstName, lastName, InputBirthDate(), personalWage, favouriteNumber, personalHeight);
         }
 
         private static void Stat(string parameters)
         {
-
             var recordsCount = Program.fileCabinetService.GetStat();
             Console.WriteLine($"{recordsCount} record(s).");
         }
@@ -139,7 +174,7 @@ namespace FileCabinetApp
 
         private static DateTime InputBirthDate()
         {
-            DateTime dob; 
+            DateTime dob;
             string input;
 
             do
