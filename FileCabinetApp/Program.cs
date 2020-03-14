@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace FileCabinetApp
 {
@@ -15,14 +16,22 @@ namespace FileCabinetApp
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
         {
             new Tuple<string, Action<string>>("help", PrintHelp),
+            new Tuple<string, Action<string>>("stat", Stat),
+            new Tuple<string, Action<string>>("list", List),
+            new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("exit", Exit),
         };
 
         private static string[][] helpMessages = new string[][]
         {
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
+            new string[] { "stat", "prints count of notes", "The 'stat' prints count of notes." },
+            new string[] { "list", "prints notes", "The 'list' print notes." },
+            new string[] { "create", "create new note", "The 'create' creates new note." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
+
+        private static FileCabinetService fileCabinetService = new FileCabinetService();
 
         public static void Main(string[] args)
         {
@@ -91,10 +100,91 @@ namespace FileCabinetApp
             Console.WriteLine();
         }
 
+        private static void List(string parameters)
+        {
+            if (fileCabinetService.GetRecords().Length > 0)
+            {
+                foreach (var t in fileCabinetService.GetRecords())
+                {
+                    Console.WriteLine($"#{t.Id}, {t.FirstName}, {t.LastName}, {t.DateOfBirth.ToShortDateString()}, height: {t.Height}, wage: {t.Wage}, favourite number: {t.FavouriteNumber}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No any notes");
+            }
+        }
+
+        private static void Create(string parameters)
+        {
+            bool exact = false;
+            decimal personalWage = 0;
+            short personalHeight = 0;
+            char favouriteNumber = ' ';
+            Console.WriteLine("Input first name");
+            string firstName = Console.ReadLine();
+            Console.WriteLine("Input last name");
+            string lastName = Console.ReadLine();
+
+            while (!exact)
+            {
+                Console.WriteLine("Input Wage");
+                exact = decimal.TryParse(Console.ReadLine(), out decimal wage);
+                personalWage = wage;
+            }
+
+            exact = false;
+            while (!exact)
+            {
+                Console.WriteLine("Input Height");
+                exact = short.TryParse(Console.ReadLine(), out short height);
+                personalHeight = height;
+                if (height < 120 || height > 250)
+                {
+                    exact = false;
+                }
+            }
+
+            exact = false;
+            while (!exact)
+            {
+                Console.WriteLine("Input favouriteNumber");
+                exact = char.TryParse(Console.ReadLine(), out char number);
+                favouriteNumber = number;
+                if (favouriteNumber < '0' || favouriteNumber > '9')
+                {
+                    exact = false;
+                }
+            }
+
+            fileCabinetService.CreateRecord(firstName, lastName, InputBirthDate(), personalWage, favouriteNumber, personalHeight);
+        }
+
+        private static void Stat(string parameters)
+        {
+            var recordsCount = Program.fileCabinetService.GetStat();
+            Console.WriteLine($"{recordsCount} record(s).");
+        }
+
         private static void Exit(string parameters)
         {
             Console.WriteLine("Exiting an application...");
             isRunning = false;
+        }
+
+        private static DateTime InputBirthDate()
+        {
+            DateTime dob;
+            string input;
+
+            do
+            {
+                Console.WriteLine("Input birth date in dd.MM.yyyy format (day.month.year):");
+                input = Console.ReadLine();
+            }
+            while (!DateTime.TryParseExact(input, "dd.MM.yyyy", null, DateTimeStyles.None, out dob));
+
+            return dob;
         }
     }
 }
