@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace FileCabinetApp
 {
@@ -16,6 +17,7 @@ namespace FileCabinetApp
         {
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("stat", Stat),
+            new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("exit", Exit),
         };
 
@@ -23,6 +25,7 @@ namespace FileCabinetApp
         {
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "stat", "prints count of notes", "The 'stat' prints count of notes." },
+            new string[] { "create", "create new note", "The 'create' creates new note." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
@@ -95,6 +98,15 @@ namespace FileCabinetApp
             Console.WriteLine();
         }
 
+        private static void Create(string parameters)
+        {
+            Console.WriteLine("Input first name");
+            string firstName = Console.ReadLine();
+            Console.WriteLine("Input last name");
+            string lastName = Console.ReadLine();
+            fileCabinetService.CreateRecord(firstName, lastName, InputBirthDate());
+        }
+
         private static void Exit(string parameters)
         {
             Console.WriteLine("Exiting an application...");
@@ -106,6 +118,21 @@ namespace FileCabinetApp
 
             var recordsCount = Program.fileCabinetService.GetStat();
             Console.WriteLine($"{recordsCount} record(s).");
+        }
+
+        private static DateTime InputBirthDate()
+        {
+            DateTime dob; 
+            string input;
+
+            do
+            {
+                Console.WriteLine("Input birth date in dd.MM.yyyy format (day.month.year):");
+                input = Console.ReadLine();
+            }
+            while (!DateTime.TryParseExact(input, "dd.MM.yyyy", null, DateTimeStyles.None, out dob));
+
+            return dob;
         }
     }
 }
