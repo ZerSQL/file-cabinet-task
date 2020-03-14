@@ -17,6 +17,7 @@ namespace FileCabinetApp
         {
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("stat", Stat),
+            new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("exit", Exit),
         };
@@ -25,6 +26,7 @@ namespace FileCabinetApp
         {
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "stat", "prints count of notes", "The 'stat' prints count of notes." },
+            new string[] { "list", "prints notes", "The 'list' print notes." },
             new string[] { "create", "create new note", "The 'create' creates new note." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
@@ -98,6 +100,21 @@ namespace FileCabinetApp
             Console.WriteLine();
         }
 
+        private static void List(string parameters)
+        {
+            if (fileCabinetService.GetRecords().Length > 0)
+            {
+                foreach (var t in fileCabinetService.GetRecords())
+                {
+                    Console.WriteLine($"#{t.Id}, {t.FirstName}, {t.LastName}, {t.DateOfBirth.ToShortDateString()}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No any notes");
+            }
+        }
+
         private static void Create(string parameters)
         {
             Console.WriteLine("Input first name");
@@ -107,17 +124,17 @@ namespace FileCabinetApp
             fileCabinetService.CreateRecord(firstName, lastName, InputBirthDate());
         }
 
-        private static void Exit(string parameters)
-        {
-            Console.WriteLine("Exiting an application...");
-            isRunning = false;
-        }
-
         private static void Stat(string parameters)
         {
 
             var recordsCount = Program.fileCabinetService.GetStat();
             Console.WriteLine($"{recordsCount} record(s).");
+        }
+
+        private static void Exit(string parameters)
+        {
+            Console.WriteLine("Exiting an application...");
+            isRunning = false;
         }
 
         private static DateTime InputBirthDate()
