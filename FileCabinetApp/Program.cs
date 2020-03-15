@@ -139,10 +139,11 @@ namespace FileCabinetApp
                 Console.WriteLine("Input Height");
                 exact = short.TryParse(Console.ReadLine(), out short height);
                 personalHeight = height;
-                if (height < 120 || height > 250)
-                {
-                    exact = false;
-                }
+
+                    // if (height < 120 || height > 250)
+                    // {
+                    //     exact = false;
+                    // }
             }
 
             exact = false;
@@ -151,10 +152,11 @@ namespace FileCabinetApp
                 Console.WriteLine("Input favouriteNumber");
                 exact = char.TryParse(Console.ReadLine(), out char number);
                 favouriteNumber = number;
-                if (favouriteNumber < '0' || favouriteNumber > '9')
-                {
-                    exact = false;
-                }
+
+                    // if (favouriteNumber < '0' || favouriteNumber > '9')
+                    // {
+                    //     exact = false;
+                    // }
             }
 
             fileCabinetService.CreateRecord(firstName, lastName, InputBirthDate(), personalWage, favouriteNumber, personalHeight);
