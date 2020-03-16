@@ -7,10 +7,10 @@ namespace FileCabinetApp
     public class FileCabinetService
     {
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
-        private DateTime minDate = new DateTime(1950, 1, 1);
-        private DateTime maxDate = DateTime.Now;
+        private readonly DateTime minDate = new DateTime(1950, 1, 1);
+        private readonly DateTime maxDate = DateTime.Now;
 
-        public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, decimal wage, char favouriteNumber, short height)
+        public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, decimal wage, char favouriteNumeral, short height)
         {
             if (firstName == null || lastName == null)
             {
@@ -21,7 +21,7 @@ namespace FileCabinetApp
                 lastName.Length < 2 || lastName.Length > 60 || lastName.Contains(' ', StringComparison.CurrentCulture) ||
                 dateOfBirth > this.maxDate || dateOfBirth < this.minDate ||
                 wage < 300 ||
-                favouriteNumber < '0' || favouriteNumber > '9')
+                favouriteNumeral < '0' || favouriteNumeral > '9')
             {
                 throw new ArgumentException("Error input");
             }
@@ -33,13 +33,30 @@ namespace FileCabinetApp
                 LastName = lastName,
                 DateOfBirth = dateOfBirth,
                 Wage = wage,
-                FavouriteNumber = favouriteNumber,
+                FavouriteNumeral = favouriteNumeral,
                 Height = height,
             };
 
             this.list.Add(record);
 
             return record.Id;
+        }
+
+        public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, decimal wage, char favouriteNumeral, short height)
+        {
+            FileCabinetRecord current = this.list.Find(x => x.Id == id);
+            if (current == null)
+            {
+                throw new ArgumentException($"No element with id = {id}");
+            }
+
+            current.FirstName = firstName;
+            current.LastName = lastName;
+            current.DateOfBirth = dateOfBirth;
+            current.Wage = wage;
+            current.FavouriteNumeral = favouriteNumeral;
+            current.Height = height;
+            Console.WriteLine($"Record #{id} is updated.");
         }
 
         public FileCabinetRecord[] GetRecords()

@@ -18,6 +18,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("list", List),
+            new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("exit", Exit),
         };
@@ -27,6 +28,7 @@ namespace FileCabinetApp
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "stat", "prints count of notes", "The 'stat' prints count of notes." },
             new string[] { "list", "prints notes", "The 'list' print notes." },
+            new string[] { "edit", "edit notes", "The 'edit' is to edit notes." },
             new string[] { "create", "create new note", "The 'create' creates new note." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
@@ -106,7 +108,7 @@ namespace FileCabinetApp
             {
                 foreach (var t in fileCabinetService.GetRecords())
                 {
-                    Console.WriteLine($"#{t.Id}, {t.FirstName}, {t.LastName}, {t.DateOfBirth.ToShortDateString()}, height: {t.Height}, wage: {t.Wage}, favourite number: {t.FavouriteNumber}");
+                    Console.WriteLine($"#{t.Id}, {t.FirstName}, {t.LastName}, {t.DateOfBirth.ToShortDateString()}, height: {t.Height}, wage: {t.Wage}, favourite numeral: {t.FavouriteNumeral}");
                 }
             }
             else
@@ -117,12 +119,60 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
+            CreateOrEditCommands(out string firstName, out string lastName, out decimal personalWage, out char favouriteNumeral, out short personalHeight);
+            fileCabinetService.CreateRecord(firstName, lastName, InputBirthDate(), personalWage, favouriteNumeral, personalHeight);
+        }
+
+        private static void Stat(string parameters)
+        {
+            var recordsCount = Program.fileCabinetService.GetStat();
+            Console.WriteLine($"{recordsCount} record(s).");
+        }
+
+        private static void Edit(string parameters)
+        {
+            bool exact;
+            int id;
+            while (true)
+            {
+                Console.WriteLine("Input id of note to be changed or '0' to go to menu");
+                exact = int.TryParse(Console.ReadLine(), out id);
+                if (exact)
+                {
+                    if (fileCabinetService.GetStat() >= id)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"#{id} record is not found.");
+                    }
+                }
+            }
+
+            if (id == 0)
+            {
+                return;
+            }
+
+            CreateOrEditCommands(out string firstName, out string lastName, out decimal personalWage, out char favouriteNumeral, out short personalHeight);
+            fileCabinetService.EditRecord(id, firstName, lastName, InputBirthDate(), personalWage, favouriteNumeral, personalHeight);
+        }
+
+        private static void Exit(string parameters)
+        {
+            Console.WriteLine("Exiting an application...");
+            isRunning = false;
+        }
+
+        private static void CreateOrEditCommands(out string firstName, out string lastName, out decimal personalWage, out char favouriteNumeral, out short personalHeight)
+        {
             bool exact = false;
-            decimal personalWage = 0;
-            short personalHeight = 0;
-            char favouriteNumber = ' ';
-            string firstName = string.Empty;
-            string lastName = string.Empty;
+            personalWage = 0;
+            personalHeight = 0;
+            favouriteNumeral = ' ';
+            firstName = string.Empty;
+            lastName = string.Empty;
 
             while (!exact)
             {
@@ -167,37 +217,23 @@ namespace FileCabinetApp
                 personalHeight = height;
 
                 if (height < 120 || height > 250)
-                    {
-                        exact = false;
-                    }
+                {
+                    exact = false;
+                }
             }
 
             exact = false;
             while (!exact)
             {
-                Console.WriteLine("Input favouriteNumber");
+                Console.WriteLine("Input favouriteNumeral");
                 exact = char.TryParse(Console.ReadLine(), out char number);
-                favouriteNumber = number;
+                favouriteNumeral = number;
 
-                if (favouriteNumber < '0' || favouriteNumber > '9')
-                    {
-                        exact = false;
-                    }
+                if (favouriteNumeral < '0' || favouriteNumeral > '9')
+                {
+                    exact = false;
+                }
             }
-
-            fileCabinetService.CreateRecord(firstName, lastName, InputBirthDate(), personalWage, favouriteNumber, personalHeight);
-        }
-
-        private static void Stat(string parameters)
-        {
-            var recordsCount = Program.fileCabinetService.GetStat();
-            Console.WriteLine($"{recordsCount} record(s).");
-        }
-
-        private static void Exit(string parameters)
-        {
-            Console.WriteLine("Exiting an application...");
-            isRunning = false;
         }
 
         private static DateTime InputBirthDate()
