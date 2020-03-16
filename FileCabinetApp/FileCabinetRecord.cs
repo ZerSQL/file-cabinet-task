@@ -16,6 +16,6 @@ namespace FileCabinetApp
 
         public decimal Wage { get; set; }
 
-        public char FavouriteNumber { get; set; }
+        public char FavouriteNumeral { get; set; }
     }
 }
