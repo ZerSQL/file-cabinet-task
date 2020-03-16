@@ -20,7 +20,7 @@ namespace FileCabinetApp
             if (firstName.Length < 2 || firstName.Length > 60 || firstName.Contains(' ', StringComparison.CurrentCulture) ||
                 lastName.Length < 2 || lastName.Length > 60 || lastName.Contains(' ', StringComparison.CurrentCulture) ||
                 dateOfBirth > this.maxDate || dateOfBirth < this.minDate ||
-                wage < 35 || wage > 200 ||
+                wage < 300 ||
                 favouriteNumber < '0' || favouriteNumber > '9')
             {
                 throw new ArgumentException("Error input");

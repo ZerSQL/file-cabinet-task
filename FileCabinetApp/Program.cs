@@ -121,16 +121,42 @@ namespace FileCabinetApp
             decimal personalWage = 0;
             short personalHeight = 0;
             char favouriteNumber = ' ';
-            Console.WriteLine("Input first name");
-            string firstName = Console.ReadLine();
-            Console.WriteLine("Input last name");
-            string lastName = Console.ReadLine();
+            string firstName = string.Empty;
+            string lastName = string.Empty;
 
+            while (!exact)
+            {
+                exact = true;
+                Console.WriteLine("Input first name");
+                firstName = Console.ReadLine();
+                if (firstName.Length < 2 || firstName.Length > 60 || firstName.Contains(' ', StringComparison.CurrentCulture))
+                {
+                    exact = false;
+                }
+            }
+
+            exact = false;
+            while (!exact)
+            {
+                exact = true;
+                Console.WriteLine("Input last name");
+                lastName = Console.ReadLine();
+                if (lastName.Length < 2 || lastName.Length > 60 || lastName.Contains(' ', StringComparison.CurrentCulture))
+                {
+                    exact = false;
+                }
+            }
+
+            exact = false;
             while (!exact)
             {
                 Console.WriteLine("Input Wage");
                 exact = decimal.TryParse(Console.ReadLine(), out decimal wage);
                 personalWage = wage;
+                if (wage < 300)
+                {
+                    exact = false;
+                }
             }
 
             exact = false;
@@ -140,10 +166,10 @@ namespace FileCabinetApp
                 exact = short.TryParse(Console.ReadLine(), out short height);
                 personalHeight = height;
 
-                    // if (height < 120 || height > 250)
-                    // {
-                    //     exact = false;
-                    // }
+                if (height < 120 || height > 250)
+                    {
+                        exact = false;
+                    }
             }
 
             exact = false;
@@ -153,10 +179,10 @@ namespace FileCabinetApp
                 exact = char.TryParse(Console.ReadLine(), out char number);
                 favouriteNumber = number;
 
-                    // if (favouriteNumber < '0' || favouriteNumber > '9')
-                    // {
-                    //     exact = false;
-                    // }
+                if (favouriteNumber < '0' || favouriteNumber > '9')
+                    {
+                        exact = false;
+                    }
             }
 
             fileCabinetService.CreateRecord(firstName, lastName, InputBirthDate(), personalWage, favouriteNumber, personalHeight);
@@ -184,7 +210,7 @@ namespace FileCabinetApp
                 Console.WriteLine("Input birth date in dd.MM.yyyy format (day.month.year):");
                 input = Console.ReadLine();
             }
-            while (!DateTime.TryParseExact(input, "dd.MM.yyyy", null, DateTimeStyles.None, out dob));
+            while (!DateTime.TryParseExact(input, "dd.MM.yyyy", null, DateTimeStyles.None, out dob) || (dob > DateTime.Now || dob < new DateTime(1950, 1, 1)));
 
             return dob;
         }
