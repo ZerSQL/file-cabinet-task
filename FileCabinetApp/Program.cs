@@ -134,6 +134,12 @@ namespace FileCabinetApp
         private static void Find(string parameters)
         {
             string[] propertyAndValue = parameters.Replace("\"", string.Empty, StringComparison.CurrentCultureIgnoreCase).Split(' ', 2);
+            if (propertyAndValue.Length != 2)
+            {
+                Console.WriteLine("'Find' command working in 'find *name of property* *value*' format. For birthdate use dd.MM.yyyy format.Please,try again.");
+                return;
+            }
+
             if (propertyAndValue[0].ToLower(CultureInfo.CurrentCulture) == "firstname")
             {
                 foreach (var note in fileCabinetService.FindByFirstName(propertyAndValue[1]))

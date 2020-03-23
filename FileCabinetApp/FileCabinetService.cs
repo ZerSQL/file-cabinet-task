@@ -6,6 +6,7 @@ namespace FileCabinetApp
 {
     public class FileCabinetService
     {
+        private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
         private readonly DateTime minDate = new DateTime(1950, 1, 1);
         private readonly DateTime maxDate = DateTime.Now;
@@ -37,6 +38,15 @@ namespace FileCabinetApp
                 Height = height,
             };
 
+            if (this.firstNameDictionary.TryGetValue(firstName, out List<FileCabinetRecord> note))
+            {
+                note.Add(record);
+            }
+            else
+            {
+                this.firstNameDictionary.Add(firstName, new List<FileCabinetRecord>() { record });
+            }
+
             this.list.Add(record);
 
             return record.Id;
@@ -44,18 +54,43 @@ namespace FileCabinetApp
 
         public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, decimal wage, char favouriteNumeral, short height)
         {
+            string key = string.Empty;
             FileCabinetRecord current = this.list.Find(x => x.Id == id);
+
             if (current == null)
             {
                 throw new ArgumentException($"No element with id = {id}");
             }
 
+            foreach (var note in this.firstNameDictionary)
+            {
+                foreach (var listItems in note.Value)
+                {
+                    if (listItems.Id == id)
+                    {
+                        key = listItems.FirstName;
+                    }
+                }
+            }
+
+            FileCabinetRecord temp = this.firstNameDictionary[key].Find(x => x.Id == id);
             current.FirstName = firstName;
             current.LastName = lastName;
             current.DateOfBirth = dateOfBirth;
             current.Wage = wage;
             current.FavouriteNumeral = favouriteNumeral;
             current.Height = height;
+
+            if (this.firstNameDictionary.TryGetValue(firstName, out List<FileCabinetRecord> k))
+            {
+                k.Add(current);
+            }
+            else
+            {
+                this.firstNameDictionary.Add(firstName, new List<FileCabinetRecord>() { current });
+            }
+
+            this.firstNameDictionary[key].Remove(temp);
             Console.WriteLine($"Record #{id} is updated.");
         }
 
@@ -66,26 +101,25 @@ namespace FileCabinetApp
 
         public FileCabinetRecord[] FindByFirstName(string firstName)
         {
-            List<FileCabinetRecord> result = new List<FileCabinetRecord>();
-            foreach (var t in this.list)
+            if (this.firstNameDictionary.TryGetValue(firstName, out List<FileCabinetRecord> keyList))
             {
-                if (t.FirstName.ToLower(System.Globalization.CultureInfo.CurrentCulture) == firstName.ToLower(System.Globalization.CultureInfo.CurrentCulture))
-                {
-                    result.Add(t);
-                }
+                return keyList.ToArray();
             }
-
-            return result.ToArray();
+            else
+            {
+                Console.WriteLine("empty");
+                return Array.Empty<FileCabinetRecord>();
+            }
         }
 
         public FileCabinetRecord[] FindByLastName(string lastName)
         {
             List<FileCabinetRecord> result = new List<FileCabinetRecord>();
-            foreach (var t in this.list)
+            foreach (var item in this.list)
             {
-                if (t.LastName.ToLower(System.Globalization.CultureInfo.CurrentCulture) == lastName.ToLower(System.Globalization.CultureInfo.CurrentCulture))
+                if (item.LastName.ToLower(System.Globalization.CultureInfo.CurrentCulture) == lastName.ToLower(System.Globalization.CultureInfo.CurrentCulture))
                 {
-                    result.Add(t);
+                    result.Add(item);
                 }
             }
 
@@ -95,11 +129,11 @@ namespace FileCabinetApp
         public FileCabinetRecord[] FindByBirthDate(string birthDate)
         {
             List<FileCabinetRecord> result = new List<FileCabinetRecord>();
-            foreach (var t in this.list)
+            foreach (var note in this.list)
             {
-                if (t.DateOfBirth.ToShortDateString() == birthDate)
+                if (note.DateOfBirth.ToShortDateString() == birthDate)
                 {
-                    result.Add(t);
+                    result.Add(note);
                 }
             }
 
