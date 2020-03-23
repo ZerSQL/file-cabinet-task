@@ -78,6 +78,20 @@ namespace FileCabinetApp
             return result.ToArray();
         }
 
+        public FileCabinetRecord[] FindByLastName(string lastName)
+        {
+            List<FileCabinetRecord> result = new List<FileCabinetRecord>();
+            foreach (var t in this.list)
+            {
+                if (t.LastName.ToLower(System.Globalization.CultureInfo.CurrentCulture) == lastName.ToLower(System.Globalization.CultureInfo.CurrentCulture))
+                {
+                    result.Add(t);
+                }
+            }
+
+            return result.ToArray();
+        }
+
         public int GetStat()
         {
             return this.list.Count;

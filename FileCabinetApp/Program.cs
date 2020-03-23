@@ -134,9 +134,19 @@ namespace FileCabinetApp
         private static void Find(string parameters)
         {
             string[] propertyAndValue = parameters.Replace("\"", string.Empty, StringComparison.CurrentCultureIgnoreCase).Split(' ', 2);
-            foreach (var note in fileCabinetService.FindByFirstName(propertyAndValue[1]))
+            if (propertyAndValue[0].ToLower(CultureInfo.CurrentCulture) == "firstname")
             {
-                Console.WriteLine($"#{note.Id}, {note.FirstName}, {note.LastName}, {note.DateOfBirth.ToShortDateString()}");
+                foreach (var note in fileCabinetService.FindByFirstName(propertyAndValue[1]))
+                {
+                    Console.WriteLine($"#{note.Id}, {note.FirstName}, {note.LastName}, {note.DateOfBirth.ToShortDateString()}");
+                }
+            }
+            else if (propertyAndValue[0].ToLower(CultureInfo.CurrentCulture) == "lastname")
+            {
+                foreach (var note in fileCabinetService.FindByLastName(propertyAndValue[1]))
+                {
+                    Console.WriteLine($"#{note.Id}, {note.FirstName}, {note.LastName}, {note.DateOfBirth.ToShortDateString()}");
+                }
             }
         }
 
