@@ -64,6 +64,20 @@ namespace FileCabinetApp
             return this.list.ToArray();
         }
 
+        public FileCabinetRecord[] FindByFirstName(string firstName)
+        {
+            List<FileCabinetRecord> result = new List<FileCabinetRecord>();
+            foreach (var t in this.list)
+            {
+                if (t.FirstName.ToLower(System.Globalization.CultureInfo.CurrentCulture) == firstName.ToLower(System.Globalization.CultureInfo.CurrentCulture))
+                {
+                    result.Add(t);
+                }
+            }
+
+            return result.ToArray();
+        }
+
         public int GetStat()
         {
             return this.list.Count;

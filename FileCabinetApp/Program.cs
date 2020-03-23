@@ -20,6 +20,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("create", Create),
+            new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("exit", Exit),
         };
 
@@ -30,6 +31,7 @@ namespace FileCabinetApp
             new string[] { "list", "prints notes", "The 'list' print notes." },
             new string[] { "edit", "edit notes", "The 'edit' is to edit notes." },
             new string[] { "create", "create new note", "The 'create' creates new note." },
+            new string[] { "find", "find notes", "The 'find' command is to find notes." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
@@ -127,6 +129,15 @@ namespace FileCabinetApp
         {
             var recordsCount = Program.fileCabinetService.GetStat();
             Console.WriteLine($"{recordsCount} record(s).");
+        }
+
+        private static void Find(string parameters)
+        {
+            string[] propertyAndValue = parameters.Replace("\"", string.Empty, StringComparison.CurrentCultureIgnoreCase).Split(' ', 2);
+            foreach (var note in fileCabinetService.FindByFirstName(propertyAndValue[1]))
+            {
+                Console.WriteLine($"#{note.Id}, {note.FirstName}, {note.LastName}, {note.DateOfBirth.ToShortDateString()}");
+            }
         }
 
         private static void Edit(string parameters)
