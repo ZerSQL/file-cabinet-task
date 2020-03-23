@@ -148,6 +148,17 @@ namespace FileCabinetApp
                     Console.WriteLine($"#{note.Id}, {note.FirstName}, {note.LastName}, {note.DateOfBirth.ToShortDateString()}");
                 }
             }
+            else if (propertyAndValue[0].ToLower(CultureInfo.CurrentCulture) == "dateofbirth")
+            {
+                foreach (var note in fileCabinetService.FindByBirthDate(propertyAndValue[1]))
+                {
+                    Console.WriteLine($"#{note.Id}, {note.FirstName}, {note.LastName}, {note.DateOfBirth.ToShortDateString()}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("'Find' command working in 'find *name of property* *value*' format. For birthdate use dd.MM.yyyy format.Please,try again.");
+            }
         }
 
         private static void Edit(string parameters)

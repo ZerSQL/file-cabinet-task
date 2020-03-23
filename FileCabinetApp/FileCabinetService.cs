@@ -92,6 +92,20 @@ namespace FileCabinetApp
             return result.ToArray();
         }
 
+        public FileCabinetRecord[] FindByBirthDate(string birthDate)
+        {
+            List<FileCabinetRecord> result = new List<FileCabinetRecord>();
+            foreach (var t in this.list)
+            {
+                if (t.DateOfBirth.ToShortDateString() == birthDate)
+                {
+                    result.Add(t);
+                }
+            }
+
+            return result.ToArray();
+        }
+
         public int GetStat()
         {
             return this.list.Count;
