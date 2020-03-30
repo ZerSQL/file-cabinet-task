@@ -20,6 +20,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("create", Create),
+            new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("exit", Exit),
         };
 
@@ -30,6 +31,7 @@ namespace FileCabinetApp
             new string[] { "list", "prints notes", "The 'list' print notes." },
             new string[] { "edit", "edit notes", "The 'edit' is to edit notes." },
             new string[] { "create", "create new note", "The 'create' creates new note." },
+            new string[] { "find", "find notes", "The 'find' command is to find notes." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
@@ -127,6 +129,42 @@ namespace FileCabinetApp
         {
             var recordsCount = Program.fileCabinetService.GetStat();
             Console.WriteLine($"{recordsCount} record(s).");
+        }
+
+        private static void Find(string parameters)
+        {
+            string[] propertyAndValue = parameters.Replace("\"", string.Empty, StringComparison.CurrentCultureIgnoreCase).Split(' ', 2);
+            if (propertyAndValue.Length != 2)
+            {
+                Console.WriteLine("'Find' command working in 'find *name of property* *value*' format. For birthdate use dd.MM.yyyy format.Please,try again.");
+                return;
+            }
+
+            if (propertyAndValue[0].ToLower(CultureInfo.CurrentCulture) == "firstname")
+            {
+                foreach (var note in fileCabinetService.FindByFirstName(propertyAndValue[1]))
+                {
+                    Console.WriteLine($"#{note.Id}, {note.FirstName}, {note.LastName}, {note.DateOfBirth.ToShortDateString()}");
+                }
+            }
+            else if (propertyAndValue[0].ToLower(CultureInfo.CurrentCulture) == "lastname")
+            {
+                foreach (var note in fileCabinetService.FindByLastName(propertyAndValue[1]))
+                {
+                    Console.WriteLine($"#{note.Id}, {note.FirstName}, {note.LastName}, {note.DateOfBirth.ToShortDateString()}");
+                }
+            }
+            else if (propertyAndValue[0].ToLower(CultureInfo.CurrentCulture) == "dateofbirth")
+            {
+                foreach (var note in fileCabinetService.FindByBirthDate(propertyAndValue[1]))
+                {
+                    Console.WriteLine($"#{note.Id}, {note.FirstName}, {note.LastName}, {note.DateOfBirth.ToShortDateString()}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("'Find' command working in 'find *name of property* *value*' format. For birthdate use dd.MM.yyyy format.Please,try again.");
+            }
         }
 
         private static void Edit(string parameters)
