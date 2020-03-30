@@ -8,6 +8,7 @@ namespace FileCabinetApp
     {
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
         private readonly DateTime minDate = new DateTime(1950, 1, 1);
         private readonly DateTime maxDate = DateTime.Now;
@@ -58,30 +59,14 @@ namespace FileCabinetApp
 
             AddNoteAtDictionary(this.firstNameDictionary, firstName, record);
             AddNoteAtDictionary(this.lastNameDictionary, lastName, record);
+            AddNoteAtDictionary(this.dateOfBirthDictionary, dateOfBirth.ToShortDateString(), record);
 
-                                // if (this.firstNameDictionary.TryGetValue(firstName, out List<FileCabinetRecord> firstNameNote))
-                                // {
-                                //    firstNameNote.Add(record);
-                                // }
-                                // else
-                                // {
-                                //    this.firstNameDictionary.Add(firstName, new List<FileCabinetRecord>() { record });
-                                // }
-
-                                // if (this.lastNameDictionary.TryGetValue(lastName, out List<FileCabinetRecord> lastNameNote))
-                                // {
-                                //    lastNameNote.Add(record);
-                                // }
-                                // else
-                                // {
-                                //    this.firstNameDictionary.Add(lastName, new List<FileCabinetRecord>() { record });
-                                // }
             this.list.Add(record);
 
             return record.Id;
         }
 
-        public void EditNoteAtDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string property, int id, FileCabinetRecord current, string name)
+        public void EditNoteAtDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string property, int id, FileCabinetRecord current, string propName)
         {
             if (dictionary == null)
             {
@@ -104,6 +89,10 @@ namespace FileCabinetApp
                         {
                             key = listItems.LastName;
                         }
+                        else if (dictionary == this.dateOfBirthDictionary)
+                        {
+                            key = listItems.DateOfBirth.ToShortDateString();
+                        }
                     }
                 }
             }
@@ -117,9 +106,9 @@ namespace FileCabinetApp
                 dictionary.Add(property, new List<FileCabinetRecord>() { current });
             }
 
-            FileCabinetRecord temp = dictionary[name].Find(x => x.Id == id);
+            FileCabinetRecord temp = dictionary[propName].Find(x => x.Id == id);
 
-            dictionary[name].Remove(temp);
+            dictionary[propName].Remove(temp);
         }
 
         public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, decimal wage, char favouriteNumeral, short height)
@@ -130,16 +119,18 @@ namespace FileCabinetApp
                 throw new ArgumentException($"No element with id = {id}");
             }
 
-            string name = current.FirstName;
-            string name2 = current.LastName;
+            string prevFirstName = current.FirstName;
+            string prevLastName = current.LastName;
+            string prevDoB = current.DateOfBirth.ToShortDateString();
             current.FirstName = firstName;
             current.LastName = lastName;
             current.DateOfBirth = dateOfBirth;
             current.Wage = wage;
             current.FavouriteNumeral = favouriteNumeral;
             current.Height = height;
-            this.EditNoteAtDictionary(this.firstNameDictionary, firstName, id, current, name);
-            this.EditNoteAtDictionary(this.lastNameDictionary, lastName, id, current, name2);
+            this.EditNoteAtDictionary(this.firstNameDictionary, firstName, id, current, prevFirstName);
+            this.EditNoteAtDictionary(this.lastNameDictionary, lastName, id, current, prevLastName);
+            this.EditNoteAtDictionary(this.dateOfBirthDictionary, dateOfBirth.ToShortDateString(), id, current, prevDoB);
 
             Console.WriteLine($"Record #{id} is updated.");
         }
@@ -177,16 +168,15 @@ namespace FileCabinetApp
 
         public FileCabinetRecord[] FindByBirthDate(string birthDate)
         {
-            List<FileCabinetRecord> result = new List<FileCabinetRecord>();
-            foreach (var note in this.list)
+            if (this.dateOfBirthDictionary.TryGetValue(birthDate, out List<FileCabinetRecord> keyList))
             {
-                if (note.DateOfBirth.ToShortDateString() == birthDate)
-                {
-                    result.Add(note);
-                }
+                return keyList.ToArray();
             }
-
-            return result.ToArray();
+            else
+            {
+                Console.WriteLine("empty");
+                return Array.Empty<FileCabinetRecord>();
+            }
         }
 
         public int GetStat()
