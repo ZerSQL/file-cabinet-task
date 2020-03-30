@@ -7,9 +7,27 @@ namespace FileCabinetApp
     public class FileCabinetService
     {
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
         private readonly DateTime minDate = new DateTime(1950, 1, 1);
         private readonly DateTime maxDate = DateTime.Now;
+
+        public static void AddNoteAtDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string property, FileCabinetRecord record)
+        {
+            if (dictionary == null)
+            {
+                throw new Exception();
+            }
+
+            if (dictionary.TryGetValue(property, out List<FileCabinetRecord> note))
+            {
+                note.Add(record);
+            }
+            else
+            {
+                dictionary.Add(property, new List<FileCabinetRecord>() { record });
+            }
+        }
 
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, decimal wage, char favouriteNumeral, short height)
         {
@@ -38,59 +56,91 @@ namespace FileCabinetApp
                 Height = height,
             };
 
-            if (this.firstNameDictionary.TryGetValue(firstName, out List<FileCabinetRecord> note))
-            {
-                note.Add(record);
-            }
-            else
-            {
-                this.firstNameDictionary.Add(firstName, new List<FileCabinetRecord>() { record });
-            }
+            AddNoteAtDictionary(this.firstNameDictionary, firstName, record);
+            AddNoteAtDictionary(this.lastNameDictionary, lastName, record);
 
+                                // if (this.firstNameDictionary.TryGetValue(firstName, out List<FileCabinetRecord> firstNameNote))
+                                // {
+                                //    firstNameNote.Add(record);
+                                // }
+                                // else
+                                // {
+                                //    this.firstNameDictionary.Add(firstName, new List<FileCabinetRecord>() { record });
+                                // }
+
+                                // if (this.lastNameDictionary.TryGetValue(lastName, out List<FileCabinetRecord> lastNameNote))
+                                // {
+                                //    lastNameNote.Add(record);
+                                // }
+                                // else
+                                // {
+                                //    this.firstNameDictionary.Add(lastName, new List<FileCabinetRecord>() { record });
+                                // }
             this.list.Add(record);
 
             return record.Id;
         }
 
-        public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, decimal wage, char favouriteNumeral, short height)
+        public void EditNoteAtDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string property, int id, FileCabinetRecord current, string name)
         {
-            string key = string.Empty;
-            FileCabinetRecord current = this.list.Find(x => x.Id == id);
-
-            if (current == null)
+            if (dictionary == null)
             {
-                throw new ArgumentException($"No element with id = {id}");
+                throw new Exception();
             }
 
-            foreach (var note in this.firstNameDictionary)
+            string key = string.Empty;
+
+            foreach (var note in dictionary)
             {
                 foreach (var listItems in note.Value)
                 {
                     if (listItems.Id == id)
                     {
-                        key = listItems.FirstName;
+                        if (dictionary == this.firstNameDictionary)
+                        {
+                            key = listItems.FirstName;
+                        }
+                        else if (dictionary == this.lastNameDictionary)
+                        {
+                            key = listItems.LastName;
+                        }
                     }
                 }
             }
 
-            FileCabinetRecord temp = this.firstNameDictionary[key].Find(x => x.Id == id);
+            if (dictionary.TryGetValue(property, out List<FileCabinetRecord> k))
+            {
+                k.Add(current);
+            }
+            else
+            {
+                dictionary.Add(property, new List<FileCabinetRecord>() { current });
+            }
+
+            FileCabinetRecord temp = dictionary[name].Find(x => x.Id == id);
+
+            dictionary[name].Remove(temp);
+        }
+
+        public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, decimal wage, char favouriteNumeral, short height)
+        {
+            FileCabinetRecord current = this.list.Find(x => x.Id == id);
+            if (current == null)
+            {
+                throw new ArgumentException($"No element with id = {id}");
+            }
+
+            string name = current.FirstName;
+            string name2 = current.LastName;
             current.FirstName = firstName;
             current.LastName = lastName;
             current.DateOfBirth = dateOfBirth;
             current.Wage = wage;
             current.FavouriteNumeral = favouriteNumeral;
             current.Height = height;
+            this.EditNoteAtDictionary(this.firstNameDictionary, firstName, id, current, name);
+            this.EditNoteAtDictionary(this.lastNameDictionary, lastName, id, current, name2);
 
-            if (this.firstNameDictionary.TryGetValue(firstName, out List<FileCabinetRecord> k))
-            {
-                k.Add(current);
-            }
-            else
-            {
-                this.firstNameDictionary.Add(firstName, new List<FileCabinetRecord>() { current });
-            }
-
-            this.firstNameDictionary[key].Remove(temp);
             Console.WriteLine($"Record #{id} is updated.");
         }
 
@@ -114,16 +164,15 @@ namespace FileCabinetApp
 
         public FileCabinetRecord[] FindByLastName(string lastName)
         {
-            List<FileCabinetRecord> result = new List<FileCabinetRecord>();
-            foreach (var item in this.list)
+            if (this.lastNameDictionary.TryGetValue(lastName, out List<FileCabinetRecord> keyList))
             {
-                if (item.LastName.ToLower(System.Globalization.CultureInfo.CurrentCulture) == lastName.ToLower(System.Globalization.CultureInfo.CurrentCulture))
-                {
-                    result.Add(item);
-                }
+                return keyList.ToArray();
             }
-
-            return result.ToArray();
+            else
+            {
+                Console.WriteLine("empty");
+                return Array.Empty<FileCabinetRecord>();
+            }
         }
 
         public FileCabinetRecord[] FindByBirthDate(string birthDate)
