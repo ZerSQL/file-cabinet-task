@@ -42,25 +42,25 @@ namespace FileCabinetApp
         /// <summary>
         /// Метод создания новой записи.
         /// </summary>
-        /// <param name="firstName">Имя сотрудника.</param>
-        /// <param name="lastName">Фамилия сотрудника.</param>
-        /// <param name="dateOfBirth">Дата рождения.</param>
-        /// <param name="wage">Заработная плата.</param>
-        /// <param name="favouriteNumeral">Любимое простое число.</param>
-        /// <param name="height">Рост.</param>
-        /// <returns>Возвращает порядковый номер записи.</returns>
-        public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, decimal wage, char favouriteNumeral, short height)
+        /// <param name="newRecord">Объект, представляющий запись.</param>
+        /// <returns>Порядковый номер записи.</returns>
+        public int CreateRecord(FileCabinetRecord newRecord)
         {
-            if (firstName == null || lastName == null)
+            if (newRecord == null)
             {
-                throw new ArgumentNullException($"Name cannot be null. Please, try again. First name is {firstName}, last name is {lastName}.");
+                throw new Exception();
             }
 
-            if (firstName.Length < 2 || firstName.Length > 60 || firstName.Contains(' ', StringComparison.CurrentCulture) ||
-                lastName.Length < 2 || lastName.Length > 60 || lastName.Contains(' ', StringComparison.CurrentCulture) ||
-                dateOfBirth > this.maxDate || dateOfBirth < this.minDate ||
-                wage < 300 ||
-                favouriteNumeral < '0' || favouriteNumeral > '9')
+            if (newRecord.FirstName == null || newRecord.LastName == null)
+            {
+                throw new ArgumentNullException($"Name cannot be null. Please, try again. First name is {newRecord.FirstName}, last name is {newRecord.LastName}.");
+            }
+
+            if (newRecord.FirstName.Length < 2 || newRecord.FirstName.Length > 60 || newRecord.FirstName.Contains(' ', StringComparison.CurrentCulture) ||
+                newRecord.LastName.Length < 2 || newRecord.LastName.Length > 60 || newRecord.LastName.Contains(' ', StringComparison.CurrentCulture) ||
+                newRecord.DateOfBirth > this.maxDate || newRecord.DateOfBirth < this.minDate ||
+                newRecord.Wage < 300 ||
+                newRecord.FavouriteNumeral < '0' || newRecord.FavouriteNumeral > '9')
             {
                 throw new ArgumentException("Error input");
             }
@@ -68,17 +68,17 @@ namespace FileCabinetApp
             var record = new FileCabinetRecord
             {
                 Id = this.list.Count + 1,
-                FirstName = firstName,
-                LastName = lastName,
-                DateOfBirth = dateOfBirth,
-                Wage = wage,
-                FavouriteNumeral = favouriteNumeral,
-                Height = height,
+                FirstName = newRecord.FirstName,
+                LastName = newRecord.LastName,
+                DateOfBirth = newRecord.DateOfBirth,
+                Wage = newRecord.Wage,
+                FavouriteNumeral = newRecord.FavouriteNumeral,
+                Height = newRecord.Height,
             };
 
-            AddNoteAtDictionary(this.firstNameDictionary, firstName, record);
-            AddNoteAtDictionary(this.lastNameDictionary, lastName, record);
-            AddNoteAtDictionary(this.dateOfBirthDictionary, dateOfBirth.ToShortDateString(), record);
+            AddNoteAtDictionary(this.firstNameDictionary, newRecord.FirstName, record);
+            AddNoteAtDictionary(this.lastNameDictionary, newRecord.LastName, record);
+            AddNoteAtDictionary(this.dateOfBirthDictionary, newRecord.DateOfBirth.ToShortDateString(), record);
 
             this.list.Add(record);
 
@@ -141,35 +141,34 @@ namespace FileCabinetApp
         /// <summary>
         /// Редактирование записи в списке.
         /// </summary>
-        /// <param name="id">Номер редактируемой записи.</param>
-        /// <param name="firstName">Новое имя.</param>
-        /// <param name="lastName">Новая фамилия.</param>
-        /// <param name="dateOfBirth">Дата рождения.</param>
-        /// <param name="wage">Заработная плата.</param>
-        /// <param name="favouriteNumeral">Любимое простое число.</param>
-        /// <param name="height">Рост.</param>
-        public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, decimal wage, char favouriteNumeral, short height)
+        /// <param name="newRecord">Новые параметры записи.</param>
+        public void EditRecord(FileCabinetRecord newRecord)
         {
-            FileCabinetRecord current = this.list.Find(x => x.Id == id);
+            if (newRecord == null)
+            {
+                throw new Exception();
+            }
+
+            FileCabinetRecord current = this.list.Find(x => x.Id == newRecord.Id);
             if (current == null)
             {
-                throw new ArgumentException($"No element with id = {id}");
+                throw new ArgumentException($"No element with id = {newRecord.Id}");
             }
 
             string prevFirstName = current.FirstName;
             string prevLastName = current.LastName;
             string prevDoB = current.DateOfBirth.ToShortDateString();
-            current.FirstName = firstName;
-            current.LastName = lastName;
-            current.DateOfBirth = dateOfBirth;
-            current.Wage = wage;
-            current.FavouriteNumeral = favouriteNumeral;
-            current.Height = height;
-            this.EditNoteAtDictionary(this.firstNameDictionary, firstName, id, current, prevFirstName);
-            this.EditNoteAtDictionary(this.lastNameDictionary, lastName, id, current, prevLastName);
-            this.EditNoteAtDictionary(this.dateOfBirthDictionary, dateOfBirth.ToShortDateString(), id, current, prevDoB);
+            current.FirstName = newRecord.FirstName;
+            current.LastName = newRecord.LastName;
+            current.DateOfBirth = newRecord.DateOfBirth;
+            current.Wage = newRecord.Wage;
+            current.FavouriteNumeral = newRecord.FavouriteNumeral;
+            current.Height = newRecord.Height;
+            this.EditNoteAtDictionary(this.firstNameDictionary, newRecord.FirstName, newRecord.Id, current, prevFirstName);
+            this.EditNoteAtDictionary(this.lastNameDictionary, newRecord.LastName, newRecord.Id, current, prevLastName);
+            this.EditNoteAtDictionary(this.dateOfBirthDictionary, newRecord.DateOfBirth.ToShortDateString(), newRecord.Id, current, prevDoB);
 
-            Console.WriteLine($"Record #{id} is updated.");
+            Console.WriteLine($"Record #{newRecord.Id} is updated.");
         }
 
         /// <summary>

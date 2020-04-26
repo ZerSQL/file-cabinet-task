@@ -128,8 +128,9 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            CreateOrEditCommands(out string firstName, out string lastName, out decimal personalWage, out char favouriteNumeral, out short personalHeight);
-            fileCabinetService.CreateRecord(firstName, lastName, InputBirthDate(), personalWage, favouriteNumeral, personalHeight);
+            CreateOrEditCommands(out string firstName, out string lastName, out DateTime dateOfBirth, out decimal personalWage, out char favouriteNumeral, out short personalHeight);
+            FileCabinetRecord newRecord = new FileCabinetRecord() { FirstName = firstName, LastName = lastName, DateOfBirth = dateOfBirth, Wage = personalWage, FavouriteNumeral = favouriteNumeral, Height = personalHeight };
+            fileCabinetService.CreateRecord(newRecord);
         }
 
         private static void Stat(string parameters)
@@ -200,8 +201,9 @@ namespace FileCabinetApp
                 return;
             }
 
-            CreateOrEditCommands(out string firstName, out string lastName, out decimal personalWage, out char favouriteNumeral, out short personalHeight);
-            fileCabinetService.EditRecord(id, firstName, lastName, InputBirthDate(), personalWage, favouriteNumeral, personalHeight);
+            CreateOrEditCommands(out string firstName, out string lastName, out DateTime dateOfBirth, out decimal personalWage, out char favouriteNumeral, out short personalHeight);
+            FileCabinetRecord record = new FileCabinetRecord() { Id = id, FirstName = firstName, LastName = lastName, DateOfBirth = dateOfBirth, Wage = personalWage, FavouriteNumeral = favouriteNumeral, Height = personalHeight };
+            fileCabinetService.EditRecord(record);
         }
 
         private static void Exit(string parameters)
@@ -210,7 +212,7 @@ namespace FileCabinetApp
             isRunning = false;
         }
 
-        private static void CreateOrEditCommands(out string firstName, out string lastName, out decimal personalWage, out char favouriteNumeral, out short personalHeight)
+        private static void CreateOrEditCommands(out string firstName, out string lastName, out DateTime dateOfBirth, out decimal personalWage, out char favouriteNumeral, out short personalHeight)
         {
             bool exact = false;
             personalWage = 0;
@@ -242,6 +244,7 @@ namespace FileCabinetApp
                 }
             }
 
+            dateOfBirth = InputBirthDate();
             exact = false;
             while (!exact)
             {

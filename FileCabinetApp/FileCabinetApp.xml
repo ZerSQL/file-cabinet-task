@@ -78,17 +78,12 @@
             <param name="property">Имя свойства для проверки необходимости создания новой пары ключ-значение.</param>
             <param name="record">Сама запись.</param>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(System.String,System.String,System.DateTime,System.Decimal,System.Char,System.Int16)">
+        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
             <summary>
             Метод создания новой записи.
             </summary>
-            <param name="firstName">Имя сотрудника.</param>
-            <param name="lastName">Фамилия сотрудника.</param>
-            <param name="dateOfBirth">Дата рождения.</param>
-            <param name="wage">Заработная плата.</param>
-            <param name="favouriteNumeral">Любимое простое число.</param>
-            <param name="height">Рост.</param>
-            <returns>Возвращает порядковый номер записи.</returns>
+            <param name="newRecord">Объект, представляющий запись.</param>
+            <returns>Порядковый номер записи.</returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.EditNoteAtDictionary(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{FileCabinetApp.FileCabinetRecord}},System.String,System.Int32,FileCabinetApp.FileCabinetRecord,System.String)">
             <summary>
@@ -100,17 +95,11 @@
             <param name="current">Запись до редактирования.</param>
             <param name="propName">Название свойства для поиска.</param>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32,System.String,System.String,System.DateTime,System.Decimal,System.Char,System.Int16)">
+        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(FileCabinetApp.FileCabinetRecord)">
             <summary>
             Редактирование записи в списке.
             </summary>
-            <param name="id">Номер редактируемой записи.</param>
-            <param name="firstName">Новое имя.</param>
-            <param name="lastName">Новая фамилия.</param>
-            <param name="dateOfBirth">Дата рождения.</param>
-            <param name="wage">Заработная плата.</param>
-            <param name="favouriteNumeral">Любимое простое число.</param>
-            <param name="height">Рост.</param>
+            <param name="newRecord">Новые параметры записи.</param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.GetRecords">
             <summary>
