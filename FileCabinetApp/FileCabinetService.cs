@@ -4,6 +4,9 @@ using System.Text;
 
 namespace FileCabinetApp
 {
+    /// <summary>
+    /// Сервис для работы со списком записей и словарями.
+    /// </summary>
     public class FileCabinetService
     {
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
@@ -13,6 +16,12 @@ namespace FileCabinetApp
         private readonly DateTime minDate = new DateTime(1950, 1, 1);
         private readonly DateTime maxDate = DateTime.Now;
 
+        /// <summary>
+        /// Функция добавления записи в словарь.
+        /// </summary>
+        /// <param name="dictionary">Сам словарь.</param>
+        /// <param name="property">Имя свойства для проверки необходимости создания новой пары ключ-значение.</param>
+        /// <param name="record">Сама запись.</param>
         public static void AddNoteAtDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string property, FileCabinetRecord record)
         {
             if (dictionary == null)
@@ -30,6 +39,16 @@ namespace FileCabinetApp
             }
         }
 
+        /// <summary>
+        /// Метод создания новой записи.
+        /// </summary>
+        /// <param name="firstName">Имя сотрудника.</param>
+        /// <param name="lastName">Фамилия сотрудника.</param>
+        /// <param name="dateOfBirth">Дата рождения.</param>
+        /// <param name="wage">Заработная плата.</param>
+        /// <param name="favouriteNumeral">Любимое простое число.</param>
+        /// <param name="height">Рост.</param>
+        /// <returns>Возвращает порядковый номер записи.</returns>
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, decimal wage, char favouriteNumeral, short height)
         {
             if (firstName == null || lastName == null)
@@ -66,6 +85,14 @@ namespace FileCabinetApp
             return record.Id;
         }
 
+        /// <summary>
+        /// Редактиование данных в словаре.
+        /// </summary>
+        /// <param name="dictionary">Словарь.</param>
+        /// <param name="property">Свойство для проверки необходимости создания нового значения ключ-значение.</param>
+        /// <param name="id">Номер редактируемой записи.</param>
+        /// <param name="current">Запись до редактирования.</param>
+        /// <param name="propName">Название свойства для поиска.</param>
         public void EditNoteAtDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string property, int id, FileCabinetRecord current, string propName)
         {
             if (dictionary == null)
@@ -111,6 +138,16 @@ namespace FileCabinetApp
             dictionary[propName].Remove(temp);
         }
 
+        /// <summary>
+        /// Редактирование записи в списке.
+        /// </summary>
+        /// <param name="id">Номер редактируемой записи.</param>
+        /// <param name="firstName">Новое имя.</param>
+        /// <param name="lastName">Новая фамилия.</param>
+        /// <param name="dateOfBirth">Дата рождения.</param>
+        /// <param name="wage">Заработная плата.</param>
+        /// <param name="favouriteNumeral">Любимое простое число.</param>
+        /// <param name="height">Рост.</param>
         public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, decimal wage, char favouriteNumeral, short height)
         {
             FileCabinetRecord current = this.list.Find(x => x.Id == id);
@@ -135,11 +172,20 @@ namespace FileCabinetApp
             Console.WriteLine($"Record #{id} is updated.");
         }
 
+        /// <summary>
+        /// Получение списка записей.
+        /// </summary>
+        /// <returns>Список записей.</returns>
         public FileCabinetRecord[] GetRecords()
         {
             return this.list.ToArray();
         }
 
+        /// <summary>
+        /// Поиск по имени.
+        /// </summary>
+        /// <param name="firstName">Искомое имя.</param>
+        /// <returns>Массив найденных записей с именем firstName.</returns>
         public FileCabinetRecord[] FindByFirstName(string firstName)
         {
             if (this.firstNameDictionary.TryGetValue(firstName, out List<FileCabinetRecord> keyList))
@@ -153,6 +199,11 @@ namespace FileCabinetApp
             }
         }
 
+        /// <summary>
+        /// Поиск по фамилии.
+        /// </summary>
+        /// <param name="lastName">Искомая фамилия.</param>
+        /// <returns>Массив найденных записей с фамилией lastName.</returns>
         public FileCabinetRecord[] FindByLastName(string lastName)
         {
             if (this.lastNameDictionary.TryGetValue(lastName, out List<FileCabinetRecord> keyList))
@@ -166,6 +217,11 @@ namespace FileCabinetApp
             }
         }
 
+        /// <summary>
+        /// Поиск по дате рождения.
+        /// </summary>
+        /// <param name="birthDate">Искомая дата рождения.</param>
+        /// <returns>Массив найденных записей с искомой датой рождения.</returns>
         public FileCabinetRecord[] FindByBirthDate(string birthDate)
         {
             if (this.dateOfBirthDictionary.TryGetValue(birthDate, out List<FileCabinetRecord> keyList))
@@ -179,6 +235,10 @@ namespace FileCabinetApp
             }
         }
 
+        /// <summary>
+        /// Получение числа записей.
+        /// </summary>
+        /// <returns>Число записей.</returns>
         public int GetStat()
         {
             return this.list.Count;

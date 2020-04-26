@@ -3,6 +3,9 @@ using System.Globalization;
 
 namespace FileCabinetApp
 {
+    /// <summary>
+    /// Класс, содержащий основную информацию о программе.
+    /// </summary>
     public static class Program
     {
         private const string DeveloperName = "Andrei Drabliankou";
@@ -37,6 +40,10 @@ namespace FileCabinetApp
 
         private static FileCabinetService fileCabinetService = new FileCabinetService();
 
+        /// <summary>
+        /// Точка входа в программу и вызов функционала в зависимости от введенной команды.
+        /// </summary>
+        /// <param name="args">Переменная для передачи параметров при запуске через консоль.</param>
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
