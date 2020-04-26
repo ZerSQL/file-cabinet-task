@@ -51,20 +51,7 @@ namespace FileCabinetApp
                 throw new Exception();
             }
 
-            if (newRecord.FirstName == null || newRecord.LastName == null)
-            {
-                throw new ArgumentNullException($"Name cannot be null. Please, try again. First name is {newRecord.FirstName}, last name is {newRecord.LastName}.");
-            }
-
-            if (newRecord.FirstName.Length < 2 || newRecord.FirstName.Length > 60 || newRecord.FirstName.Contains(' ', StringComparison.CurrentCulture) ||
-                newRecord.LastName.Length < 2 || newRecord.LastName.Length > 60 || newRecord.LastName.Contains(' ', StringComparison.CurrentCulture) ||
-                newRecord.DateOfBirth > this.maxDate || newRecord.DateOfBirth < this.minDate ||
-                newRecord.Wage < 300 ||
-                newRecord.FavouriteNumeral < '0' || newRecord.FavouriteNumeral > '9')
-            {
-                throw new ArgumentException("Error input");
-            }
-
+            this.ValidateParameters(newRecord);
             var record = new FileCabinetRecord
             {
                 Id = this.list.Count + 1,
@@ -83,6 +70,14 @@ namespace FileCabinetApp
             this.list.Add(record);
 
             return record.Id;
+        }
+
+        /// <summary>
+        /// Виртуальный пустой метод валидации.
+        /// </summary>
+        /// <param name="newRecord">Новая запись.</param>
+        public virtual void ValidateParameters(FileCabinetRecord newRecord)
+        {
         }
 
         /// <summary>
@@ -149,6 +144,7 @@ namespace FileCabinetApp
                 throw new Exception();
             }
 
+            this.ValidateParameters(newRecord);
             FileCabinetRecord current = this.list.Find(x => x.Id == newRecord.Id);
             if (current == null)
             {

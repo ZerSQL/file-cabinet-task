@@ -38,7 +38,7 @@ namespace FileCabinetApp
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
-        private static FileCabinetService fileCabinetService = new FileCabinetService();
+        private static FileCabinetCustomService fileCabinetService = new FileCabinetCustomService();
 
         /// <summary>
         /// Точка входа в программу и вызов функционала в зависимости от введенной команды.

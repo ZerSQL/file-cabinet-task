@@ -4,6 +4,28 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.FileCabinetCustomService">
+            <summary>
+            Измененная валидация.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetCustomService.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод производящий валидацию.
+            </summary>
+            <param name="newRecord">Проверяемая запись.</param>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetDefaultService">
+            <summary>
+            Обычная валидация.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetDefaultService.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод выполняющий валидацию.
+            </summary>
+            <param name="newRecord">Проверяемая запись.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
             Класс, представляющий запись.
@@ -84,6 +106,12 @@
             </summary>
             <param name="newRecord">Объект, представляющий запись.</param>
             <returns>Порядковый номер записи.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Виртуальный пустой метод валидации.
+            </summary>
+            <param name="newRecord">Новая запись.</param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.EditNoteAtDictionary(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{FileCabinetApp.FileCabinetRecord}},System.String,System.Int32,FileCabinetApp.FileCabinetRecord,System.String)">
             <summary>
