@@ -9,13 +9,9 @@ namespace FileCabinetApp
     /// </summary>
     public class FileCabinetCustomService : FileCabinetService
     {
-        /// <summary>
-        /// Метод создания валидатора.
-        /// </summary>
-        /// <returns>Измененный валидатор.</returns>
-        public override IRecordValidator CreateValidator()
+        public FileCabinetCustomService()
+            : base(new CustomValidator())
         {
-            return new CustomValidator();
         }
     }
 }

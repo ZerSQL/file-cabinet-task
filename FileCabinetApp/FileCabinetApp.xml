@@ -31,22 +31,10 @@
             Измененная валидация.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.CreateValidator">
-            <summary>
-            Метод создания валидатора.
-            </summary>
-            <returns>Измененный валидатор.</returns>
-        </member>
         <member name="T:FileCabinetApp.FileCabinetDefaultService">
             <summary>
             Обычная валидация.
             </summary>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.CreateValidator">
-            <summary>
-            Метод создания валидатора.
-            </summary>
-            <returns>Базовый валидатор.</returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -128,12 +116,6 @@
             </summary>
             <param name="newRecord">Объект, представляющий запись.</param>
             <returns>Порядковый номер записи.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.CreateValidator">
-            <summary>
-            Абстрактый метод создания валидатора.
-            </summary>
-            <returns>Тип валидатора.</returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.EditNoteAtDictionary(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{FileCabinetApp.FileCabinetRecord}},System.String,System.Int32,FileCabinetApp.FileCabinetRecord,System.String)">
             <summary>

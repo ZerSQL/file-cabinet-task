@@ -9,10 +9,16 @@ namespace FileCabinetApp
     /// </summary>
     public abstract class FileCabinetService
     {
+        private IRecordValidator validator;
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+
+        protected FileCabinetService(IRecordValidator validator)
+        {
+            this.validator = validator;
+        }
 
         /// <summary>
         /// Функция добавления записи в словарь.
@@ -49,7 +55,7 @@ namespace FileCabinetApp
                 throw new Exception();
             }
 
-            this.CreateValidator().ValidateParameters(newRecord);
+            this.validator.ValidateParameters(newRecord);
             var record = new FileCabinetRecord
             {
                 Id = this.list.Count + 1,
@@ -74,7 +80,7 @@ namespace FileCabinetApp
         /// Абстрактый метод создания валидатора.
         /// </summary>
         /// <returns>Тип валидатора.</returns>
-        public abstract IRecordValidator CreateValidator();
+      //  public abstract IRecordValidator CreateValidator();
 
         /// <summary>
         /// Редактиование данных в словаре.
@@ -140,7 +146,7 @@ namespace FileCabinetApp
                 throw new Exception();
             }
 
-            this.CreateValidator().ValidateParameters(newRecord);
+            this.validator.ValidateParameters(newRecord);
             FileCabinetRecord current = this.list.Find(x => x.Id == newRecord.Id);
             if (current == null)
             {
