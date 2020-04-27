@@ -4,27 +4,49 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.CustomValidator">
+            <summary>
+            Класс, представляющий измененный валидатор.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, выполняющий измененную валидацию.
+            </summary>
+            <param name="newRecord">Проверяемая запись.</param>
+        </member>
+        <member name="T:FileCabinetApp.DefaultValidator">
+            <summary>
+            Класс, представляющий обычный валидатор.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, выполняющий обычную валидацию.
+            </summary>
+            <param name="newRecord">Проверяемая запись.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetCustomService">
             <summary>
             Измененная валидация.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.FileCabinetCustomService.CreateValidator">
             <summary>
-            Метод производящий валидацию.
+            Метод создания валидатора.
             </summary>
-            <param name="newRecord">Проверяемая запись.</param>
+            <returns>Измененный валидатор.</returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetDefaultService">
             <summary>
             Обычная валидация.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.FileCabinetDefaultService.CreateValidator">
             <summary>
-            Метод выполняющий валидацию.
+            Метод создания валидатора.
             </summary>
-            <param name="newRecord">Проверяемая запись.</param>
+            <returns>Базовый валидатор.</returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -107,11 +129,11 @@
             <param name="newRecord">Объект, представляющий запись.</param>
             <returns>Порядковый номер записи.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.FileCabinetService.CreateValidator">
             <summary>
-            Виртуальный пустой метод валидации.
+            Абстрактый метод создания валидатора.
             </summary>
-            <param name="newRecord">Новая запись.</param>
+            <returns>Тип валидатора.</returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.EditNoteAtDictionary(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{FileCabinetApp.FileCabinetRecord}},System.String,System.Int32,FileCabinetApp.FileCabinetRecord,System.String)">
             <summary>
@@ -161,6 +183,17 @@
             Получение числа записей.
             </summary>
             <returns>Число записей.</returns>
+        </member>
+        <member name="T:FileCabinetApp.IRecordValidator">
+            <summary>
+            Интерфейс для валидации записей.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.IRecordValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, выполняющий обычную валидацию.
+            </summary>
+            /// <param name="newRecord">Проверяемая запись.</param>
         </member>
         <member name="T:FileCabinetApp.Program">
             <summary>

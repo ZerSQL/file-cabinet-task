@@ -40,7 +40,7 @@ namespace FileCabinetApp
 
         private static FileCabinetCustomService fileCabinetCustomService = new FileCabinetCustomService();
         private static FileCabinetDefaultService fileCabinetDefaultService = new FileCabinetDefaultService();
-        private static FileCabinetService fileCabinetService = new FileCabinetService();
+        private static FileCabinetService fileCabinetService;
 
         /// <summary>
         /// Точка входа в программу и вызов функционала в зависимости от введенной команды.

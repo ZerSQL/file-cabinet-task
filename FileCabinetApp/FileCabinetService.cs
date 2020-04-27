@@ -7,7 +7,7 @@ namespace FileCabinetApp
     /// <summary>
     /// Сервис для работы со списком записей и словарями.
     /// </summary>
-    public class FileCabinetService
+    public abstract class FileCabinetService
     {
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
@@ -49,7 +49,7 @@ namespace FileCabinetApp
                 throw new Exception();
             }
 
-            this.ValidateParameters(newRecord);
+            this.CreateValidator().ValidateParameters(newRecord);
             var record = new FileCabinetRecord
             {
                 Id = this.list.Count + 1,
@@ -71,12 +71,10 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Виртуальный пустой метод валидации.
+        /// Абстрактый метод создания валидатора.
         /// </summary>
-        /// <param name="newRecord">Новая запись.</param>
-        public virtual void ValidateParameters(FileCabinetRecord newRecord)
-        {
-        }
+        /// <returns>Тип валидатора.</returns>
+        public abstract IRecordValidator CreateValidator();
 
         /// <summary>
         /// Редактиование данных в словаре.
@@ -142,7 +140,7 @@ namespace FileCabinetApp
                 throw new Exception();
             }
 
-            this.ValidateParameters(newRecord);
+            this.CreateValidator().ValidateParameters(newRecord);
             FileCabinetRecord current = this.list.Find(x => x.Id == newRecord.Id);
             if (current == null)
             {
