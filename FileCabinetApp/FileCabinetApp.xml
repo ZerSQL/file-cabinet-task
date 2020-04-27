@@ -162,6 +162,67 @@
             </summary>
             <returns>Число записей.</returns>
         </member>
+        <member name="T:FileCabinetApp.IFileCabinetService">
+            <summary>
+            Интерфейс представляющий сервис.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод создания записи.
+            </summary>
+            <param name="newRecord">Запись.</param>
+            <returns>Порядковый номер созданной записи.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.EditNoteAtDictionary(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{FileCabinetApp.FileCabinetRecord}},System.String,System.Int32,FileCabinetApp.FileCabinetRecord,System.String)">
+            <summary>
+            Редактиование данных в словаре.
+            </summary>
+            <param name="dictionary">Словарь.</param>
+            <param name="property">Свойство для проверки необходимости создания нового значения ключ-значение.</param>
+            <param name="id">Номер редактируемой записи.</param>
+            <param name="current">Запись до редактирования.</param>
+            <param name="propName">Название свойства для поиска.</param>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.EditRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Редактирование записи в списке.
+            </summary>
+            <param name="newRecord">Новые параметры записи.</param>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.GetRecords">
+            <summary>
+            Получение списка записей.
+            </summary>
+            <returns>Список записей.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByFirstName(System.String)">
+            <summary>
+            Поиск по имени.
+            </summary>
+            <param name="firstName">Искомое имя.</param>
+            <returns>Массив найденных записей с именем firstName.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByLastName(System.String)">
+            <summary>
+            Поиск по фамилии.
+            </summary>
+            <param name="lastName">Искомая фамилия.</param>
+            <returns>Массив найденных записей с фамилией lastName.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByBirthDate(System.String)">
+            <summary>
+            Поиск по дате рождения.
+            </summary>
+            <param name="birthDate">Искомая дата рождения.</param>
+            <returns>Массив найденных записей с искомой датой рождения.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.GetStat">
+            <summary>
+            Получение числа записей.
+            </summary>
+            <returns>Число записей.</returns>
+        </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>
             Интерфейс для валидации записей.
