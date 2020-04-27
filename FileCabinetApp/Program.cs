@@ -38,6 +38,7 @@ namespace FileCabinetApp
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
+        private static bool isDefaultRules = true;
         private static IFileCabinetService fileCabinetService;
 
         /// <summary>
@@ -54,6 +55,7 @@ namespace FileCabinetApp
             }
             else
             {
+                isDefaultRules = false;
                 fileCabinetService = new FileCabinetService(new CustomValidator());
                 Console.WriteLine("Using custom validation rules.");
             }
@@ -241,74 +243,22 @@ namespace FileCabinetApp
 
         private static void CreateOrEditCommands(out string firstName, out string lastName, out DateTime dateOfBirth, out decimal personalWage, out char favouriteNumeral, out short personalHeight)
         {
-            bool exact = false;
             personalWage = 0;
             personalHeight = 0;
             favouriteNumeral = ' ';
             firstName = string.Empty;
             lastName = string.Empty;
-
-            while (!exact)
-            {
-                exact = true;
-                Console.WriteLine("Input first name");
-                firstName = Console.ReadLine();
-                if (firstName.Length < 2 || firstName.Length > 60 || firstName.Contains(' ', StringComparison.CurrentCulture))
-                {
-                    exact = false;
-                }
-            }
-
-            exact = false;
-            while (!exact)
-            {
-                exact = true;
-                Console.WriteLine("Input last name");
-                lastName = Console.ReadLine();
-                if (lastName.Length < 2 || lastName.Length > 60 || lastName.Contains(' ', StringComparison.CurrentCulture))
-                {
-                    exact = false;
-                }
-            }
-
+            Console.WriteLine("Input Firstname");
+            firstName = ReadInput(StringConventer, StringValidator);
+            Console.WriteLine("Input Lastname");
+            lastName = ReadInput(StringConventer, StringValidator);
             dateOfBirth = InputBirthDate();
-            exact = false;
-            while (!exact)
-            {
-                Console.WriteLine("Input Wage");
-                exact = decimal.TryParse(Console.ReadLine(), out decimal wage);
-                personalWage = wage;
-                if (wage < 300)
-                {
-                    exact = false;
-                }
-            }
-
-            exact = false;
-            while (!exact)
-            {
-                Console.WriteLine("Input Height");
-                exact = short.TryParse(Console.ReadLine(), out short height);
-                personalHeight = height;
-
-                if (height < 120 || height > 250)
-                {
-                    exact = false;
-                }
-            }
-
-            exact = false;
-            while (!exact)
-            {
-                Console.WriteLine("Input favouriteNumeral");
-                exact = char.TryParse(Console.ReadLine(), out char number);
-                favouriteNumeral = number;
-
-                if (favouriteNumeral < '0' || favouriteNumeral > '9')
-                {
-                    exact = false;
-                }
-            }
+            Console.WriteLine("Input wage");
+            personalWage = ReadInput(DecimalConventer, DecimalValidator);
+            Console.WriteLine("Input height");
+            personalHeight = ReadInput(ShortConventer, ShortValidator);
+            Console.WriteLine("Input favourite numeral");
+            favouriteNumeral = ReadInput(CharConventer, CharValidator);
         }
 
         private static DateTime InputBirthDate()
@@ -324,6 +274,187 @@ namespace FileCabinetApp
             while (!DateTime.TryParseExact(input, "dd.MM.yyyy", null, DateTimeStyles.None, out dob) || (dob > DateTime.Now || dob < new DateTime(1950, 1, 1)));
 
             return dob;
+        }
+
+        private static Tuple<bool, string, string> StringConventer(string str = "")
+        {
+            if (str == null)
+            {
+                return new Tuple<bool, string, string>(false, "string is empty", string.Empty);
+            }
+            else
+            {
+                return new Tuple<bool, string, string>(true, string.Empty, str);
+            }
+        }
+
+        private static Tuple<bool, string, decimal> DecimalConventer(string str = "")
+        {
+            if (decimal.TryParse(str, out decimal wage))
+            {
+                return new Tuple<bool, string, decimal>(true, string.Empty, wage);
+            }
+            else
+            {
+                return new Tuple<bool, string, decimal>(false, "This is not a number", 0);
+            }
+        }
+
+        private static Tuple<bool, string, char> CharConventer(string symbol)
+        {
+            if (char.TryParse(symbol, out char number))
+            {
+                return new Tuple<bool, string, char>(true, string.Empty, number);
+            }
+            else
+            {
+                return new Tuple<bool, string, char>(false, "this is not a char", ' ');
+            }
+        }
+
+        private static Tuple<bool, string, short> ShortConventer(string height)
+        {
+            if (short.TryParse(height, out short personalHeight))
+            {
+                return new Tuple<bool, string, short>(true, string.Empty, personalHeight);
+            }
+            else
+            {
+                return new Tuple<bool, string, short>(false, "cannot cast to a short,", 0);
+            }
+        }
+
+        private static Tuple<bool, string> StringValidator(string str = "")
+        {
+            if (isDefaultRules == true)
+            {
+                if (str.Length < 2 || str.Length > 60 || str.Contains(' ', StringComparison.CurrentCulture))
+                {
+                    return new Tuple<bool, string>(false, "string is too short or too long");
+                }
+                else
+                {
+                    return new Tuple<bool, string>(true, string.Empty);
+                }
+            }
+            else
+            {
+                if (str.Length < 2 || str.Length > 15 || str.Contains(' ', StringComparison.CurrentCulture))
+                {
+                    return new Tuple<bool, string>(false, "string is too short or too long");
+                }
+                else
+                {
+                    return new Tuple<bool, string>(true, string.Empty);
+                }
+            }
+        }
+
+        private static Tuple<bool, string> DecimalValidator(decimal wage)
+        {
+            if (isDefaultRules == true)
+            {
+                if (wage < 300)
+                {
+                    return new Tuple<bool, string>(false, "wage is too small");
+                }
+                else
+                {
+                    return new Tuple<bool, string>(true, string.Empty);
+                }
+            }
+            else
+            {
+                if (wage < 150)
+                {
+                    return new Tuple<bool, string>(false, "wage is too small");
+                }
+                else
+                {
+                    return new Tuple<bool, string>(true, string.Empty);
+                }
+            }
+        }
+
+        private static Tuple<bool, string> CharValidator(char symbol)
+        {
+            if (isDefaultRules == true)
+            {
+                if (symbol < '0' || symbol > '9')
+                {
+                    return new Tuple<bool, string>(false, "this is not a numeral");
+                }
+                else
+                {
+                    return new Tuple<bool, string>(true, string.Empty);
+                }
+            }
+            else
+            {
+                if (symbol < '0' || symbol > '9' || symbol == '4')
+                {
+                    return new Tuple<bool, string>(false, "this is not a numeral or this is 4");
+                }
+                else
+                {
+                    return new Tuple<bool, string>(true, string.Empty);
+                }
+            }
+        }
+
+        private static Tuple<bool, string> ShortValidator(short height)
+        {
+            if (isDefaultRules == true)
+            {
+                if (height < 120 || height > 250)
+                {
+                    return new Tuple<bool, string>(false, "height must be between 120 and 250");
+                }
+                else
+                {
+                    return new Tuple<bool, string>(true, string.Empty);
+                }
+            }
+            else
+            {
+                if (height < 135 || height > 250)
+                {
+                    return new Tuple<bool, string>(false, "height must be between 135 and 250");
+                }
+                else
+                {
+                    return new Tuple<bool, string>(true, string.Empty);
+                }
+            }
+        }
+
+        private static T ReadInput<T>(Func<string, Tuple<bool, string, T>> converter, Func<T, Tuple<bool, string>> validator)
+        {
+            do
+            {
+                T value;
+
+                var input = Console.ReadLine();
+                var conversionResult = converter(input);
+
+                if (!conversionResult.Item1)
+                {
+                    Console.WriteLine($"Conversion failed: {conversionResult.Item2}. Please, correct your input.");
+                    continue;
+                }
+
+                value = conversionResult.Item3;
+
+                var validationResult = validator(value);
+                if (!validationResult.Item1)
+                {
+                    Console.WriteLine($"Validation failed: {validationResult.Item2}. Please, correct your input.");
+                    continue;
+                }
+
+                return value;
+            }
+            while (true);
         }
     }
 }

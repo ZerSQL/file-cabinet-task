@@ -29,7 +29,7 @@ namespace FileCabinetApp
                 newRecord.LastName.Length < 2 || newRecord.LastName.Length > 15 || newRecord.LastName.Contains(' ', StringComparison.CurrentCulture) ||
                 newRecord.DateOfBirth > DateTime.Now || newRecord.DateOfBirth < new DateTime(1900, 1, 1) ||
                 newRecord.Wage < 150 ||
-                newRecord.FavouriteNumeral < '0' || newRecord.FavouriteNumeral > '9' ||
+                newRecord.FavouriteNumeral < '0' || newRecord.FavouriteNumeral > '9' || newRecord.FavouriteNumeral == '4' ||
                 newRecord.Height < 135 || newRecord.Height > 250)
             {
                 throw new ArgumentException("Error input");
