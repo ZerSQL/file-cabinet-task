@@ -38,7 +38,9 @@ namespace FileCabinetApp
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
-        private static FileCabinetCustomService fileCabinetService = new FileCabinetCustomService();
+        private static FileCabinetCustomService fileCabinetCustomService = new FileCabinetCustomService();
+        private static FileCabinetDefaultService fileCabinetDefaultService = new FileCabinetDefaultService();
+        private static FileCabinetService fileCabinetService = new FileCabinetService();
 
         /// <summary>
         /// Точка входа в программу и вызов функционала в зависимости от введенной команды.
@@ -47,9 +49,19 @@ namespace FileCabinetApp
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
+            if (args == null || ChooseService(args) == false)
+            {
+                fileCabinetService = fileCabinetDefaultService;
+                Console.WriteLine("Using default validation rules.");
+            }
+            else
+            {
+                fileCabinetService = fileCabinetCustomService;
+                Console.WriteLine("Using custom validation rules.");
+            }
+
             Console.WriteLine(Program.HintMessage);
             Console.WriteLine();
-
             do
             {
                 Console.Write("> ");
@@ -76,6 +88,23 @@ namespace FileCabinetApp
                 }
             }
             while (isRunning);
+        }
+
+        private static bool ChooseService(string[] args)
+        {
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (string.Equals(args[i], "--validation-rules=custom", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return true;
+                }
+                else if (string.Equals(args[i], "-v", StringComparison.InvariantCultureIgnoreCase) && args[i + 1] != null && string.Equals(args[i + 1], "custom", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static void PrintMissedCommandInfo(string command)

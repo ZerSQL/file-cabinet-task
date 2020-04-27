@@ -13,8 +13,6 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
-        private readonly DateTime minDate = new DateTime(1950, 1, 1);
-        private readonly DateTime maxDate = DateTime.Now;
 
         /// <summary>
         /// Функция добавления записи в словарь.
