@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace FileCabinetApp
@@ -171,9 +172,9 @@ namespace FileCabinetApp
         /// Получение списка записей.
         /// </summary>
         /// <returns>Список записей.</returns>
-        public FileCabinetRecord[] GetRecords()
+        public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
-            return this.list.ToArray();
+            return this.list.AsReadOnly();
         }
 
         /// <summary>
@@ -181,16 +182,16 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="firstName">Искомое имя.</param>
         /// <returns>Массив найденных записей с именем firstName.</returns>
-        public FileCabinetRecord[] FindByFirstName(string firstName)
+        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
         {
             if (this.firstNameDictionary.TryGetValue(firstName, out List<FileCabinetRecord> keyList))
             {
-                return keyList.ToArray();
+                return keyList.AsReadOnly();
             }
             else
             {
                 Console.WriteLine("empty");
-                return Array.Empty<FileCabinetRecord>();
+                return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>());
             }
         }
 
@@ -199,16 +200,16 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="lastName">Искомая фамилия.</param>
         /// <returns>Массив найденных записей с фамилией lastName.</returns>
-        public FileCabinetRecord[] FindByLastName(string lastName)
+        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
         {
             if (this.lastNameDictionary.TryGetValue(lastName, out List<FileCabinetRecord> keyList))
             {
-                return keyList.ToArray();
+                return keyList.AsReadOnly();
             }
             else
             {
                 Console.WriteLine("empty");
-                return Array.Empty<FileCabinetRecord>();
+                return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>());
             }
         }
 
@@ -217,16 +218,16 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="birthDate">Искомая дата рождения.</param>
         /// <returns>Массив найденных записей с искомой датой рождения.</returns>
-        public FileCabinetRecord[] FindByBirthDate(string birthDate)
+        public ReadOnlyCollection<FileCabinetRecord> FindByBirthDate(string birthDate)
         {
             if (this.dateOfBirthDictionary.TryGetValue(birthDate, out List<FileCabinetRecord> keyList))
             {
-                return keyList.ToArray();
+                return keyList.AsReadOnly();
             }
             else
             {
                 Console.WriteLine("empty");
-                return Array.Empty<FileCabinetRecord>();
+                return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>());
             }
         }
 

@@ -140,7 +140,7 @@ namespace FileCabinetApp
 
         private static void List(string parameters)
         {
-            if (fileCabinetService.GetRecords().Length > 0)
+            if (fileCabinetService.GetRecords().Count > 0)
             {
                 foreach (var t in fileCabinetService.GetRecords())
                 {
