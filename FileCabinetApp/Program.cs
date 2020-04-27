@@ -38,8 +38,6 @@ namespace FileCabinetApp
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
-        private static FileCabinetCustomService fileCabinetCustomService = new FileCabinetCustomService();
-        private static FileCabinetDefaultService fileCabinetDefaultService = new FileCabinetDefaultService();
         private static FileCabinetService fileCabinetService;
 
         /// <summary>
@@ -51,12 +49,12 @@ namespace FileCabinetApp
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
             if (args == null || ChooseService(args) == false)
             {
-                fileCabinetService = fileCabinetDefaultService;
+                fileCabinetService = new FileCabinetService(new DefaultValidator());
                 Console.WriteLine("Using default validation rules.");
             }
             else
             {
-                fileCabinetService = fileCabinetCustomService;
+                fileCabinetService = new FileCabinetService(new CustomValidator());
                 Console.WriteLine("Using custom validation rules.");
             }
 

@@ -26,16 +26,6 @@
             </summary>
             <param name="newRecord">Проверяемая запись.</param>
         </member>
-        <member name="T:FileCabinetApp.FileCabinetCustomService">
-            <summary>
-            Измененная валидация.
-            </summary>
-        </member>
-        <member name="T:FileCabinetApp.FileCabinetDefaultService">
-            <summary>
-            Обычная валидация.
-            </summary>
-        </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
             Класс, представляющий запись.
@@ -101,6 +91,12 @@
             <summary>
             Сервис для работы со списком записей и словарями.
             </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.#ctor(FileCabinetApp.IRecordValidator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetService"/> class.
+            </summary>
+            <param name="validator">Тип валидатора.</param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.AddNoteAtDictionary(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{FileCabinetApp.FileCabinetRecord}},System.String,FileCabinetApp.FileCabinetRecord)">
             <summary>

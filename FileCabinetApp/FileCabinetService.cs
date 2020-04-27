@@ -7,15 +7,19 @@ namespace FileCabinetApp
     /// <summary>
     /// Сервис для работы со списком записей и словарями.
     /// </summary>
-    public abstract class FileCabinetService
+    public class FileCabinetService
     {
-        private IRecordValidator validator;
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+        private IRecordValidator validator;
 
-        protected FileCabinetService(IRecordValidator validator)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileCabinetService"/> class.
+        /// </summary>
+        /// <param name="validator">Тип валидатора.</param>
+        public FileCabinetService(IRecordValidator validator)
         {
             this.validator = validator;
         }
@@ -75,12 +79,6 @@ namespace FileCabinetApp
 
             return record.Id;
         }
-
-        /// <summary>
-        /// Абстрактый метод создания валидатора.
-        /// </summary>
-        /// <returns>Тип валидатора.</returns>
-      //  public abstract IRecordValidator CreateValidator();
 
         /// <summary>
         /// Редактиование данных в словаре.
