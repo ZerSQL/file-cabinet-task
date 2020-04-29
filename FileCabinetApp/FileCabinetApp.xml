@@ -104,6 +104,23 @@
             </summary>
             <param name="records">Массив записей.</param>
         </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordXmlWriter">
+            <summary>
+            Класс для выполнения экспорта списка в xml.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.#ctor(System.Xml.XmlWriter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordXmlWriter"/> class.
+            </summary>
+            <param name="textWriter">StreamWriter.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.Write(FileCabinetApp.FileCabinetRecord[])">
+            <summary>
+            Метод выполняющий запись в xml.
+            </summary>
+            <param name="records">Массив записей.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetService">
             <summary>
             Сервис для работы со списком записей и словарями.
@@ -201,6 +218,12 @@
             Метод записи в csv.
             </summary>
             <param name="streamWriter">StreamWriter.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.SaveToXml(System.Xml.XmlWriter)">
+            <summary>
+            Метод записи в xml.
+            </summary>
+            <param name="xmlWriter">StreamWriter.</param>
         </member>
         <member name="T:FileCabinetApp.IFileCabinetService">
             <summary>

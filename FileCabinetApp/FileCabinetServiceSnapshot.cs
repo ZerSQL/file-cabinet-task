@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Xml;
 
 namespace FileCabinetApp
 {
@@ -36,6 +37,16 @@ namespace FileCabinetApp
         {
             FileCabinetRecordCsvWriter fileCabinetRecordCsvWriter = new FileCabinetRecordCsvWriter(streamWriter);
             fileCabinetRecordCsvWriter.Write(this.records);
+        }
+
+        /// <summary>
+        /// Метод записи в xml.
+        /// </summary>
+        /// <param name="xmlWriter">StreamWriter.</param>
+        public void SaveToXml(XmlWriter xmlWriter)
+        {
+            FileCabinetRecordXmlWriter fileCabinetRecordXmlWriter = new FileCabinetRecordXmlWriter(xmlWriter);
+            fileCabinetRecordXmlWriter.Write(this.records);
         }
     }
 }
