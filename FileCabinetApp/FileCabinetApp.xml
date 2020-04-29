@@ -4,5 +4,292 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.CustomValidator">
+            <summary>
+            Класс, представляющий измененный валидатор.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, выполняющий измененную валидацию.
+            </summary>
+            <param name="newRecord">Проверяемая запись.</param>
+        </member>
+        <member name="T:FileCabinetApp.DefaultValidator">
+            <summary>
+            Класс, представляющий обычный валидатор.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, выполняющий обычную валидацию.
+            </summary>
+            <param name="newRecord">Проверяемая запись.</param>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetRecord">
+            <summary>
+            Класс, представляющий запись.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Id">
+            <summary>
+            Gets or sets id of note.
+            </summary>
+            <value>
+            Порядковый номер записи.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.FirstName">
+            <summary>
+            Gets or sets firstname in note.
+            </summary>
+            <value>
+            Имя сотрудника.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.LastName">
+            <summary>
+            Gets or sets lastname in note.
+            </summary>
+            <value>
+            Фамилия сотрудника.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.DateOfBirth">
+            <summary>
+            Gets or sets Birthday date in note.
+            </summary>
+            <value>
+            Дата рождения сотрудника.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Height">
+            <summary>
+            Gets or sets height in note.
+            </summary>
+            <value>
+            Рост сотрудника.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Wage">
+            <summary>
+            Gets or sets wage in note.
+            </summary>
+            <value>
+            Заработная плата сотрудника.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.FavouriteNumeral">
+            <summary>
+            Gets or sets numeral in note.
+            </summary>
+            <value>
+            Любимое число.
+            </value>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordCsvWriter">
+            <summary>
+            Класс для выполнения экспорта списка в csv.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordCsvWriter.#ctor(System.IO.StreamWriter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordCsvWriter"/> class.
+            </summary>
+            <param name="textWriter">StreamWriter.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordCsvWriter.Write(FileCabinetApp.FileCabinetRecord[])">
+            <summary>
+            Метод выполняющий запись в csv.
+            </summary>
+            <param name="records">Массив записей.</param>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetService">
+            <summary>
+            Сервис для работы со списком записей и словарями.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.#ctor(FileCabinetApp.IRecordValidator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetService"/> class.
+            </summary>
+            <param name="validator">Тип валидатора.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.AddNoteAtDictionary(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{FileCabinetApp.FileCabinetRecord}},System.String,FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Функция добавления записи в словарь.
+            </summary>
+            <param name="dictionary">Сам словарь.</param>
+            <param name="property">Имя свойства для проверки необходимости создания новой пары ключ-значение.</param>
+            <param name="record">Сама запись.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод создания новой записи.
+            </summary>
+            <param name="newRecord">Объект, представляющий запись.</param>
+            <returns>Порядковый номер записи.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.EditNoteAtDictionary(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{FileCabinetApp.FileCabinetRecord}},System.String,System.Int32,FileCabinetApp.FileCabinetRecord,System.String)">
+            <summary>
+            Редактиование данных в словаре.
+            </summary>
+            <param name="dictionary">Словарь.</param>
+            <param name="property">Свойство для проверки необходимости создания нового значения ключ-значение.</param>
+            <param name="id">Номер редактируемой записи.</param>
+            <param name="current">Запись до редактирования.</param>
+            <param name="propName">Название свойства для поиска.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Редактирование записи в списке.
+            </summary>
+            <param name="newRecord">Новые параметры записи.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.GetRecords">
+            <summary>
+            Получение списка записей.
+            </summary>
+            <returns>Список записей.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByFirstName(System.String)">
+            <summary>
+            Поиск по имени.
+            </summary>
+            <param name="firstName">Искомое имя.</param>
+            <returns>Массив найденных записей с именем firstName.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByLastName(System.String)">
+            <summary>
+            Поиск по фамилии.
+            </summary>
+            <param name="lastName">Искомая фамилия.</param>
+            <returns>Массив найденных записей с фамилией lastName.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByBirthDate(System.String)">
+            <summary>
+            Поиск по дате рождения.
+            </summary>
+            <param name="birthDate">Искомая дата рождения.</param>
+            <returns>Массив найденных записей с искомой датой рождения.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.GetStat">
+            <summary>
+            Получение числа записей.
+            </summary>
+            <returns>Число записей.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.MakeSnapshot">
+            <summary>
+            Создание копии состояния.
+            </summary>
+            <returns>Объект представляющий копию.</returns>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetServiceSnapshot">
+            <summary>
+            Класс для сохранения текущего списка для последующего экспорта.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.#ctor(System.Collections.Generic.List{FileCabinetApp.FileCabinetRecord})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetServiceSnapshot"/> class.
+            </summary>
+            <param name="list">Список записей.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.SaveToCsv(System.IO.StreamWriter)">
+            <summary>
+            Метод записи в csv.
+            </summary>
+            <param name="streamWriter">StreamWriter.</param>
+        </member>
+        <member name="T:FileCabinetApp.IFileCabinetService">
+            <summary>
+            Интерфейс представляющий сервис.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод создания записи.
+            </summary>
+            <param name="newRecord">Запись.</param>
+            <returns>Порядковый номер созданной записи.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.EditNoteAtDictionary(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{FileCabinetApp.FileCabinetRecord}},System.String,System.Int32,FileCabinetApp.FileCabinetRecord,System.String)">
+            <summary>
+            Редактиование данных в словаре.
+            </summary>
+            <param name="dictionary">Словарь.</param>
+            <param name="property">Свойство для проверки необходимости создания нового значения ключ-значение.</param>
+            <param name="id">Номер редактируемой записи.</param>
+            <param name="current">Запись до редактирования.</param>
+            <param name="propName">Название свойства для поиска.</param>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.EditRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Редактирование записи в списке.
+            </summary>
+            <param name="newRecord">Новые параметры записи.</param>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.GetRecords">
+            <summary>
+            Получение списка записей.
+            </summary>
+            <returns>Список записей.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByFirstName(System.String)">
+            <summary>
+            Поиск по имени.
+            </summary>
+            <param name="firstName">Искомое имя.</param>
+            <returns>Массив найденных записей с именем firstName.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByLastName(System.String)">
+            <summary>
+            Поиск по фамилии.
+            </summary>
+            <param name="lastName">Искомая фамилия.</param>
+            <returns>Массив найденных записей с фамилией lastName.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByBirthDate(System.String)">
+            <summary>
+            Поиск по дате рождения.
+            </summary>
+            <param name="birthDate">Искомая дата рождения.</param>
+            <returns>Массив найденных записей с искомой датой рождения.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.GetStat">
+            <summary>
+            Получение числа записей.
+            </summary>
+            <returns>Число записей.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.MakeSnapshot">
+            <summary>
+            Создает копию.
+            </summary>
+            <returns>Объект содержащий копию и метод записи.</returns>
+        </member>
+        <member name="T:FileCabinetApp.IRecordValidator">
+            <summary>
+            Интерфейс для валидации записей.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.IRecordValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, выполняющий обычную валидацию.
+            </summary>
+            /// <param name="newRecord">Проверяемая запись.</param>
+        </member>
+        <member name="T:FileCabinetApp.Program">
+            <summary>
+            Класс, содержащий основную информацию о программе.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Program.Main(System.String[])">
+            <summary>
+            Точка входа в программу и вызов функционала в зависимости от введенной команды.
+            </summary>
+            <param name="args">Переменная для передачи параметров при запуске через консоль.</param>
+        </member>
     </members>
 </doc>

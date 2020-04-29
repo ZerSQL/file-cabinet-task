@@ -1,18 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace FileCabinetApp
 {
-    public class FileCabinetService
+    /// <summary>
+    /// Сервис для работы со списком записей и словарями.
+    /// </summary>
+    public class FileCabinetService : IFileCabinetService
     {
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
-        private readonly DateTime minDate = new DateTime(1950, 1, 1);
-        private readonly DateTime maxDate = DateTime.Now;
+        private IRecordValidator validator;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileCabinetService"/> class.
+        /// </summary>
+        /// <param name="validator">Тип валидатора.</param>
+        public FileCabinetService(IRecordValidator validator)
+        {
+            this.validator = validator;
+        }
+
+        /// <summary>
+        /// Функция добавления записи в словарь.
+        /// </summary>
+        /// <param name="dictionary">Сам словарь.</param>
+        /// <param name="property">Имя свойства для проверки необходимости создания новой пары ключ-значение.</param>
+        /// <param name="record">Сама запись.</param>
         public static void AddNoteAtDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string property, FileCabinetRecord record)
         {
             if (dictionary == null)
@@ -30,42 +48,47 @@ namespace FileCabinetApp
             }
         }
 
-        public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, decimal wage, char favouriteNumeral, short height)
+        /// <summary>
+        /// Метод создания новой записи.
+        /// </summary>
+        /// <param name="newRecord">Объект, представляющий запись.</param>
+        /// <returns>Порядковый номер записи.</returns>
+        public int CreateRecord(FileCabinetRecord newRecord)
         {
-            if (firstName == null || lastName == null)
+            if (newRecord == null)
             {
-                throw new ArgumentNullException($"Name cannot be null. Please, try again. First name is {firstName}, last name is {lastName}.");
+                throw new Exception();
             }
 
-            if (firstName.Length < 2 || firstName.Length > 60 || firstName.Contains(' ', StringComparison.CurrentCulture) ||
-                lastName.Length < 2 || lastName.Length > 60 || lastName.Contains(' ', StringComparison.CurrentCulture) ||
-                dateOfBirth > this.maxDate || dateOfBirth < this.minDate ||
-                wage < 300 ||
-                favouriteNumeral < '0' || favouriteNumeral > '9')
-            {
-                throw new ArgumentException("Error input");
-            }
-
+            this.validator.ValidateParameters(newRecord);
             var record = new FileCabinetRecord
             {
                 Id = this.list.Count + 1,
-                FirstName = firstName,
-                LastName = lastName,
-                DateOfBirth = dateOfBirth,
-                Wage = wage,
-                FavouriteNumeral = favouriteNumeral,
-                Height = height,
+                FirstName = newRecord.FirstName,
+                LastName = newRecord.LastName,
+                DateOfBirth = newRecord.DateOfBirth,
+                Wage = newRecord.Wage,
+                FavouriteNumeral = newRecord.FavouriteNumeral,
+                Height = newRecord.Height,
             };
 
-            AddNoteAtDictionary(this.firstNameDictionary, firstName, record);
-            AddNoteAtDictionary(this.lastNameDictionary, lastName, record);
-            AddNoteAtDictionary(this.dateOfBirthDictionary, dateOfBirth.ToShortDateString(), record);
+            AddNoteAtDictionary(this.firstNameDictionary, newRecord.FirstName, record);
+            AddNoteAtDictionary(this.lastNameDictionary, newRecord.LastName, record);
+            AddNoteAtDictionary(this.dateOfBirthDictionary, newRecord.DateOfBirth.ToShortDateString(), record);
 
             this.list.Add(record);
 
             return record.Id;
         }
 
+        /// <summary>
+        /// Редактиование данных в словаре.
+        /// </summary>
+        /// <param name="dictionary">Словарь.</param>
+        /// <param name="property">Свойство для проверки необходимости создания нового значения ключ-значение.</param>
+        /// <param name="id">Номер редактируемой записи.</param>
+        /// <param name="current">Запись до редактирования.</param>
+        /// <param name="propName">Название свойства для поиска.</param>
         public void EditNoteAtDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string property, int id, FileCabinetRecord current, string propName)
         {
             if (dictionary == null)
@@ -111,77 +134,120 @@ namespace FileCabinetApp
             dictionary[propName].Remove(temp);
         }
 
-        public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, decimal wage, char favouriteNumeral, short height)
+        /// <summary>
+        /// Редактирование записи в списке.
+        /// </summary>
+        /// <param name="newRecord">Новые параметры записи.</param>
+        public void EditRecord(FileCabinetRecord newRecord)
         {
-            FileCabinetRecord current = this.list.Find(x => x.Id == id);
+            if (newRecord == null)
+            {
+                throw new Exception();
+            }
+
+            this.validator.ValidateParameters(newRecord);
+            FileCabinetRecord current = this.list.Find(x => x.Id == newRecord.Id);
             if (current == null)
             {
-                throw new ArgumentException($"No element with id = {id}");
+                throw new ArgumentException($"No element with id = {newRecord.Id}");
             }
 
             string prevFirstName = current.FirstName;
             string prevLastName = current.LastName;
             string prevDoB = current.DateOfBirth.ToShortDateString();
-            current.FirstName = firstName;
-            current.LastName = lastName;
-            current.DateOfBirth = dateOfBirth;
-            current.Wage = wage;
-            current.FavouriteNumeral = favouriteNumeral;
-            current.Height = height;
-            this.EditNoteAtDictionary(this.firstNameDictionary, firstName, id, current, prevFirstName);
-            this.EditNoteAtDictionary(this.lastNameDictionary, lastName, id, current, prevLastName);
-            this.EditNoteAtDictionary(this.dateOfBirthDictionary, dateOfBirth.ToShortDateString(), id, current, prevDoB);
+            current.FirstName = newRecord.FirstName;
+            current.LastName = newRecord.LastName;
+            current.DateOfBirth = newRecord.DateOfBirth;
+            current.Wage = newRecord.Wage;
+            current.FavouriteNumeral = newRecord.FavouriteNumeral;
+            current.Height = newRecord.Height;
+            this.EditNoteAtDictionary(this.firstNameDictionary, newRecord.FirstName, newRecord.Id, current, prevFirstName);
+            this.EditNoteAtDictionary(this.lastNameDictionary, newRecord.LastName, newRecord.Id, current, prevLastName);
+            this.EditNoteAtDictionary(this.dateOfBirthDictionary, newRecord.DateOfBirth.ToShortDateString(), newRecord.Id, current, prevDoB);
 
-            Console.WriteLine($"Record #{id} is updated.");
+            Console.WriteLine($"Record #{newRecord.Id} is updated.");
         }
 
-        public FileCabinetRecord[] GetRecords()
+        /// <summary>
+        /// Получение списка записей.
+        /// </summary>
+        /// <returns>Список записей.</returns>
+        public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
-            return this.list.ToArray();
+            return this.list.AsReadOnly();
         }
 
-        public FileCabinetRecord[] FindByFirstName(string firstName)
+        /// <summary>
+        /// Поиск по имени.
+        /// </summary>
+        /// <param name="firstName">Искомое имя.</param>
+        /// <returns>Массив найденных записей с именем firstName.</returns>
+        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
         {
             if (this.firstNameDictionary.TryGetValue(firstName, out List<FileCabinetRecord> keyList))
             {
-                return keyList.ToArray();
+                return keyList.AsReadOnly();
             }
             else
             {
                 Console.WriteLine("empty");
-                return Array.Empty<FileCabinetRecord>();
+                return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>());
             }
         }
 
-        public FileCabinetRecord[] FindByLastName(string lastName)
+        /// <summary>
+        /// Поиск по фамилии.
+        /// </summary>
+        /// <param name="lastName">Искомая фамилия.</param>
+        /// <returns>Массив найденных записей с фамилией lastName.</returns>
+        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
         {
             if (this.lastNameDictionary.TryGetValue(lastName, out List<FileCabinetRecord> keyList))
             {
-                return keyList.ToArray();
+                return keyList.AsReadOnly();
             }
             else
             {
                 Console.WriteLine("empty");
-                return Array.Empty<FileCabinetRecord>();
+                return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>());
             }
         }
 
-        public FileCabinetRecord[] FindByBirthDate(string birthDate)
+        /// <summary>
+        /// Поиск по дате рождения.
+        /// </summary>
+        /// <param name="birthDate">Искомая дата рождения.</param>
+        /// <returns>Массив найденных записей с искомой датой рождения.</returns>
+        public ReadOnlyCollection<FileCabinetRecord> FindByBirthDate(string birthDate)
         {
             if (this.dateOfBirthDictionary.TryGetValue(birthDate, out List<FileCabinetRecord> keyList))
             {
-                return keyList.ToArray();
+                return keyList.AsReadOnly();
             }
             else
             {
                 Console.WriteLine("empty");
-                return Array.Empty<FileCabinetRecord>();
+                return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>());
             }
         }
 
+        /// <summary>
+        /// Получение числа записей.
+        /// </summary>
+        /// <returns>Число записей.</returns>
         public int GetStat()
         {
             return this.list.Count;
+        }
+
+        /// <summary>
+        /// Создание копии состояния.
+        /// </summary>
+        /// <returns>Объект представляющий копию.</returns>
+        public FileCabinetServiceSnapshot MakeSnapshot()
+        {
+            FileCabinetServiceSnapshot snapshot = new FileCabinetServiceSnapshot(this.list);
+            return snapshot;
         }
     }
 }

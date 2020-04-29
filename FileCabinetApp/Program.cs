@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 
 namespace FileCabinetApp
 {
+    /// <summary>
+    /// Класс, содержащий основную информацию о программе.
+    /// </summary>
     public static class Program
     {
         private const string DeveloperName = "Andrei Drabliankou";
@@ -21,6 +25,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("find", Find),
+            new Tuple<string, Action<string>>("export", Export),
             new Tuple<string, Action<string>>("exit", Exit),
         };
 
@@ -32,17 +37,34 @@ namespace FileCabinetApp
             new string[] { "edit", "edit notes", "The 'edit' is to edit notes." },
             new string[] { "create", "create new note", "The 'create' creates new note." },
             new string[] { "find", "find notes", "The 'find' command is to find notes." },
+            new string[] { "export csv", "export notes to csv", "The 'export csv' command is to export notes to csv format." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
-        private static FileCabinetService fileCabinetService = new FileCabinetService();
+        private static bool isDefaultRules = true;
+        private static IFileCabinetService fileCabinetService;
 
+        /// <summary>
+        /// Точка входа в программу и вызов функционала в зависимости от введенной команды.
+        /// </summary>
+        /// <param name="args">Переменная для передачи параметров при запуске через консоль.</param>
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
+            if (args == null || ChooseService(args) == false)
+            {
+                fileCabinetService = new FileCabinetService(new DefaultValidator());
+                Console.WriteLine("Using default validation rules.");
+            }
+            else
+            {
+                isDefaultRules = false;
+                fileCabinetService = new FileCabinetService(new CustomValidator());
+                Console.WriteLine("Using custom validation rules.");
+            }
+
             Console.WriteLine(Program.HintMessage);
             Console.WriteLine();
-
             do
             {
                 Console.Write("> ");
@@ -69,6 +91,23 @@ namespace FileCabinetApp
                 }
             }
             while (isRunning);
+        }
+
+        private static bool ChooseService(string[] args)
+        {
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (string.Equals(args[i], "--validation-rules=custom", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return true;
+                }
+                else if (string.Equals(args[i], "-v", StringComparison.InvariantCultureIgnoreCase) && args[i + 1] != null && string.Equals(args[i + 1], "custom", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static void PrintMissedCommandInfo(string command)
@@ -106,7 +145,7 @@ namespace FileCabinetApp
 
         private static void List(string parameters)
         {
-            if (fileCabinetService.GetRecords().Length > 0)
+            if (fileCabinetService.GetRecords().Count > 0)
             {
                 foreach (var t in fileCabinetService.GetRecords())
                 {
@@ -121,8 +160,9 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            CreateOrEditCommands(out string firstName, out string lastName, out decimal personalWage, out char favouriteNumeral, out short personalHeight);
-            fileCabinetService.CreateRecord(firstName, lastName, InputBirthDate(), personalWage, favouriteNumeral, personalHeight);
+            CreateOrEditCommands(out string firstName, out string lastName, out DateTime dateOfBirth, out decimal personalWage, out char favouriteNumeral, out short personalHeight);
+            FileCabinetRecord newRecord = new FileCabinetRecord() { FirstName = firstName, LastName = lastName, DateOfBirth = dateOfBirth, Wage = personalWage, FavouriteNumeral = favouriteNumeral, Height = personalHeight };
+            fileCabinetService.CreateRecord(newRecord);
         }
 
         private static void Stat(string parameters)
@@ -193,8 +233,9 @@ namespace FileCabinetApp
                 return;
             }
 
-            CreateOrEditCommands(out string firstName, out string lastName, out decimal personalWage, out char favouriteNumeral, out short personalHeight);
-            fileCabinetService.EditRecord(id, firstName, lastName, InputBirthDate(), personalWage, favouriteNumeral, personalHeight);
+            CreateOrEditCommands(out string firstName, out string lastName, out DateTime dateOfBirth, out decimal personalWage, out char favouriteNumeral, out short personalHeight);
+            FileCabinetRecord record = new FileCabinetRecord() { Id = id, FirstName = firstName, LastName = lastName, DateOfBirth = dateOfBirth, Wage = personalWage, FavouriteNumeral = favouriteNumeral, Height = personalHeight };
+            fileCabinetService.EditRecord(record);
         }
 
         private static void Exit(string parameters)
@@ -203,75 +244,84 @@ namespace FileCabinetApp
             isRunning = false;
         }
 
-        private static void CreateOrEditCommands(out string firstName, out string lastName, out decimal personalWage, out char favouriteNumeral, out short personalHeight)
+        private static void Export(string parameters)
         {
-            bool exact = false;
+            if (parameters.Split(' ').Length < 2)
+            {
+                Console.WriteLine("Type type and path to export file.");
+                return;
+            }
+
+            string[] values = parameters.Split(' ', 2);
+            string pathDirectory = string.Empty;
+            if (values[0] == "csv")
+            {
+                if (values[1].Contains('\\', StringComparison.InvariantCulture) && !values[1].EndsWith("/", StringComparison.InvariantCulture))
+                {
+                    pathDirectory = values[1].Substring(0, values[1].LastIndexOf("\\", StringComparison.InvariantCulture));
+                }
+
+                if (Directory.Exists(pathDirectory) || Path.GetExtension(values[1]) == ".csv")
+                {
+                    if (File.Exists(values[1]))
+                    {
+                        Console.WriteLine($"File is exist - rewrite {values[1]}? [y/n]");
+                    M:
+                        switch (Console.ReadLine())
+                        {
+                            case "y":
+                                using (StreamWriter writer = new StreamWriter(values[1]))
+                                {
+                                    Program.fileCabinetService.MakeSnapshot().SaveToCsv(writer);
+                                    Console.WriteLine($"All records are exported to file {values[1]}");
+                                }
+
+                                break;
+                            case "n":
+                                break;
+                            default:
+                                Console.WriteLine("Type 'y' or 'n' to continue.");
+                                goto M;
+                        }
+                    }
+                    else
+                    {
+                        using (StreamWriter writer = new StreamWriter(values[1]))
+                        {
+                            Program.fileCabinetService.MakeSnapshot().SaveToCsv(writer);
+                            Console.WriteLine($"All records are exported to file {values[1]}");
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Directory not exists");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Error comand. There is only 'export csv' and 'export xml' available commands.");
+            }
+        }
+
+        private static void CreateOrEditCommands(out string firstName, out string lastName, out DateTime dateOfBirth, out decimal personalWage, out char favouriteNumeral, out short personalHeight)
+        {
             personalWage = 0;
             personalHeight = 0;
             favouriteNumeral = ' ';
             firstName = string.Empty;
             lastName = string.Empty;
-
-            while (!exact)
-            {
-                exact = true;
-                Console.WriteLine("Input first name");
-                firstName = Console.ReadLine();
-                if (firstName.Length < 2 || firstName.Length > 60 || firstName.Contains(' ', StringComparison.CurrentCulture))
-                {
-                    exact = false;
-                }
-            }
-
-            exact = false;
-            while (!exact)
-            {
-                exact = true;
-                Console.WriteLine("Input last name");
-                lastName = Console.ReadLine();
-                if (lastName.Length < 2 || lastName.Length > 60 || lastName.Contains(' ', StringComparison.CurrentCulture))
-                {
-                    exact = false;
-                }
-            }
-
-            exact = false;
-            while (!exact)
-            {
-                Console.WriteLine("Input Wage");
-                exact = decimal.TryParse(Console.ReadLine(), out decimal wage);
-                personalWage = wage;
-                if (wage < 300)
-                {
-                    exact = false;
-                }
-            }
-
-            exact = false;
-            while (!exact)
-            {
-                Console.WriteLine("Input Height");
-                exact = short.TryParse(Console.ReadLine(), out short height);
-                personalHeight = height;
-
-                if (height < 120 || height > 250)
-                {
-                    exact = false;
-                }
-            }
-
-            exact = false;
-            while (!exact)
-            {
-                Console.WriteLine("Input favouriteNumeral");
-                exact = char.TryParse(Console.ReadLine(), out char number);
-                favouriteNumeral = number;
-
-                if (favouriteNumeral < '0' || favouriteNumeral > '9')
-                {
-                    exact = false;
-                }
-            }
+            Console.WriteLine("Input Firstname");
+            firstName = ReadInput(StringConventer, StringValidator);
+            Console.WriteLine("Input Lastname");
+            lastName = ReadInput(StringConventer, StringValidator);
+            dateOfBirth = InputBirthDate();
+            Console.WriteLine("Input wage");
+            personalWage = ReadInput(DecimalConventer, DecimalValidator);
+            Console.WriteLine("Input height");
+            personalHeight = ReadInput(ShortConventer, ShortValidator);
+            Console.WriteLine("Input favourite numeral");
+            favouriteNumeral = ReadInput(CharConventer, CharValidator);
         }
 
         private static DateTime InputBirthDate()
@@ -287,6 +337,187 @@ namespace FileCabinetApp
             while (!DateTime.TryParseExact(input, "dd.MM.yyyy", null, DateTimeStyles.None, out dob) || (dob > DateTime.Now || dob < new DateTime(1950, 1, 1)));
 
             return dob;
+        }
+
+        private static Tuple<bool, string, string> StringConventer(string str = "")
+        {
+            if (str == null)
+            {
+                return new Tuple<bool, string, string>(false, "string is empty", string.Empty);
+            }
+            else
+            {
+                return new Tuple<bool, string, string>(true, string.Empty, str);
+            }
+        }
+
+        private static Tuple<bool, string, decimal> DecimalConventer(string str = "")
+        {
+            if (decimal.TryParse(str, out decimal wage))
+            {
+                return new Tuple<bool, string, decimal>(true, string.Empty, wage);
+            }
+            else
+            {
+                return new Tuple<bool, string, decimal>(false, "This is not a number", 0);
+            }
+        }
+
+        private static Tuple<bool, string, char> CharConventer(string symbol)
+        {
+            if (char.TryParse(symbol, out char number))
+            {
+                return new Tuple<bool, string, char>(true, string.Empty, number);
+            }
+            else
+            {
+                return new Tuple<bool, string, char>(false, "this is not a char", ' ');
+            }
+        }
+
+        private static Tuple<bool, string, short> ShortConventer(string height)
+        {
+            if (short.TryParse(height, out short personalHeight))
+            {
+                return new Tuple<bool, string, short>(true, string.Empty, personalHeight);
+            }
+            else
+            {
+                return new Tuple<bool, string, short>(false, "cannot cast to a short,", 0);
+            }
+        }
+
+        private static Tuple<bool, string> StringValidator(string str = "")
+        {
+            if (isDefaultRules == true)
+            {
+                if (str.Length < 2 || str.Length > 60 || str.Contains(' ', StringComparison.CurrentCulture))
+                {
+                    return new Tuple<bool, string>(false, "string is too short or too long");
+                }
+                else
+                {
+                    return new Tuple<bool, string>(true, string.Empty);
+                }
+            }
+            else
+            {
+                if (str.Length < 2 || str.Length > 15 || str.Contains(' ', StringComparison.CurrentCulture))
+                {
+                    return new Tuple<bool, string>(false, "string is too short or too long");
+                }
+                else
+                {
+                    return new Tuple<bool, string>(true, string.Empty);
+                }
+            }
+        }
+
+        private static Tuple<bool, string> DecimalValidator(decimal wage)
+        {
+            if (isDefaultRules == true)
+            {
+                if (wage < 300)
+                {
+                    return new Tuple<bool, string>(false, "wage is too small");
+                }
+                else
+                {
+                    return new Tuple<bool, string>(true, string.Empty);
+                }
+            }
+            else
+            {
+                if (wage < 150)
+                {
+                    return new Tuple<bool, string>(false, "wage is too small");
+                }
+                else
+                {
+                    return new Tuple<bool, string>(true, string.Empty);
+                }
+            }
+        }
+
+        private static Tuple<bool, string> CharValidator(char symbol)
+        {
+            if (isDefaultRules == true)
+            {
+                if (symbol < '0' || symbol > '9')
+                {
+                    return new Tuple<bool, string>(false, "this is not a numeral");
+                }
+                else
+                {
+                    return new Tuple<bool, string>(true, string.Empty);
+                }
+            }
+            else
+            {
+                if (symbol < '0' || symbol > '9' || symbol == '4')
+                {
+                    return new Tuple<bool, string>(false, "this is not a numeral or this is 4");
+                }
+                else
+                {
+                    return new Tuple<bool, string>(true, string.Empty);
+                }
+            }
+        }
+
+        private static Tuple<bool, string> ShortValidator(short height)
+        {
+            if (isDefaultRules == true)
+            {
+                if (height < 120 || height > 250)
+                {
+                    return new Tuple<bool, string>(false, "height must be between 120 and 250");
+                }
+                else
+                {
+                    return new Tuple<bool, string>(true, string.Empty);
+                }
+            }
+            else
+            {
+                if (height < 135 || height > 250)
+                {
+                    return new Tuple<bool, string>(false, "height must be between 135 and 250");
+                }
+                else
+                {
+                    return new Tuple<bool, string>(true, string.Empty);
+                }
+            }
+        }
+
+        private static T ReadInput<T>(Func<string, Tuple<bool, string, T>> converter, Func<T, Tuple<bool, string>> validator)
+        {
+            do
+            {
+                T value;
+
+                var input = Console.ReadLine();
+                var conversionResult = converter(input);
+
+                if (!conversionResult.Item1)
+                {
+                    Console.WriteLine($"Conversion failed: {conversionResult.Item2}. Please, correct your input.");
+                    continue;
+                }
+
+                value = conversionResult.Item3;
+
+                var validationResult = validator(value);
+                if (!validationResult.Item1)
+                {
+                    Console.WriteLine($"Validation failed: {validationResult.Item2}. Please, correct your input.");
+                    continue;
+                }
+
+                return value;
+            }
+            while (true);
         }
     }
 }
