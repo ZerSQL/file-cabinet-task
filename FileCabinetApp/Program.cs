@@ -54,13 +54,13 @@ namespace FileCabinetApp
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
             if (args == null || ChooseService(args) == false)
             {
-                fileCabinetService = new FileCabinetService(new DefaultValidator());
+                fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
                 Console.WriteLine("Using default validation rules.");
             }
             else
             {
                 isDefaultRules = false;
-                fileCabinetService = new FileCabinetService(new CustomValidator());
+                fileCabinetService = new FileCabinetMemoryService(new CustomValidator());
                 Console.WriteLine("Using custom validation rules.");
             }
 
