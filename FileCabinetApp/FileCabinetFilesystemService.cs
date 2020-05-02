@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Text;
 
 namespace FileCabinetApp
@@ -10,6 +11,17 @@ namespace FileCabinetApp
     /// </summary>
     public class FileCabinetFilesystemService : IFileCabinetService
     {
+        private FileStream fileStream;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileCabinetFilesystemService"/> class.
+        /// </summary>
+        /// <param name="fileStream">Filestream.</param>
+        public FileCabinetFilesystemService(FileStream fileStream)
+        {
+            this.fileStream = fileStream;
+        }
+
         /// <summary>
         /// Создание записи.
         /// </summary>

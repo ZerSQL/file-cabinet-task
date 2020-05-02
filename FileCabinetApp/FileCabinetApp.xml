@@ -31,6 +31,12 @@
             Класс для создания файлов данных.
             </summary>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.#ctor(System.IO.FileStream)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetFilesystemService"/> class.
+            </summary>
+            <param name="fileStream">Filestream.</param>
+        </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
             <summary>
             Создание записи.

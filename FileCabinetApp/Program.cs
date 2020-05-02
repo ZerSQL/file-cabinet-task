@@ -52,16 +52,13 @@ namespace FileCabinetApp
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
-            if (args == null || ChooseService(args) == false)
+            if (args == null)
             {
                 fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
-                Console.WriteLine("Using default validation rules.");
             }
             else
             {
-                isDefaultRules = false;
-                fileCabinetService = new FileCabinetMemoryService(new CustomValidator());
-                Console.WriteLine("Using custom validation rules.");
+                fileCabinetService = ChooseFileSystem(args);
             }
 
             Console.WriteLine(Program.HintMessage);
@@ -94,21 +91,41 @@ namespace FileCabinetApp
             while (isRunning);
         }
 
-        private static bool ChooseService(string[] args)
+        private static IFileCabinetService ChooseFileSystem(string[] args)
+        {
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (string.Equals(args[i], "--storage=file", StringComparison.InvariantCultureIgnoreCase) ||
+                    (string.Equals(args[i], "-s", StringComparison.InvariantCultureIgnoreCase) && args[i + 1] != null && string.Equals(args[i + 1], "file", StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    Console.WriteLine("Using filesystem service.");
+                    FileStream fstream = new FileStream("cabinet-records.db", FileMode.OpenOrCreate);
+                    return new FileCabinetFilesystemService(fstream);
+                }
+            }
+
+            Console.WriteLine("Using memory service.");
+            return new FileCabinetMemoryService(ChooseService(args));
+        }
+
+        private static IRecordValidator ChooseService(string[] args)
         {
             for (int i = 0; i < args.Length; i++)
             {
                 if (string.Equals(args[i], "--validation-rules=custom", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    return true;
+                    Console.WriteLine("Using custom validation rules.");
+                    return new CustomValidator();
                 }
                 else if (string.Equals(args[i], "-v", StringComparison.InvariantCultureIgnoreCase) && args[i + 1] != null && string.Equals(args[i + 1], "custom", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    return true;
+                    Console.WriteLine("Using custom validation rules.");
+                    return new CustomValidator();
                 }
             }
 
-            return false;
+            Console.WriteLine("Using default validation rules.");
+            return new DefaultValidator();
         }
 
         private static void PrintMissedCommandInfo(string command)
