@@ -127,7 +127,10 @@ namespace FileCabinetApp
         /// <returns>Число записей.</returns>
         public int GetStat()
         {
-            return (int)this.fileStream.Length / 278;
+            using (FileStream fs = new FileStream(this.fileStream.Name, FileMode.Open, FileAccess.Read))
+            {
+                return (int)fs.Length / 278;
+            }
         }
 
         /// <summary>
