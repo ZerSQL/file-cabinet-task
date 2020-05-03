@@ -127,7 +127,7 @@ namespace FileCabinetApp
         /// <returns>Число записей.</returns>
         public int GetStat()
         {
-            throw new NotImplementedException();
+            return (int)this.fileStream.Length / 278;
         }
 
         /// <summary>
