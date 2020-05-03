@@ -12,7 +12,8 @@ namespace FileCabinetApp
     /// </summary>
     public class FileCabinetFilesystemService : IFileCabinetService
     {
-        private const int Size = sizeof(short) + sizeof(int) + 120 + 120 + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(decimal) + sizeof(short) + sizeof(char);
+        private const int NameLength = 120;
+        private const int Size = sizeof(short) + sizeof(int) + NameLength + NameLength + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(decimal) + sizeof(short) + sizeof(char);
         private readonly FileStream fileStream;
 
         /// <summary>
@@ -38,6 +39,7 @@ namespace FileCabinetApp
                     throw new Exception();
                 }
 
+                newRecord.Id = ((int)fs.Length / 278) + 1;
                 var b1 = this.RecordToBytes(newRecord);
                 fs.Write(b1);
                 fs.Flush();
@@ -104,7 +106,19 @@ namespace FileCabinetApp
         /// <returns>Список записей.</returns>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
-            throw new NotImplementedException();
+            using (FileStream fs = new FileStream(this.fileStream.Name, FileMode.Open, FileAccess.Read))
+            {
+                List<FileCabinetRecord> records = new List<FileCabinetRecord>();
+                var recordBuffer = new byte[Size];
+                for (int i = 0; i < fs.Length / 278; i++)
+                {
+                    fs.Read(recordBuffer, 0, Size);
+                    var u1 = this.BytesToRecord(recordBuffer);
+                    records.Add(u1);
+                }
+
+                return new ReadOnlyCollection<FileCabinetRecord>(records);
+            }
         }
 
         /// <summary>
@@ -127,7 +141,7 @@ namespace FileCabinetApp
 
         private byte[] RecordToBytes(FileCabinetRecord newRecord)
         {
-            char reserved = ' ';
+            short reserved = 0;
             if (newRecord == null)
             {
                 throw new ArgumentNullException(nameof(newRecord));
@@ -142,10 +156,10 @@ namespace FileCabinetApp
 
                 var firstNameBytes = Encoding.ASCII.GetBytes(newRecord.FirstName);
                 var lastNameBytes = Encoding.ASCII.GetBytes(newRecord.LastName);
-                var nameBuffer = new byte[120];
-                nameBuffer = firstNameBytes;
+                var nameBuffer = new byte[NameLength];
+                Array.Copy(firstNameBytes, nameBuffer, firstNameBytes.Length);
                 binaryWriter.Write(nameBuffer, 0, nameBuffer.Length);
-                nameBuffer = lastNameBytes;
+                Array.Copy(lastNameBytes, nameBuffer, lastNameBytes.Length);
                 binaryWriter.Write(nameBuffer, 0, nameBuffer.Length);
                 binaryWriter.Write(newRecord.DateOfBirth.Year);
                 binaryWriter.Write(newRecord.DateOfBirth.Month);
@@ -156,6 +170,36 @@ namespace FileCabinetApp
             }
 
             return bytes;
+        }
+
+        private FileCabinetRecord BytesToRecord(byte[] bytes)
+        {
+            if (bytes == null)
+            {
+                throw new ArgumentNullException(nameof(bytes));
+            }
+
+            var record = new FileCabinetRecord();
+            using (var memoryStream = new MemoryStream(bytes))
+            using (var binaryReader = new BinaryReader(memoryStream))
+            {
+                binaryReader.ReadInt16();
+                record.Id = binaryReader.ReadInt32();
+                var nameBuffer = binaryReader.ReadBytes(NameLength);
+                record.FirstName = Encoding.ASCII.GetString(nameBuffer, 0, nameBuffer.Length).TrimEnd('\0');
+                nameBuffer = binaryReader.ReadBytes(NameLength);
+                record.LastName = Encoding.ASCII.GetString(nameBuffer, 0, nameBuffer.Length).TrimEnd('\0');
+                int year = binaryReader.ReadInt32();
+                int month = binaryReader.ReadInt32();
+                int day = binaryReader.ReadInt32();
+                DateTime dateTime = new DateTime(year, month, day);
+                record.DateOfBirth = dateTime;
+                record.Wage = binaryReader.ReadDecimal();
+                record.Height = binaryReader.ReadInt16();
+                record.FavouriteNumeral = binaryReader.ReadChar();
+            }
+
+            return record;
         }
     }
 }
