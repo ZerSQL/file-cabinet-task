@@ -99,8 +99,10 @@ namespace FileCabinetApp
                     (string.Equals(args[i], "-s", StringComparison.InvariantCultureIgnoreCase) && args[i + 1] != null && string.Equals(args[i + 1], "file", StringComparison.InvariantCultureIgnoreCase)))
                 {
                     Console.WriteLine("Using filesystem service.");
-                    FileStream fstream = new FileStream("cabinet-records.db", FileMode.OpenOrCreate);
-                    return new FileCabinetFilesystemService(fstream);
+                    using (FileStream ftream = new FileStream("cabinet-records.db", FileMode.Append))
+                    {
+                        return new FileCabinetFilesystemService(ftream);
+                    }
                 }
             }
 

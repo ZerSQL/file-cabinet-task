@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -11,7 +12,8 @@ namespace FileCabinetApp
     /// </summary>
     public class FileCabinetFilesystemService : IFileCabinetService
     {
-        private FileStream fileStream;
+        private const int Size = sizeof(short) + sizeof(int) + 120 + 120 + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(decimal) + sizeof(short) + sizeof(char);
+        private readonly FileStream fileStream;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetFilesystemService"/> class.
@@ -29,7 +31,19 @@ namespace FileCabinetApp
         /// <returns>Номер записи.</returns>
         public int CreateRecord(FileCabinetRecord newRecord)
         {
-            throw new NotImplementedException();
+            using (FileStream fs = new FileStream(this.fileStream.Name, FileMode.Append))
+            {
+                if (newRecord == null)
+                {
+                    throw new Exception();
+                }
+
+                var b1 = this.RecordToBytes(newRecord);
+                fs.Write(b1);
+                fs.Flush();
+
+                return newRecord.Id + 1;
+            }
         }
 
         /// <summary>
@@ -109,6 +123,39 @@ namespace FileCabinetApp
         public FileCabinetServiceSnapshot MakeSnapshot()
         {
             throw new NotImplementedException();
+        }
+
+        private byte[] RecordToBytes(FileCabinetRecord newRecord)
+        {
+            char reserved = ' ';
+            if (newRecord == null)
+            {
+                throw new ArgumentNullException(nameof(newRecord));
+            }
+
+            byte[] bytes = new byte[Size];
+            using (var memoryStream = new MemoryStream(bytes))
+            using (var binaryWriter = new BinaryWriter(memoryStream))
+            {
+                binaryWriter.Write(reserved);
+                binaryWriter.Write(newRecord.Id);
+
+                var firstNameBytes = Encoding.ASCII.GetBytes(newRecord.FirstName);
+                var lastNameBytes = Encoding.ASCII.GetBytes(newRecord.LastName);
+                var nameBuffer = new byte[120];
+                nameBuffer = firstNameBytes;
+                binaryWriter.Write(nameBuffer, 0, nameBuffer.Length);
+                nameBuffer = lastNameBytes;
+                binaryWriter.Write(nameBuffer, 0, nameBuffer.Length);
+                binaryWriter.Write(newRecord.DateOfBirth.Year);
+                binaryWriter.Write(newRecord.DateOfBirth.Month);
+                binaryWriter.Write(newRecord.DateOfBirth.Day);
+                binaryWriter.Write(newRecord.Wage);
+                binaryWriter.Write(newRecord.Height);
+                binaryWriter.Write(newRecord.FavouriteNumeral);
+            }
+
+            return bytes;
         }
     }
 }
