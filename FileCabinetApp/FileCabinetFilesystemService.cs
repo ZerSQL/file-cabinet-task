@@ -100,7 +100,22 @@ namespace FileCabinetApp
         /// <returns>Массив найденных записей с искомой датой рождения.</returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByBirthDate(string birthDate)
         {
-            throw new NotImplementedException();
+            using (FileStream fs = new FileStream(this.fileStream.Name, FileMode.Open, FileAccess.Read))
+            {
+                List<FileCabinetRecord> records = new List<FileCabinetRecord>();
+                var recordBuffer = new byte[Size];
+                for (int i = 0; i < fs.Length / 278; i++)
+                {
+                    fs.Read(recordBuffer, 0, Size);
+                    var u1 = this.BytesToRecord(recordBuffer);
+                    if (u1.DateOfBirth.ToShortDateString() == birthDate)
+                    {
+                        records.Add(u1);
+                    }
+                }
+
+                return new ReadOnlyCollection<FileCabinetRecord>(records);
+            }
         }
 
         /// <summary>
@@ -110,7 +125,22 @@ namespace FileCabinetApp
         /// <returns>Массив найденных записей с именем firstName.</returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
         {
-            throw new NotImplementedException();
+            using (FileStream fs = new FileStream(this.fileStream.Name, FileMode.Open, FileAccess.Read))
+            {
+                List<FileCabinetRecord> records = new List<FileCabinetRecord>();
+                var recordBuffer = new byte[Size];
+                for (int i = 0; i < fs.Length / 278; i++)
+                {
+                    fs.Read(recordBuffer, 0, Size);
+                    var u1 = this.BytesToRecord(recordBuffer);
+                    if (u1.FirstName.Equals(firstName, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        records.Add(u1);
+                    }
+                }
+
+                return new ReadOnlyCollection<FileCabinetRecord>(records);
+            }
         }
 
         /// <summary>
@@ -120,7 +150,22 @@ namespace FileCabinetApp
         /// <returns>Массив найденных записей с фамилией lastName.</returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
         {
-            throw new NotImplementedException();
+            using (FileStream fs = new FileStream(this.fileStream.Name, FileMode.Open, FileAccess.Read))
+            {
+                List<FileCabinetRecord> records = new List<FileCabinetRecord>();
+                var recordBuffer = new byte[Size];
+                for (int i = 0; i < fs.Length / 278; i++)
+                {
+                    fs.Read(recordBuffer, 0, Size);
+                    var u1 = this.BytesToRecord(recordBuffer);
+                    if (u1.LastName.Equals(lastName, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        records.Add(u1);
+                    }
+                }
+
+                return new ReadOnlyCollection<FileCabinetRecord>(records);
+            }
         }
 
         /// <summary>
