@@ -39,7 +39,7 @@ namespace FileCabinetApp
                     throw new Exception();
                 }
 
-                newRecord.Id = ((int)fs.Length / 278) + 1;
+                newRecord.Id = ((int)fs.Length / Size) + 1;
                 var b1 = this.RecordToBytes(newRecord);
                 fs.Write(b1);
                 fs.Flush();
@@ -67,7 +67,30 @@ namespace FileCabinetApp
         /// <param name="newRecord">Новые параметры записи.</param>
         public void EditRecord(FileCabinetRecord newRecord)
         {
-            throw new NotImplementedException();
+            using (FileStream fs = new FileStream(this.fileStream.Name, FileMode.Open, FileAccess.ReadWrite))
+            {
+                if (newRecord == null)
+                {
+                    throw new Exception();
+                }
+
+                FileCabinetRecord u1 = null;
+                var recordBuffer = new byte[Size];
+                for (int i = 0; i < fs.Length / 278; i++)
+                {
+                    fs.Read(recordBuffer, 0, Size);
+                    u1 = this.BytesToRecord(recordBuffer);
+                    if (u1.Id == newRecord.Id)
+                    {
+                        u1 = newRecord;
+                        break;
+                    }
+                }
+
+                byte[] recordBytes = this.RecordToBytes(u1);
+                fs.Seek(-Size, SeekOrigin.Current);
+                fs.Write(recordBytes);
+            }
         }
 
         /// <summary>
@@ -129,7 +152,7 @@ namespace FileCabinetApp
         {
             using (FileStream fs = new FileStream(this.fileStream.Name, FileMode.Open, FileAccess.Read))
             {
-                return (int)fs.Length / 278;
+                return (int)fs.Length / Size;
             }
         }
 
