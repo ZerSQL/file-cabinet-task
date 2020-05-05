@@ -38,7 +38,7 @@ namespace FileCabinetApp
             new string[] { "edit", "edit notes", "The 'edit' is to edit notes." },
             new string[] { "create", "create new note", "The 'create' creates new note." },
             new string[] { "find", "find notes", "The 'find' command is to find notes." },
-            new string[] { "export csv", "export notes to csv", "The 'export csv' command is to export notes to csv format." },
+            new string[] { "export", "export notes to csv or xml", "The 'export csv' command is to export notes to csv format." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
