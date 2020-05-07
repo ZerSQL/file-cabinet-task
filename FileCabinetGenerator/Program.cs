@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using FileCabinetApp;
 
@@ -14,8 +15,10 @@ namespace FileCabinetGenerator
             DateTime currentTime = DateTime.Now;
             string outputType = string.Empty;
             string path = string.Empty;
+            string pathDirectory = string.Empty;
             int recordsAmount = 0;
             int startId = 0;
+
             for (int i = 0; i < args.Length; i++)
             {
                 if (args[i].Contains("--output-type=", StringComparison.InvariantCultureIgnoreCase))
@@ -51,9 +54,75 @@ namespace FileCabinetGenerator
                     Int32.TryParse(args[i + 1], out startId);
                 }
             }
-
             records = GenerateRecords(startId, recordsAmount);
-            Console.WriteLine($"{recordsAmount} records were written to {path}.");
+
+            if (path.Contains('\\', StringComparison.InvariantCulture) && !path.EndsWith("/", StringComparison.InvariantCulture))
+            {
+                pathDirectory = path.Substring(0, path.LastIndexOf("\\", StringComparison.InvariantCulture));
+            }
+            if (outputType.Equals("csv",StringComparison.InvariantCultureIgnoreCase))
+            {
+                if (Directory.Exists(pathDirectory))
+                {
+                    if (File.Exists(path))
+                    {
+                        Console.WriteLine($"File is exist - rewrite {path}? [y/n]");
+                    M:
+                        switch (Console.ReadLine())
+                        {
+                            case "y":
+                                using (StreamWriter writer = new StreamWriter(path))
+                                {
+                                    writer.WriteLine("Id, First Name, Last Name, Date of Birth, Wage, Height, Favourite numeral");
+                                    if (records != null)
+                                    {
+                                        foreach (FileCabinetRecord record in records)
+                                        {
+                                            writer.Write($"{record.Id},{record.FirstName},{record.LastName},{record.DateOfBirth.ToShortDateString()},{record.Wage},{record.Height},{record.FavouriteNumeral}");
+                                            writer.WriteLine();
+                                        }
+                                    }
+                                    Console.WriteLine($"{recordsAmount} records were written to {path}.");
+                                }
+                                break;
+                            case "n":
+                                break;
+                            default:
+                                Console.WriteLine("Type 'y' or 'n' to continue.");
+                                goto M;
+                        }
+                    }
+                    else
+                    {
+                        using (StreamWriter writer = new StreamWriter(path))
+                        {
+                            writer.WriteLine("Id, First Name, Last Name, Date of Birth, Wage, Height, Favourite numeral");
+                            if (records != null)
+                            {
+                                foreach (FileCabinetRecord record in records)
+                                {
+                                    writer.Write($"{record.Id},{record.FirstName},{record.LastName},{record.DateOfBirth.ToShortDateString()},{record.Wage},{record.Height},{record.FavouriteNumeral}");
+                                    writer.WriteLine();
+                                }
+                            }
+                            Console.WriteLine($"{recordsAmount} records were written to {path}.");
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Directory not exists");
+                }
+            }
+            else if (outputType.Equals("xml", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Console.WriteLine($"{recordsAmount} records were written to {path}.");
+            }
+            else
+            {
+                Console.WriteLine("Record weren't written. Check entered data.");
+            }
+
             // foreach (var t in records)
             // {
             //     Console.WriteLine($"{t.Id},{t.LastName},{t.FirstName},{t.Wage},{t.FavouriteNumeral},{t.DateOfBirth.ToShortDateString()}");
