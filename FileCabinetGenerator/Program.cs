@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Xml.Serialization;
 using FileCabinetApp;
 
 namespace FileCabinetGenerator
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main(string[] arg)
         {
             List<FileCabinetRecord> records = new List<FileCabinetRecord>();
             Random rnd = new Random();
@@ -18,14 +19,14 @@ namespace FileCabinetGenerator
             string pathDirectory = string.Empty;
             int recordsAmount = 0;
             int startId = 0;
-
+            string[] args = {"-t", "xml", "-o", "d:\\records.xml", "-a", "14", "-i", "45" };
             for (int i = 0; i < args.Length; i++)
             {
                 if (args[i].Contains("--output-type=", StringComparison.InvariantCultureIgnoreCase))
                 {
                     outputType = args[i].Substring(14);
                 }
-                else if (args[i].Equals("t", StringComparison.InvariantCultureIgnoreCase))
+                else if (args[i].Equals("-t", StringComparison.InvariantCultureIgnoreCase))
                 {
                     outputType = args[i + 1];
                 }
@@ -33,7 +34,7 @@ namespace FileCabinetGenerator
                 {
                     path = args[i].Substring(9);
                 }
-                else if (args[i].Equals("o", StringComparison.InvariantCultureIgnoreCase))
+                else if (args[i].Equals("-o", StringComparison.InvariantCultureIgnoreCase))
                 {
                     path = args[i + 1];
                 }
@@ -41,7 +42,7 @@ namespace FileCabinetGenerator
                 {
                     Int32.TryParse(args[i].Substring(17), out recordsAmount);
                 }
-                else if (args[i].Equals("a", StringComparison.InvariantCultureIgnoreCase))
+                else if (args[i].Equals("-a", StringComparison.InvariantCultureIgnoreCase))
                 {
                     Int32.TryParse(args[i + 1], out recordsAmount);
                 }
@@ -49,7 +50,7 @@ namespace FileCabinetGenerator
                 {
                     Int32.TryParse(args[i].Substring(11), out startId);
                 }
-                else if (args[i].Equals("i", StringComparison.InvariantCultureIgnoreCase))
+                else if (args[i].Equals("-i", StringComparison.InvariantCultureIgnoreCase))
                 {
                     Int32.TryParse(args[i + 1], out startId);
                 }
@@ -116,17 +117,54 @@ namespace FileCabinetGenerator
             }
             else if (outputType.Equals("xml", StringComparison.InvariantCultureIgnoreCase))
             {
-                Console.WriteLine($"{recordsAmount} records were written to {path}.");
+                if (Directory.Exists(pathDirectory) || Path.GetExtension(path) == ".xml")
+                {
+                    XmlSerializer formatter = new XmlSerializer(typeof(FileCabinetRecord));
+                    if (File.Exists(path))
+                    {
+                        Console.WriteLine($"File is exist - rewrite {path}? [y/n]");
+                    M:
+                        switch (Console.ReadLine())
+                        {
+                            case "y":
+                                using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
+                                {
+                                    foreach (var record in records)
+                                    {
+                                        formatter.Serialize(fs, record);
+                                    }
+                                    Console.WriteLine($"{recordsAmount} records were written to {path}.");
+                                }
+
+                                break;
+                            case "n":
+                                break;
+                            default:
+                                Console.WriteLine("Type 'y' or 'n' to continue.");
+                                goto M;
+                        }
+                    }
+                    else
+                    {
+                        using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
+                        {
+                            foreach (var record in records)
+                            {
+                                formatter.Serialize(fs, record);
+                            }
+                            Console.WriteLine($"{recordsAmount} records were written to {path}.");
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Directory not exists");
+                }
             }
             else
             {
                 Console.WriteLine("Record weren't written. Check entered data.");
             }
-
-            // foreach (var t in records)
-            // {
-            //     Console.WriteLine($"{t.Id},{t.LastName},{t.FirstName},{t.Wage},{t.FavouriteNumeral},{t.DateOfBirth.ToShortDateString()}");
-            // }
         }
 
         private static List<FileCabinetRecord> GenerateRecords(int startId, int recordsAmount)
