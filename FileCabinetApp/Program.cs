@@ -116,11 +116,13 @@ namespace FileCabinetApp
             {
                 if (string.Equals(args[i], "--validation-rules=custom", StringComparison.InvariantCultureIgnoreCase))
                 {
+                    isDefaultRules = false;
                     Console.WriteLine("Using custom validation rules.");
                     return new CustomValidator();
                 }
                 else if (string.Equals(args[i], "-v", StringComparison.InvariantCultureIgnoreCase) && args[i + 1] != null && string.Equals(args[i + 1], "custom", StringComparison.InvariantCultureIgnoreCase))
                 {
+                    isDefaultRules = false;
                     Console.WriteLine("Using custom validation rules.");
                     return new CustomValidator();
                 }
