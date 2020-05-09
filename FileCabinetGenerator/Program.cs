@@ -9,7 +9,7 @@ namespace FileCabinetGenerator
 {
     public class Program
     {
-        public static void Main(string[] arg)
+        public static void Main(string[] args)
         {
             List<FileCabinetRecord> records = new List<FileCabinetRecord>();
             Random rnd = new Random();
@@ -19,7 +19,7 @@ namespace FileCabinetGenerator
             string pathDirectory = string.Empty;
             int recordsAmount = 0;
             int startId = 0;
-            string[] args = {"-t", "xml", "-o", "d:\\records.xml", "-a", "14", "-i", "45" };
+
             for (int i = 0; i < args.Length; i++)
             {
                 if (args[i].Contains("--output-type=", StringComparison.InvariantCultureIgnoreCase))
@@ -61,7 +61,7 @@ namespace FileCabinetGenerator
             {
                 pathDirectory = path.Substring(0, path.LastIndexOf("\\", StringComparison.InvariantCulture));
             }
-            if (outputType.Equals("csv",StringComparison.InvariantCultureIgnoreCase))
+            if (outputType.Equals("csv", StringComparison.InvariantCultureIgnoreCase))
             {
                 if (Directory.Exists(pathDirectory))
                 {

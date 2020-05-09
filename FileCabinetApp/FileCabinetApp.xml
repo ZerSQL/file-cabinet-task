@@ -93,6 +93,12 @@
             </summary>
             <returns>Число записей.</returns>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>
+            Метод производящий добавление в список импортируемых записей.
+            </summary>
+            <param name="snap">Импортированные записи.</param>
+        </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.MakeSnapshot">
             <summary>
             Создание копии состояния.
@@ -180,6 +186,12 @@
             </summary>
             <returns>Объект представляющий копию.</returns>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>
+            Метод производящий добавление в список и словари импортируемых записей.
+            </summary>
+            <param name="snap">Импортированные записи.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
             Класс, представляющий запись.
@@ -241,6 +253,23 @@
             Любимое число.
             </value>
         </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordCsvReader">
+            <summary>
+            Класс производящий считывание Csv.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordCsvReader.#ctor(System.IO.StreamReader)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordCsvReader"/> class.
+            </summary>
+            <param name="reader">Reader.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordCsvReader.ReadAll">
+            <summary>
+            Получение всех импортируемых записей.
+            </summary>
+            <returns>Список импортированных записей.</returns>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecordCsvWriter">
             <summary>
             Класс для выполнения экспорта списка в csv.
@@ -286,6 +315,14 @@
             </summary>
             <param name="list">Список записей.</param>
         </member>
+        <member name="P:FileCabinetApp.FileCabinetServiceSnapshot.Records">
+            <summary>
+            Gets notes from csv.
+            </summary>
+            <value>
+            Notes.
+            </value>
+        </member>
         <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.SaveToCsv(System.IO.StreamWriter)">
             <summary>
             Метод записи в csv.
@@ -297,6 +334,12 @@
             Метод записи в xml.
             </summary>
             <param name="xmlWriter">StreamWriter.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.LoadFromCsv(System.IO.FileStream)">
+            <summary>
+            Метод выгрузки из csv.
+            </summary>
+            <param name="fs">Filestream.</param>
         </member>
         <member name="T:FileCabinetApp.IFileCabinetService">
             <summary>
@@ -364,6 +407,12 @@
             Создает копию.
             </summary>
             <returns>Объект содержащий копию и метод записи.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>
+            Замена и добавление импортированных записей.
+            </summary>
+            <param name="snap">Snap.</param>
         </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>

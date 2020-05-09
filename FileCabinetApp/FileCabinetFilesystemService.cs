@@ -202,6 +202,15 @@ namespace FileCabinetApp
         }
 
         /// <summary>
+        /// Метод производящий добавление в список импортируемых записей.
+        /// </summary>
+        /// <param name="snap">Импортированные записи.</param>
+        public void Restore(FileCabinetServiceSnapshot snap)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Создание копии состояния.
         /// </summary>
         /// <returns>Объект представляющий копию.</returns>

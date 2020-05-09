@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Xml;
@@ -27,6 +28,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("export", Export),
+            new Tuple<string, Action<string>>("import", Import),
             new Tuple<string, Action<string>>("exit", Exit),
         };
 
@@ -39,6 +41,7 @@ namespace FileCabinetApp
             new string[] { "create", "create new note", "The 'create' creates new note." },
             new string[] { "find", "find notes", "The 'find' command is to find notes." },
             new string[] { "export", "export notes to csv or xml", "The 'export csv' command is to export notes to csv format." },
+            new string[] { "import", "import notes from csv or xml", "The 'import csv' command is to import notes from csv format." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
@@ -367,6 +370,36 @@ namespace FileCabinetApp
             else
             {
                 Console.WriteLine("Error comand. There is only 'export csv' and 'export xml' available commands.");
+            }
+        }
+
+        private static void Import(string parameters)
+        {
+            if (parameters.Split(' ').Length < 2)
+            {
+                Console.WriteLine("Type type and path to export file.");
+                return;
+            }
+
+            string[] values = parameters.Split(' ', 2);
+            string pathDirectory = string.Empty;
+            if (values[0].Equals("csv", StringComparison.InvariantCultureIgnoreCase))
+            {
+                if (File.Exists(values[1]))
+                {
+                    using (FileStream fs = new FileStream(values[1], FileMode.Open))
+                    {
+                        List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+                        FileCabinetServiceSnapshot snap = new FileCabinetServiceSnapshot(list);
+                        snap.LoadFromCsv(fs);
+                        fileCabinetService.Restore(snap);
+                        Console.WriteLine($"Notes has been imported from {values[1]}.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("File not exists");
+                }
             }
         }
 

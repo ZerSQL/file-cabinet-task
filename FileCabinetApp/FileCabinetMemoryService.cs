@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 
 namespace FileCabinetApp
@@ -55,15 +56,33 @@ namespace FileCabinetApp
         /// <returns>Порядковый номер записи.</returns>
         public int CreateRecord(FileCabinetRecord newRecord)
         {
+            int newId = 0;
             if (newRecord == null)
             {
                 throw new Exception();
             }
 
             this.validator.ValidateParameters(newRecord);
+
+            if (newRecord.Id == 0)
+            {
+                if (this.list.Count == 0)
+                {
+                    newId = 1;
+                }
+                else
+                {
+                    newId = this.list.Last().Id + 1;
+                }
+            }
+            else
+            {
+                newId = newRecord.Id;
+            }
+
             var record = new FileCabinetRecord
             {
-                Id = this.list.Count + 1,
+                Id = newId,
                 FirstName = newRecord.FirstName,
                 LastName = newRecord.LastName,
                 DateOfBirth = newRecord.DateOfBirth,
@@ -248,6 +267,40 @@ namespace FileCabinetApp
         {
             FileCabinetServiceSnapshot snapshot = new FileCabinetServiceSnapshot(this.list);
             return snapshot;
+        }
+
+        /// <summary>
+        /// Метод производящий добавление в список и словари импортируемых записей.
+        /// </summary>
+        /// <param name="snap">Импортированные записи.</param>
+        public void Restore(FileCabinetServiceSnapshot snap)
+        {
+            if (snap == null)
+            {
+                throw new Exception();
+            }
+
+            foreach (FileCabinetRecord record in snap.Records)
+            {
+                int t;
+                if (this.list.Count == 0)
+                {
+                    t = 0;
+                }
+                else
+                {
+                    t = this.list.Last().Id;
+                }
+
+                if (record.Id <= this.list.Count || record.Id <= t)
+                {
+                    this.EditRecord(record);
+                }
+                else
+                {
+                    this.CreateRecord(record);
+                }
+            }
         }
     }
 }

@@ -71,5 +71,11 @@ namespace FileCabinetApp
         /// </summary>
         /// <returns>Объект содержащий копию и метод записи.</returns>
         FileCabinetServiceSnapshot MakeSnapshot();
+
+        /// <summary>
+        /// Замена и добавление импортированных записей.
+        /// </summary>
+        /// <param name="snap">Snap.</param>
+        void Restore(FileCabinetServiceSnapshot snap);
     }
 }

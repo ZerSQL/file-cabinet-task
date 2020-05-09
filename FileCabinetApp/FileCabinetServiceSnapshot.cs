@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -30,6 +31,14 @@ namespace FileCabinetApp
         }
 
         /// <summary>
+        /// Gets notes from csv.
+        /// </summary>
+        /// <value>
+        /// Notes.
+        /// </value>
+        public ReadOnlyCollection<FileCabinetRecord> Records => Array.AsReadOnly<FileCabinetRecord>(this.records);
+
+        /// <summary>
         /// Метод записи в csv.
         /// </summary>
         /// <param name="streamWriter">StreamWriter.</param>
@@ -47,6 +56,18 @@ namespace FileCabinetApp
         {
             FileCabinetRecordXmlWriter fileCabinetRecordXmlWriter = new FileCabinetRecordXmlWriter(xmlWriter);
             fileCabinetRecordXmlWriter.Write(this.records);
+        }
+
+        /// <summary>
+        /// Метод выгрузки из csv.
+        /// </summary>
+        /// <param name="fs">Filestream.</param>
+        public void LoadFromCsv(FileStream fs)
+        {
+            StreamReader reader = new StreamReader(fs);
+            FileCabinetRecordCsvReader csvReader = new FileCabinetRecordCsvReader(reader);
+            List<FileCabinetRecord> list = new List<FileCabinetRecord>(csvReader.ReadAll());
+            this.records = list.ToArray();
         }
     }
 }
