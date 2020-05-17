@@ -110,6 +110,10 @@ namespace FileCabinetApp
             }
 
             Console.WriteLine("Using memory service.");
+            using (FileStream ftream = new FileStream("cabinet-records.db", FileMode.Append))
+            {
+                return new FileCabinetFilesystemService(ftream);
+            }
             return new FileCabinetMemoryService(ChooseService(args));
         }
 

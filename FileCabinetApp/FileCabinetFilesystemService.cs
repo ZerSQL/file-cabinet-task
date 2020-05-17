@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace FileCabinetApp
@@ -32,14 +33,25 @@ namespace FileCabinetApp
         /// <returns>Номер записи.</returns>
         public int CreateRecord(FileCabinetRecord newRecord)
         {
+            if (newRecord == null)
+            {
+                throw new Exception();
+            }
+
+            if (newRecord.Id == 0)
+            {
+                if (this.GetRecords().Count != 0)
+                {
+                    newRecord.Id = this.GetRecords().Last().Id + 1;
+                }
+                else
+                {
+                    newRecord.Id = 1;
+                }
+            }
+
             using (FileStream fs = new FileStream(this.fileStream.Name, FileMode.Append))
             {
-                if (newRecord == null)
-                {
-                    throw new Exception();
-                }
-
-                newRecord.Id = ((int)fs.Length / Size) + 1;
                 var b1 = this.RecordToBytes(newRecord);
                 fs.Write(b1);
                 fs.Flush();
@@ -207,7 +219,32 @@ namespace FileCabinetApp
         /// <param name="snap">Импортированные записи.</param>
         public void Restore(FileCabinetServiceSnapshot snap)
         {
-            throw new NotImplementedException();
+            if (snap == null)
+            {
+                throw new Exception();
+            }
+
+            foreach (FileCabinetRecord record in snap.Records)
+            {
+                int t;
+                if (this.GetStat() == 0)
+                {
+                    t = 0;
+                }
+                else
+                {
+                    t = this.GetRecords().Last().Id;
+                }
+
+                if (record.Id <= this.GetStat() || record.Id <= t)
+                {
+                    this.EditRecord(record);
+                }
+                else
+                {
+                    this.CreateRecord(record);
+                }
+            }
         }
 
         /// <summary>
