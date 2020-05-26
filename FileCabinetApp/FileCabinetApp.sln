@@ -5,6 +5,11 @@ VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileCabinetApp", "FileCabinetApp.csproj", "{CCC44B1A-4A9D-4EFF-A9A4-E9A614637C59}"
 EndProject
+<<<<<<< HEAD
+=======
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileCabinetGenerator", "..\FileCabinetGenerator\FileCabinetGenerator.csproj", "{6FEBCCDA-8A9A-4B60-808A-BE4762F29306}"
+EndProject
+>>>>>>> step8-add-import
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +20,13 @@ Global
 		{CCC44B1A-4A9D-4EFF-A9A4-E9A614637C59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCC44B1A-4A9D-4EFF-A9A4-E9A614637C59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCC44B1A-4A9D-4EFF-A9A4-E9A614637C59}.Release|Any CPU.Build.0 = Release|Any CPU
+<<<<<<< HEAD
+=======
+		{6FEBCCDA-8A9A-4B60-808A-BE4762F29306}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FEBCCDA-8A9A-4B60-808A-BE4762F29306}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FEBCCDA-8A9A-4B60-808A-BE4762F29306}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FEBCCDA-8A9A-4B60-808A-BE4762F29306}.Release|Any CPU.Build.0 = Release|Any CPU
+>>>>>>> step8-add-import
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
