@@ -19,7 +19,6 @@ namespace FileCabinetGenerator
             string pathDirectory = string.Empty;
             int recordsAmount = 0;
             int startId = 0;
-
             for (int i = 0; i < args.Length; i++)
             {
                 if (args[i].Contains("--output-type=", StringComparison.InvariantCultureIgnoreCase))
@@ -119,7 +118,7 @@ namespace FileCabinetGenerator
             {
                 if (Directory.Exists(pathDirectory) || Path.GetExtension(path) == ".xml")
                 {
-                    XmlSerializer formatter = new XmlSerializer(typeof(FileCabinetRecord));
+                    XmlSerializer formatter = new XmlSerializer(typeof(FileCabinetRecord[]), new XmlRootAttribute("FileCabinetRecords"));
                     if (File.Exists(path))
                     {
                         Console.WriteLine($"File is exist - rewrite {path}? [y/n]");
@@ -129,10 +128,9 @@ namespace FileCabinetGenerator
                             case "y":
                                 using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
                                 {
-                                    foreach (var record in records)
-                                    {
-                                        formatter.Serialize(fs, record);
-                                    }
+                                    FileCabinetRecord[] recs;
+                                    recs = records.ToArray();
+                                    formatter.Serialize(fs, recs);
                                     Console.WriteLine($"{recordsAmount} records were written to {path}.");
                                 }
 
@@ -148,10 +146,9 @@ namespace FileCabinetGenerator
                     {
                         using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
                         {
-                            foreach (var record in records)
-                            {
-                                formatter.Serialize(fs, record);
-                            }
+                            FileCabinetRecord[] recs;
+                            recs = records.ToArray();
+                            formatter.Serialize(fs, recs);
                             Console.WriteLine($"{recordsAmount} records were written to {path}.");
                         }
                     }

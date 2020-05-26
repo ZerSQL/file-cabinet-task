@@ -110,10 +110,6 @@ namespace FileCabinetApp
             }
 
             Console.WriteLine("Using memory service.");
-            using (FileStream ftream = new FileStream("cabinet-records.db", FileMode.Append))
-            {
-                return new FileCabinetFilesystemService(ftream);
-            }
             return new FileCabinetMemoryService(ChooseService(args));
         }
 
@@ -396,6 +392,24 @@ namespace FileCabinetApp
                         List<FileCabinetRecord> list = new List<FileCabinetRecord>();
                         FileCabinetServiceSnapshot snap = new FileCabinetServiceSnapshot(list);
                         snap.LoadFromCsv(fs);
+                        fileCabinetService.Restore(snap);
+                        Console.WriteLine($"Notes has been imported from {values[1]}.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("File not exists");
+                }
+            }
+            else if (values[0].Equals("xml", StringComparison.InvariantCultureIgnoreCase))
+            {
+                if (File.Exists(values[1]))
+                {
+                    using (FileStream fs = new FileStream(values[1], FileMode.Open))
+                    {
+                        List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+                        FileCabinetServiceSnapshot snap = new FileCabinetServiceSnapshot(list);
+                        snap.LoadFromXml(fs);
                         fileCabinetService.Restore(snap);
                         Console.WriteLine($"Notes has been imported from {values[1]}.");
                     }

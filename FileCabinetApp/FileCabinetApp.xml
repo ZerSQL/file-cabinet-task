@@ -287,6 +287,23 @@
             </summary>
             <param name="records">Массив записей.</param>
         </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordXmlReader">
+            <summary>
+            Класс производящий считывание xml.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlReader.#ctor(System.IO.StreamReader)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordXmlReader"/> class.
+            </summary>
+            <param name="reader">Reader.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlReader.ReadAll">
+            <summary>
+            Получение всех импортируемых записей.
+            </summary>
+            <returns>Список импортированных записей.</returns>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecordXmlWriter">
             <summary>
             Класс для выполнения экспорта списка в xml.
@@ -340,6 +357,12 @@
             Метод выгрузки из csv.
             </summary>
             <param name="fs">Filestream.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.LoadFromXml(System.IO.FileStream)">
+            <summary>
+            Метод выгрузки из xml.
+            </summary>
+            <param name="fs">Экзмепляр Filestream.</param>
         </member>
         <member name="T:FileCabinetApp.IFileCabinetService">
             <summary>

@@ -69,5 +69,17 @@ namespace FileCabinetApp
             List<FileCabinetRecord> list = new List<FileCabinetRecord>(csvReader.ReadAll());
             this.records = list.ToArray();
         }
+
+        /// <summary>
+        /// Метод выгрузки из xml.
+        /// </summary>
+        /// <param name="fs">Экзмепляр Filestream.</param>
+        public void LoadFromXml(FileStream fs)
+        {
+            StreamReader reader = new StreamReader(fs);
+            FileCabinetRecordXmlReader xmlReader = new FileCabinetRecordXmlReader(reader);
+            List<FileCabinetRecord> list = new List<FileCabinetRecord>(xmlReader.ReadAll());
+            this.records = list.ToArray();
+        }
     }
 }

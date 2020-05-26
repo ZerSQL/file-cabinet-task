@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace FileCabinetApp
 {
@@ -32,20 +33,8 @@ namespace FileCabinetApp
             {
                 if (records != null)
                 {
-                    this.writer.WriteStartElement("records");
-
-                    foreach (FileCabinetRecord record in records)
-                    {
-                        this.writer.WriteStartElement("record");
-                        this.writer.WriteAttributeString("id", $"{record.Id}");
-                        this.writer.WriteElementString($"firstname", $"{record.FirstName}");
-                        this.writer.WriteElementString($"lastname", $"{record.LastName}");
-                        this.writer.WriteElementString($"dateOfBirth", $"{record.DateOfBirth.ToShortDateString()}");
-                        this.writer.WriteElementString($"wage", $"{record.Wage}");
-                        this.writer.WriteElementString($"height", $"{record.Height}");
-                        this.writer.WriteElementString($"fav.numeral", $"{record.FavouriteNumeral}");
-                        this.writer.WriteEndElement();
-                    }
+                    XmlSerializer formatter = new XmlSerializer(typeof(FileCabinetRecord[]), new XmlRootAttribute("FileCabinetRecords"));
+                    formatter.Serialize(this.writer, records);
                 }
             }
         }

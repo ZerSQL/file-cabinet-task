@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Xml.Serialization;
 
 namespace FileCabinetApp
 {
     /// <summary>
     /// Класс, представляющий запись.
     /// </summary>
+    [XmlRoot("FileCabinetRecords")]
     public class FileCabinetRecord
     {
         /// <summary>
