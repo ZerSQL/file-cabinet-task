@@ -111,6 +111,11 @@
             </summary>
             <param name="number">Номер удаляемой записи.</param>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.Purge">
+            <summary>
+            Удаляет записи, помеченные битом IsDeleted.
+            </summary>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>
             Сервис для работы со списком записей и словарями.
@@ -210,6 +215,11 @@
             Удаляет записи из списка.
             </summary>
             <param name="number">Номер удаляемой записи.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.Purge">
+            <summary>
+            Удаляет записи, помеченные битом IsDeleted (не доступно для MemoryService).
+            </summary>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -461,6 +471,11 @@
             Удаляет записи из списка.
             </summary>
             <param name="number">Номер удаляемой записи.</param>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.Purge">
+            <summary>
+            Удаляет записи, помеченные битом IsDeleted.
+            </summary>
         </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>

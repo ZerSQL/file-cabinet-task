@@ -30,6 +30,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("export", Export),
             new Tuple<string, Action<string>>("import", Import),
             new Tuple<string, Action<string>>("remove", Remove),
+            new Tuple<string, Action<string>>("purge", Purge),
             new Tuple<string, Action<string>>("exit", Exit),
         };
 
@@ -44,6 +45,7 @@ namespace FileCabinetApp
             new string[] { "export", "export notes to csv or xml", "The 'export csv || export xml' command is to export notes to csv or xml format." },
             new string[] { "import", "import notes from csv or xml", "The 'import csv || import xml' command is to import notes from csv or xml format." },
             new string[] { "remove", "remove notes from memory", "The 'remove' command is to remove notes from memory." },
+            new string[] { "purge", "removes blank spaces in db file", "The 'purge' command is to remove blank spaces in db file." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
@@ -168,6 +170,11 @@ namespace FileCabinetApp
             }
 
             Console.WriteLine();
+        }
+
+        private static void Purge(string parameters)
+        {
+            fileCabinetService.Purge();
         }
 
         private static void List(string parameters)

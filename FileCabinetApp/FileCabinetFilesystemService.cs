@@ -298,6 +298,43 @@ namespace FileCabinetApp
             }
         }
 
+        /// <summary>
+        /// Удаляет записи, помеченные битом IsDeleted.
+        /// </summary>
+        public void Purge()
+        {
+            List<byte[]> t = new List<byte[]>();
+            int counter = 0;
+            int sizeOfFile = this.GetStat();
+            using (FileStream fs = new FileStream(this.fileStream.Name, FileMode.Open, FileAccess.ReadWrite))
+            {
+                for (int i = 0; i < fs.Length / Size; i++)
+                {
+                    var recordBuffer = new byte[Size];
+                    fs.Read(recordBuffer, 0, Size);
+                    BitArray tt = new BitArray(recordBuffer);
+                    if (tt[2] == true)
+                    {
+                        counter++;
+                    }
+                    else
+                    {
+                        t.Add(recordBuffer);
+                    }
+                }
+            }
+
+            using (FileStream fs = new FileStream(this.fileStream.Name, FileMode.Create, FileAccess.ReadWrite))
+            {
+                foreach (var d in t)
+                {
+                    fs.Write(d);
+                }
+
+                Console.WriteLine($"Data file processing is completed: {counter} of {sizeOfFile} records were purged.");
+            }
+        }
+
         private byte[] RecordToBytes(FileCabinetRecord newRecord)
         {
             short reserved = 0;

@@ -343,5 +343,13 @@ namespace FileCabinetApp
 
             Console.WriteLine("Record doesn't exists.");
         }
+
+        /// <summary>
+        /// Удаляет записи, помеченные битом IsDeleted (не доступно для MemoryService).
+        /// </summary>
+        public void Purge()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

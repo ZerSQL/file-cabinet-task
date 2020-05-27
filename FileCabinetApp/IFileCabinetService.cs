@@ -83,5 +83,10 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="number">Номер удаляемой записи.</param>
         void Remove(int number);
+
+        /// <summary>
+        /// Удаляет записи, помеченные битом IsDeleted.
+        /// </summary>
+        void Purge();
     }
 }
