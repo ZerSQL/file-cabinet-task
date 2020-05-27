@@ -222,6 +222,19 @@ namespace FileCabinetApp
         {
             using (FileStream fs = new FileStream(this.fileStream.Name, FileMode.Open, FileAccess.Read))
             {
+                int counter = 0;
+                for (int i = 0; i < fs.Length / Size; i++)
+                {
+                    var recordBuffer = new byte[Size];
+                    fs.Read(recordBuffer, 0, Size);
+                    BitArray tt = new BitArray(recordBuffer);
+                    if (tt[2] == true)
+                    {
+                        counter++;
+                    }
+                }
+
+                Console.WriteLine($"{counter} note(s) has been deleted.");
                 return (int)fs.Length / Size;
             }
         }
@@ -338,39 +351,6 @@ namespace FileCabinetApp
         private byte[] RecordToBytes(FileCabinetRecord newRecord)
         {
             short reserved = 0;
-            if (newRecord == null)
-            {
-                throw new ArgumentNullException(nameof(newRecord));
-            }
-
-            byte[] bytes = new byte[Size];
-            using (var memoryStream = new MemoryStream(bytes))
-            using (var binaryWriter = new BinaryWriter(memoryStream))
-            {
-                binaryWriter.Write(reserved);
-                binaryWriter.Write(newRecord.Id);
-
-                var firstNameBytes = Encoding.ASCII.GetBytes(newRecord.FirstName);
-                var lastNameBytes = Encoding.ASCII.GetBytes(newRecord.LastName);
-                var nameBuffer = new byte[NameLength];
-                Array.Copy(firstNameBytes, nameBuffer, firstNameBytes.Length);
-                binaryWriter.Write(nameBuffer, 0, nameBuffer.Length);
-                Array.Copy(lastNameBytes, nameBuffer, lastNameBytes.Length);
-                binaryWriter.Write(nameBuffer, 0, nameBuffer.Length);
-                binaryWriter.Write(newRecord.DateOfBirth.Year);
-                binaryWriter.Write(newRecord.DateOfBirth.Month);
-                binaryWriter.Write(newRecord.DateOfBirth.Day);
-                binaryWriter.Write(newRecord.Wage);
-                binaryWriter.Write(newRecord.Height);
-                binaryWriter.Write(newRecord.FavouriteNumeral);
-            }
-
-            return bytes;
-        }
-
-        private byte[] DeletedRecordToBytes(FileCabinetRecord newRecord)
-        {
-            short reserved = 4;
             if (newRecord == null)
             {
                 throw new ArgumentNullException(nameof(newRecord));
