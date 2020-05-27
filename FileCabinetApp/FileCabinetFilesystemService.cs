@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -94,14 +95,20 @@ namespace FileCabinetApp
                     u1 = this.BytesToRecord(recordBuffer);
                     if (u1.Id == newRecord.Id)
                     {
-                        u1 = newRecord;
+                        long t = fs.Position;
+                        if (this.RemovedCheck(u1, fs) == false)
+                        {
+                            fs.Position = t;
+                            u1 = newRecord;
+
+                            byte[] recordBytes = this.RecordToBytes(u1);
+                            fs.Seek(-Size, SeekOrigin.Current);
+                            fs.Write(recordBytes);
+                        }
+
                         break;
                     }
                 }
-
-                byte[] recordBytes = this.RecordToBytes(u1);
-                fs.Seek(-Size, SeekOrigin.Current);
-                fs.Write(recordBytes);
             }
         }
 
@@ -120,9 +127,11 @@ namespace FileCabinetApp
                 {
                     fs.Read(recordBuffer, 0, Size);
                     var u1 = this.BytesToRecord(recordBuffer);
-                    if (u1.DateOfBirth.ToShortDateString() == birthDate)
+                    long pos = fs.Position;
+                    if (u1.DateOfBirth.ToShortDateString() == birthDate && this.RemovedCheck(u1, fs) == false)
                     {
                         records.Add(u1);
+                        fs.Position = pos;
                     }
                 }
 
@@ -145,9 +154,11 @@ namespace FileCabinetApp
                 {
                     fs.Read(recordBuffer, 0, Size);
                     var u1 = this.BytesToRecord(recordBuffer);
-                    if (u1.FirstName.Equals(firstName, StringComparison.InvariantCultureIgnoreCase))
+                    long pos = fs.Position;
+                    if (u1.FirstName.Equals(firstName, StringComparison.InvariantCultureIgnoreCase) && this.RemovedCheck(u1, fs) == false)
                     {
                         records.Add(u1);
+                        fs.Position = pos;
                     }
                 }
 
@@ -170,9 +181,11 @@ namespace FileCabinetApp
                 {
                     fs.Read(recordBuffer, 0, Size);
                     var u1 = this.BytesToRecord(recordBuffer);
-                    if (u1.LastName.Equals(lastName, StringComparison.InvariantCultureIgnoreCase))
+                    long pos = fs.Position;
+                    if (u1.LastName.Equals(lastName, StringComparison.InvariantCultureIgnoreCase) && this.RemovedCheck(u1, fs) == false)
                     {
                         records.Add(u1);
+                        fs.Position = pos;
                     }
                 }
 
@@ -209,6 +222,19 @@ namespace FileCabinetApp
         {
             using (FileStream fs = new FileStream(this.fileStream.Name, FileMode.Open, FileAccess.Read))
             {
+                int counter = 0;
+                for (int i = 0; i < fs.Length / Size; i++)
+                {
+                    var recordBuffer = new byte[Size];
+                    fs.Read(recordBuffer, 0, Size);
+                    BitArray tt = new BitArray(recordBuffer);
+                    if (tt[2] == true)
+                    {
+                        counter++;
+                    }
+                }
+
+                Console.WriteLine($"{counter} note(s) has been deleted.");
                 return (int)fs.Length / Size;
             }
         }
@@ -254,6 +280,72 @@ namespace FileCabinetApp
         public FileCabinetServiceSnapshot MakeSnapshot()
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Удаляет записи из списка.
+        /// </summary>
+        /// <param name="number">Номер удаляемой записи.</param>
+        public void Remove(int number)
+        {
+            using (FileStream fs = new FileStream(this.fileStream.Name, FileMode.Open, FileAccess.ReadWrite))
+            {
+                FileCabinetRecord u1 = null;
+                var recordBuffer = new byte[Size];
+                for (int i = 0; i < fs.Length / Size; i++)
+                {
+                    fs.Read(recordBuffer, 0, Size);
+                    u1 = this.BytesToRecord(recordBuffer);
+                    if (u1.Id == number)
+                    {
+                        break;
+                    }
+                }
+
+                byte[] recordBytes = this.RecordToBytes(u1);
+                BitArray t = new BitArray(recordBytes);
+                t[2] = true;
+                t.CopyTo(recordBytes, 0);
+                fs.Seek(-Size, SeekOrigin.Current);
+                fs.Write(recordBytes);
+            }
+        }
+
+        /// <summary>
+        /// Удаляет записи, помеченные битом IsDeleted.
+        /// </summary>
+        public void Purge()
+        {
+            List<byte[]> t = new List<byte[]>();
+            int counter = 0;
+            int sizeOfFile = this.GetStat();
+            using (FileStream fs = new FileStream(this.fileStream.Name, FileMode.Open, FileAccess.ReadWrite))
+            {
+                for (int i = 0; i < fs.Length / Size; i++)
+                {
+                    var recordBuffer = new byte[Size];
+                    fs.Read(recordBuffer, 0, Size);
+                    BitArray tt = new BitArray(recordBuffer);
+                    if (tt[2] == true)
+                    {
+                        counter++;
+                    }
+                    else
+                    {
+                        t.Add(recordBuffer);
+                    }
+                }
+            }
+
+            using (FileStream fs = new FileStream(this.fileStream.Name, FileMode.Create, FileAccess.ReadWrite))
+            {
+                foreach (var d in t)
+                {
+                    fs.Write(d);
+                }
+
+                Console.WriteLine($"Data file processing is completed: {counter} of {sizeOfFile} records were purged.");
+            }
         }
 
         private byte[] RecordToBytes(FileCabinetRecord newRecord)
@@ -317,6 +409,33 @@ namespace FileCabinetApp
             }
 
             return record;
+        }
+
+        private bool RemovedCheck(FileCabinetRecord record, FileStream fs)
+        {
+            fs.Position = 0;
+            var recordBuffer = new byte[Size];
+            byte[] shortBuffer = new byte[2];
+            FileCabinetRecord u1;
+            for (int i = 0; i < fs.Length / Size; i++)
+            {
+                fs.Read(recordBuffer, 0, Size);
+                u1 = this.BytesToRecord(recordBuffer);
+                if (u1.Id == record.Id)
+                {
+                    fs.Seek(-Size, SeekOrigin.Current);
+                    fs.Read(shortBuffer, 0, 2);
+                    fs.Seek(-2, SeekOrigin.Current);
+                }
+            }
+
+            BitArray t = new BitArray(shortBuffer);
+            if (t[2] != true)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
