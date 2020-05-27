@@ -50,6 +50,25 @@ namespace FileCabinetApp
         }
 
         /// <summary>
+        /// Удаляет записи из словарей.
+        /// </summary>
+        /// <param name="dictionary">Словарь.</param>
+        /// <param name="record">Запись.</param>
+        public static void RemoveAtDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, FileCabinetRecord record)
+        {
+            if (dictionary == null)
+            {
+                throw new Exception();
+            }
+
+            foreach (var note in dictionary)
+            {
+                FileCabinetRecord deletedRecord = note.Value.Find(p => p.Id == record.Id);
+                note.Value.Remove(deletedRecord);
+            }
+        }
+
+        /// <summary>
         /// Метод создания новой записи.
         /// </summary>
         /// <param name="newRecord">Объект, представляющий запись.</param>
@@ -301,6 +320,28 @@ namespace FileCabinetApp
                     this.CreateRecord(record);
                 }
             }
+        }
+
+        /// <summary>
+        /// Удаляет записи из списка.
+        /// </summary>
+        /// <param name="number">Номер удаляемой записи.</param>
+        public void Remove(int number)
+        {
+            foreach (var record in this.list)
+            {
+                if (record.Id == number)
+                {
+                    this.list.Remove(record);
+                    Console.WriteLine($"Record #{number} is removed.");
+                    RemoveAtDictionary(this.firstNameDictionary, record);
+                    RemoveAtDictionary(this.lastNameDictionary, record);
+                    RemoveAtDictionary(this.dateOfBirthDictionary, record);
+                    return;
+                }
+            }
+
+            Console.WriteLine("Record doesn't exists.");
         }
     }
 }

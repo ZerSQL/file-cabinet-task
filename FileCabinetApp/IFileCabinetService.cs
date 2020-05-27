@@ -77,5 +77,11 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="snap">Snap.</param>
         void Restore(FileCabinetServiceSnapshot snap);
+
+        /// <summary>
+        /// Удаляет записи из списка.
+        /// </summary>
+        /// <param name="number">Номер удаляемой записи.</param>
+        void Remove(int number);
     }
 }

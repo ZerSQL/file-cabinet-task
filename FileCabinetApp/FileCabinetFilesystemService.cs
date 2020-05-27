@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -94,14 +95,20 @@ namespace FileCabinetApp
                     u1 = this.BytesToRecord(recordBuffer);
                     if (u1.Id == newRecord.Id)
                     {
-                        u1 = newRecord;
+                        long t = fs.Position;
+                        if (this.RemovedCheck(u1, fs) == false)
+                        {
+                            fs.Position = t;
+                            u1 = newRecord;
+
+                            byte[] recordBytes = this.RecordToBytes(u1);
+                            fs.Seek(-Size, SeekOrigin.Current);
+                            fs.Write(recordBytes);
+                        }
+
                         break;
                     }
                 }
-
-                byte[] recordBytes = this.RecordToBytes(u1);
-                fs.Seek(-Size, SeekOrigin.Current);
-                fs.Write(recordBytes);
             }
         }
 
@@ -120,9 +127,11 @@ namespace FileCabinetApp
                 {
                     fs.Read(recordBuffer, 0, Size);
                     var u1 = this.BytesToRecord(recordBuffer);
-                    if (u1.DateOfBirth.ToShortDateString() == birthDate)
+                    long pos = fs.Position;
+                    if (u1.DateOfBirth.ToShortDateString() == birthDate && this.RemovedCheck(u1, fs) == false)
                     {
                         records.Add(u1);
+                        fs.Position = pos;
                     }
                 }
 
@@ -145,9 +154,11 @@ namespace FileCabinetApp
                 {
                     fs.Read(recordBuffer, 0, Size);
                     var u1 = this.BytesToRecord(recordBuffer);
-                    if (u1.FirstName.Equals(firstName, StringComparison.InvariantCultureIgnoreCase))
+                    long pos = fs.Position;
+                    if (u1.FirstName.Equals(firstName, StringComparison.InvariantCultureIgnoreCase) && this.RemovedCheck(u1, fs) == false)
                     {
                         records.Add(u1);
+                        fs.Position = pos;
                     }
                 }
 
@@ -170,9 +181,11 @@ namespace FileCabinetApp
                 {
                     fs.Read(recordBuffer, 0, Size);
                     var u1 = this.BytesToRecord(recordBuffer);
-                    if (u1.LastName.Equals(lastName, StringComparison.InvariantCultureIgnoreCase))
+                    long pos = fs.Position;
+                    if (u1.LastName.Equals(lastName, StringComparison.InvariantCultureIgnoreCase) && this.RemovedCheck(u1, fs) == false)
                     {
                         records.Add(u1);
+                        fs.Position = pos;
                     }
                 }
 
@@ -256,9 +269,71 @@ namespace FileCabinetApp
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Удаляет записи из списка.
+        /// </summary>
+        /// <param name="number">Номер удаляемой записи.</param>
+        public void Remove(int number)
+        {
+            using (FileStream fs = new FileStream(this.fileStream.Name, FileMode.Open, FileAccess.ReadWrite))
+            {
+                FileCabinetRecord u1 = null;
+                var recordBuffer = new byte[Size];
+                for (int i = 0; i < fs.Length / Size; i++)
+                {
+                    fs.Read(recordBuffer, 0, Size);
+                    u1 = this.BytesToRecord(recordBuffer);
+                    if (u1.Id == number)
+                    {
+                        break;
+                    }
+                }
+
+                byte[] recordBytes = this.RecordToBytes(u1);
+                BitArray t = new BitArray(recordBytes);
+                t[2] = true;
+                t.CopyTo(recordBytes, 0);
+                fs.Seek(-Size, SeekOrigin.Current);
+                fs.Write(recordBytes);
+            }
+        }
+
         private byte[] RecordToBytes(FileCabinetRecord newRecord)
         {
             short reserved = 0;
+            if (newRecord == null)
+            {
+                throw new ArgumentNullException(nameof(newRecord));
+            }
+
+            byte[] bytes = new byte[Size];
+            using (var memoryStream = new MemoryStream(bytes))
+            using (var binaryWriter = new BinaryWriter(memoryStream))
+            {
+                binaryWriter.Write(reserved);
+                binaryWriter.Write(newRecord.Id);
+
+                var firstNameBytes = Encoding.ASCII.GetBytes(newRecord.FirstName);
+                var lastNameBytes = Encoding.ASCII.GetBytes(newRecord.LastName);
+                var nameBuffer = new byte[NameLength];
+                Array.Copy(firstNameBytes, nameBuffer, firstNameBytes.Length);
+                binaryWriter.Write(nameBuffer, 0, nameBuffer.Length);
+                Array.Copy(lastNameBytes, nameBuffer, lastNameBytes.Length);
+                binaryWriter.Write(nameBuffer, 0, nameBuffer.Length);
+                binaryWriter.Write(newRecord.DateOfBirth.Year);
+                binaryWriter.Write(newRecord.DateOfBirth.Month);
+                binaryWriter.Write(newRecord.DateOfBirth.Day);
+                binaryWriter.Write(newRecord.Wage);
+                binaryWriter.Write(newRecord.Height);
+                binaryWriter.Write(newRecord.FavouriteNumeral);
+            }
+
+            return bytes;
+        }
+
+        private byte[] DeletedRecordToBytes(FileCabinetRecord newRecord)
+        {
+            short reserved = 4;
             if (newRecord == null)
             {
                 throw new ArgumentNullException(nameof(newRecord));
@@ -317,6 +392,33 @@ namespace FileCabinetApp
             }
 
             return record;
+        }
+
+        private bool RemovedCheck(FileCabinetRecord record, FileStream fs)
+        {
+            fs.Position = 0;
+            var recordBuffer = new byte[Size];
+            byte[] shortBuffer = new byte[2];
+            FileCabinetRecord u1;
+            for (int i = 0; i < fs.Length / Size; i++)
+            {
+                fs.Read(recordBuffer, 0, Size);
+                u1 = this.BytesToRecord(recordBuffer);
+                if (u1.Id == record.Id)
+                {
+                    fs.Seek(-Size, SeekOrigin.Current);
+                    fs.Read(shortBuffer, 0, 2);
+                    fs.Seek(-2, SeekOrigin.Current);
+                }
+            }
+
+            BitArray t = new BitArray(shortBuffer);
+            if (t[2] != true)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

@@ -29,6 +29,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("export", Export),
             new Tuple<string, Action<string>>("import", Import),
+            new Tuple<string, Action<string>>("remove", Remove),
             new Tuple<string, Action<string>>("exit", Exit),
         };
 
@@ -40,8 +41,9 @@ namespace FileCabinetApp
             new string[] { "edit", "edit notes", "The 'edit' is to edit notes." },
             new string[] { "create", "create new note", "The 'create' creates new note." },
             new string[] { "find", "find notes", "The 'find' command is to find notes." },
-            new string[] { "export", "export notes to csv or xml", "The 'export csv' command is to export notes to csv format." },
-            new string[] { "import", "import notes from csv or xml", "The 'import csv' command is to import notes from csv format." },
+            new string[] { "export", "export notes to csv or xml", "The 'export csv || export xml' command is to export notes to csv or xml format." },
+            new string[] { "import", "import notes from csv or xml", "The 'import csv || import xml' command is to import notes from csv or xml format." },
+            new string[] { "remove", "remove notes from memory", "The 'remove' command is to remove notes from memory." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
@@ -418,6 +420,25 @@ namespace FileCabinetApp
                 {
                     Console.WriteLine("File not exists");
                 }
+            }
+        }
+
+        private static void Remove(string parameters)
+        {
+            if (parameters.Split(' ').Length > 1)
+            {
+                Console.WriteLine("Error input.");
+                return;
+            }
+
+            string[] values = parameters.Split(' ', 1);
+            if (int.TryParse(values[0], out int number))
+            {
+                fileCabinetService.Remove(number);
+            }
+            else
+            {
+                Console.WriteLine("Error input");
             }
         }
 

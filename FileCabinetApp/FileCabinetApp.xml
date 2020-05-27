@@ -105,6 +105,12 @@
             </summary>
             <returns>Объект представляющий копию.</returns>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.Remove(System.Int32)">
+            <summary>
+            Удаляет записи из списка.
+            </summary>
+            <param name="number">Номер удаляемой записи.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>
             Сервис для работы со списком записей и словарями.
@@ -123,6 +129,13 @@
             <param name="dictionary">Сам словарь.</param>
             <param name="property">Имя свойства для проверки необходимости создания новой пары ключ-значение.</param>
             <param name="record">Сама запись.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.RemoveAtDictionary(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{FileCabinetApp.FileCabinetRecord}},FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Удаляет записи из словарей.
+            </summary>
+            <param name="dictionary">Словарь.</param>
+            <param name="record">Запись.</param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
             <summary>
@@ -191,6 +204,12 @@
             Метод производящий добавление в список и словари импортируемых записей.
             </summary>
             <param name="snap">Импортированные записи.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.Remove(System.Int32)">
+            <summary>
+            Удаляет записи из списка.
+            </summary>
+            <param name="number">Номер удаляемой записи.</param>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -436,6 +455,12 @@
             Замена и добавление импортированных записей.
             </summary>
             <param name="snap">Snap.</param>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.Remove(System.Int32)">
+            <summary>
+            Удаляет записи из списка.
+            </summary>
+            <param name="number">Номер удаляемой записи.</param>
         </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>
