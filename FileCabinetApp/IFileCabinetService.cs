@@ -8,7 +8,7 @@ namespace FileCabinetApp
     /// <summary>
     /// Интерфейс представляющий сервис.
     /// </summary>
-    internal interface IFileCabinetService
+    public interface IFileCabinetService
     {
         /// <summary>
         /// Метод создания записи.
@@ -21,11 +21,11 @@ namespace FileCabinetApp
         /// Редактиование данных в словаре.
         /// </summary>
         /// <param name="dictionary">Словарь.</param>
-        /// <param name="property">Свойство для проверки необходимости создания нового значения ключ-значение.</param>
+        /// <param name="prop">Свойство для проверки необходимости создания нового значения ключ-значение.</param>
         /// <param name="id">Номер редактируемой записи.</param>
         /// <param name="current">Запись до редактирования.</param>
         /// <param name="propName">Название свойства для поиска.</param>
-        void EditNoteAtDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string property, int id, FileCabinetRecord current, string propName);
+        void EditNoteAtDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string prop, int id, FileCabinetRecord current, string propName);
 
         /// <summary>
         /// Редактирование записи в списке.

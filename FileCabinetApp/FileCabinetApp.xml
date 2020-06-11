@@ -4,6 +4,198 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.CommandHandlers.AppCommandRequest">
+            <summary>
+            Запрос.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.CommandHandlers.AppCommandRequest.Command">
+            <summary>
+            Gets or sets command.
+            </summary>
+            <value>
+            Искомая команда.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.CommandHandlers.AppCommandRequest.Parameters">
+            <summary>
+            Gets or sets parameters.
+            </summary>
+            <value>
+            Параметры.
+            </value>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.CommandHandlerBase">
+            <summary>
+            Абстрактный класс(цепочка обязанностей).
+            </summary>
+        </member>
+        <member name="F:FileCabinetApp.CommandHandlers.CommandHandlerBase.nextHandler">
+            <summary>
+            Текущий обработчик.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.CommandHandlerBase.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Абстрактный метод(выполняет команду запроса).
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.CommandHandlerBase.SetNext(FileCabinetApp.CommandHandlers.ICommandHandler)">
+            <summary>
+            Метод перехода к следующему обработчику.
+            </summary>
+            <param name="handler">Обработчик.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.CreateCommandHandler">
+            <summary>
+            Обработка команды создания.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.CreateCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Обработчкик команды создания.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.DefaultHandler">
+            <summary>
+            Класс обработчика по умолчанию.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.DefaultHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Стандартный обработчик.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.EditCommandHandler">
+            <summary>
+            Класс, представляющий обработчик команды редактирования.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.EditCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Обработчкик команды редактирования.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ExitCommandHandler">
+            <summary>
+            Класс, представляющий обработчик команды выхода.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ExitCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Обработчкик команды выхода.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ExportCommandHandler">
+            <summary>
+            Класс, представляющий обработчик команды экспорта.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ExportCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Обработчкик команды экспорта.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.FindCommandHandler">
+            <summary>
+            Класс, представляющий обработчик команды поиска.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Обработчкик команды поиска.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.HelpCommandHandler">
+            <summary>
+            Класс, представляющий обрабочик команды помощи.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.HelpCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Обработчкик команды помощи.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ICommandHandler">
+            <summary>
+            Интерфейс, представляющий цепочку.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ICommandHandler.SetNext(FileCabinetApp.CommandHandlers.ICommandHandler)">
+            <summary>
+            Переход к следующему обработчику.
+            </summary>
+            <param name="handler">Установка следующего обработчика.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ICommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Выполнение команды обработчика.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ImportCommandHandler">
+            <summary>
+            Класс, представляющий обработчик команды импорта.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ImportCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Обработчкик команды импорта.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ListCommandHandler">
+            <summary>
+            Класс, представляющий обработик команды вывода записей.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Обработчкик команды вывода записей.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.PurgeCommandHandler">
+            <summary>
+            Класс, представляющий обработчик команды удаления пустот.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.PurgeCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Обработчкик команды удаления пустот.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.RemoveCommandHandler">
+            <summary>
+            Класс, представляющий команду удаления записи.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.RemoveCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Обработчкик команды удаления записи.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.StatCommandHandler">
+            <summary>
+            Класс, представляющий команду вывода количества записей.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.StatCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Обработчкик команды вывода количества записей.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
         <member name="T:FileCabinetApp.CustomValidator">
             <summary>
             Класс, представляющий измененный валидатор.
@@ -410,7 +602,7 @@
             Редактиование данных в словаре.
             </summary>
             <param name="dictionary">Словарь.</param>
-            <param name="property">Свойство для проверки необходимости создания нового значения ключ-значение.</param>
+            <param name="prop">Свойство для проверки необходимости создания нового значения ключ-значение.</param>
             <param name="id">Номер редактируемой записи.</param>
             <param name="current">Запись до редактирования.</param>
             <param name="propName">Название свойства для поиска.</param>
@@ -498,6 +690,17 @@
             Точка входа в программу и вызов функционала в зависимости от введенной команды.
             </summary>
             <param name="args">Переменная для передачи параметров при запуске через консоль.</param>
+        </member>
+        <member name="M:FileCabinetApp.Program.CreateOrEditCommands(System.String@,System.String@,System.DateTime@,System.Decimal@,System.Char@,System.Int16@)">
+            <summary>
+            Метод, выполняющий общие команды создания/редактирования записей.
+            </summary>
+            <param name="firstName">Имя.</param>
+            <param name="lastName">Фамилия.</param>
+            <param name="dateOfBirth">Дата рождения.</param>
+            <param name="personalWage">Заработная плата.</param>
+            <param name="favouriteNumeral">Любимое число.</param>
+            <param name="personalHeight">Рост.</param>
         </member>
     </members>
 </doc>

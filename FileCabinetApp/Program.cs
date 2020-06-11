@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Xml;
+using FileCabinetApp.CommandHandlers;
 
 namespace FileCabinetApp
 {
@@ -11,46 +10,11 @@ namespace FileCabinetApp
     /// </summary>
     public static class Program
     {
+        public static bool isRunning = true;
+        public static IFileCabinetService fileCabinetService;
         private const string DeveloperName = "Andrei Drabliankou";
         private const string HintMessage = "Enter your command, or enter 'help' to get help.";
-        private const int CommandHelpIndex = 0;
-        private const int DescriptionHelpIndex = 1;
-        private const int ExplanationHelpIndex = 2;
-
-        private static bool isRunning = true;
-
-        private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
-        {
-            new Tuple<string, Action<string>>("help", PrintHelp),
-            new Tuple<string, Action<string>>("stat", Stat),
-            new Tuple<string, Action<string>>("list", List),
-            new Tuple<string, Action<string>>("edit", Edit),
-            new Tuple<string, Action<string>>("create", Create),
-            new Tuple<string, Action<string>>("find", Find),
-            new Tuple<string, Action<string>>("export", Export),
-            new Tuple<string, Action<string>>("import", Import),
-            new Tuple<string, Action<string>>("remove", Remove),
-            new Tuple<string, Action<string>>("purge", Purge),
-            new Tuple<string, Action<string>>("exit", Exit),
-        };
-
-        private static string[][] helpMessages = new string[][]
-        {
-            new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
-            new string[] { "stat", "prints count of notes", "The 'stat' prints count of notes." },
-            new string[] { "list", "prints notes", "The 'list' print notes." },
-            new string[] { "edit", "edit notes", "The 'edit' is to edit notes." },
-            new string[] { "create", "create new note", "The 'create' creates new note." },
-            new string[] { "find", "find notes", "The 'find' command is to find notes." },
-            new string[] { "export", "export notes to csv or xml", "The 'export csv || export xml' command is to export notes to csv or xml format." },
-            new string[] { "import", "import notes from csv or xml", "The 'import csv || import xml' command is to import notes from csv or xml format." },
-            new string[] { "remove", "remove notes from memory", "The 'remove' command is to remove notes from memory." },
-            new string[] { "purge", "removes blank spaces in db file", "The 'purge' command is to remove blank spaces in db file." },
-            new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
-        };
-
         private static bool isDefaultRules = true;
-        private static IFileCabinetService fileCabinetService;
 
         /// <summary>
         /// Точка входа в программу и вызов функционала в зависимости от введенной команды.
@@ -76,26 +40,51 @@ namespace FileCabinetApp
                 var inputs = Console.ReadLine().Split(' ', 2);
                 const int commandIndex = 0;
                 var command = inputs[commandIndex];
-
+                var commandHandler = CreateCommandHandlers();
                 if (string.IsNullOrEmpty(command))
                 {
                     Console.WriteLine(Program.HintMessage);
                     continue;
                 }
 
-                var index = Array.FindIndex(commands, 0, commands.Length, i => i.Item1.Equals(command, StringComparison.InvariantCultureIgnoreCase));
-                if (index >= 0)
+                const int parametersIndex = 1;
+                var parameters = inputs.Length > 1 ? inputs[parametersIndex] : string.Empty;
+                commandHandler.Handle(new AppCommandRequest
                 {
-                    const int parametersIndex = 1;
-                    var parameters = inputs.Length > 1 ? inputs[parametersIndex] : string.Empty;
-                    commands[index].Item2(parameters);
-                }
-                else
-                {
-                    PrintMissedCommandInfo(command);
-                }
+                    Command = command,
+                    Parameters = parameters,
+                });
             }
             while (isRunning);
+        }
+
+        /// <summary>
+        /// Метод, выполняющий общие команды создания/редактирования записей.
+        /// </summary>
+        /// <param name="firstName">Имя.</param>
+        /// <param name="lastName">Фамилия.</param>
+        /// <param name="dateOfBirth">Дата рождения.</param>
+        /// <param name="personalWage">Заработная плата.</param>
+        /// <param name="favouriteNumeral">Любимое число.</param>
+        /// <param name="personalHeight">Рост.</param>
+        internal static void CreateOrEditCommands(out string firstName, out string lastName, out DateTime dateOfBirth, out decimal personalWage, out char favouriteNumeral, out short personalHeight)
+        {
+            personalWage = 0;
+            personalHeight = 0;
+            favouriteNumeral = ' ';
+            firstName = string.Empty;
+            lastName = string.Empty;
+            Console.WriteLine("Input Firstname");
+            firstName = ReadInput(StringConventer, StringValidator);
+            Console.WriteLine("Input Lastname");
+            lastName = ReadInput(StringConventer, StringValidator);
+            dateOfBirth = InputBirthDate();
+            Console.WriteLine("Input wage");
+            personalWage = ReadInput(DecimalConventer, DecimalValidator);
+            Console.WriteLine("Input height");
+            personalHeight = ReadInput(ShortConventer, ShortValidator);
+            Console.WriteLine("Input favourite numeral");
+            favouriteNumeral = ReadInput(CharConventer, CharValidator);
         }
 
         private static IFileCabinetService ChooseFileSystem(string[] args)
@@ -139,334 +128,32 @@ namespace FileCabinetApp
             return new DefaultValidator();
         }
 
-        private static void PrintMissedCommandInfo(string command)
+        private static ICommandHandler CreateCommandHandlers()
         {
-            Console.WriteLine($"There is no '{command}' command.");
-            Console.WriteLine();
-        }
-
-        private static void PrintHelp(string parameters)
-        {
-            if (!string.IsNullOrEmpty(parameters))
-            {
-                var index = Array.FindIndex(helpMessages, 0, helpMessages.Length, i => string.Equals(i[Program.CommandHelpIndex], parameters, StringComparison.InvariantCultureIgnoreCase));
-                if (index >= 0)
-                {
-                    Console.WriteLine(helpMessages[index][Program.ExplanationHelpIndex]);
-                }
-                else
-                {
-                    Console.WriteLine($"There is no explanation for '{parameters}' command.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Available commands:");
-
-                foreach (var helpMessage in helpMessages)
-                {
-                    Console.WriteLine("\t{0}\t- {1}", helpMessage[Program.CommandHelpIndex], helpMessage[Program.DescriptionHelpIndex]);
-                }
-            }
-
-            Console.WriteLine();
-        }
-
-        private static void Purge(string parameters)
-        {
-            fileCabinetService.Purge();
-        }
-
-        private static void List(string parameters)
-        {
-            if (fileCabinetService.GetRecords().Count > 0)
-            {
-                foreach (var t in fileCabinetService.GetRecords())
-                {
-                    Console.WriteLine($"#{t.Id}, {t.FirstName}, {t.LastName}, {t.DateOfBirth.ToShortDateString()}, height: {t.Height}, wage: {t.Wage}, favourite numeral: {t.FavouriteNumeral}");
-                }
-            }
-            else
-            {
-                Console.WriteLine("No any notes");
-            }
-        }
-
-        private static void Create(string parameters)
-        {
-            CreateOrEditCommands(out string firstName, out string lastName, out DateTime dateOfBirth, out decimal personalWage, out char favouriteNumeral, out short personalHeight);
-            FileCabinetRecord newRecord = new FileCabinetRecord() { FirstName = firstName, LastName = lastName, DateOfBirth = dateOfBirth, Wage = personalWage, FavouriteNumeral = favouriteNumeral, Height = personalHeight };
-            fileCabinetService.CreateRecord(newRecord);
-        }
-
-        private static void Stat(string parameters)
-        {
-            var recordsCount = Program.fileCabinetService.GetStat();
-            Console.WriteLine($"{recordsCount} record(s).");
-        }
-
-        private static void Find(string parameters)
-        {
-            string[] propertyAndValue = parameters.Replace("\"", string.Empty, StringComparison.CurrentCultureIgnoreCase).Split(' ', 2);
-            if (propertyAndValue.Length != 2)
-            {
-                Console.WriteLine("'Find' command working in 'find *name of property* *value*' format. For birthdate use dd.MM.yyyy format.Please,try again.");
-                return;
-            }
-
-            if (propertyAndValue[0].ToLower(CultureInfo.CurrentCulture) == "firstname")
-            {
-                foreach (var note in fileCabinetService.FindByFirstName(propertyAndValue[1]))
-                {
-                    Console.WriteLine($"#{note.Id}, {note.FirstName}, {note.LastName}, {note.DateOfBirth.ToShortDateString()}");
-                }
-            }
-            else if (propertyAndValue[0].ToLower(CultureInfo.CurrentCulture) == "lastname")
-            {
-                foreach (var note in fileCabinetService.FindByLastName(propertyAndValue[1]))
-                {
-                    Console.WriteLine($"#{note.Id}, {note.FirstName}, {note.LastName}, {note.DateOfBirth.ToShortDateString()}");
-                }
-            }
-            else if (propertyAndValue[0].ToLower(CultureInfo.CurrentCulture) == "dateofbirth")
-            {
-                foreach (var note in fileCabinetService.FindByBirthDate(propertyAndValue[1]))
-                {
-                    Console.WriteLine($"#{note.Id}, {note.FirstName}, {note.LastName}, {note.DateOfBirth.ToShortDateString()}");
-                }
-            }
-            else
-            {
-                Console.WriteLine("'Find' command working in 'find *name of property* *value*' format. For birthdate use dd.MM.yyyy format.Please,try again.");
-            }
-        }
-
-        private static void Edit(string parameters)
-        {
-            bool exact;
-            int id;
-            while (true)
-            {
-                Console.WriteLine("Input id of note to be changed or '0' to go to menu");
-                exact = int.TryParse(Console.ReadLine(), out id);
-                if (exact)
-                {
-                    if (fileCabinetService.GetStat() >= id)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        Console.WriteLine($"#{id} record is not found.");
-                    }
-                }
-            }
-
-            if (id == 0)
-            {
-                return;
-            }
-
-            CreateOrEditCommands(out string firstName, out string lastName, out DateTime dateOfBirth, out decimal personalWage, out char favouriteNumeral, out short personalHeight);
-            FileCabinetRecord record = new FileCabinetRecord() { Id = id, FirstName = firstName, LastName = lastName, DateOfBirth = dateOfBirth, Wage = personalWage, FavouriteNumeral = favouriteNumeral, Height = personalHeight };
-            fileCabinetService.EditRecord(record);
-        }
-
-        private static void Exit(string parameters)
-        {
-            Console.WriteLine("Exiting an application...");
-            isRunning = false;
-        }
-
-        private static void Export(string parameters)
-        {
-            if (parameters.Split(' ').Length < 2)
-            {
-                Console.WriteLine("Type type and path to export file.");
-                return;
-            }
-
-            string[] values = parameters.Split(' ', 2);
-            string pathDirectory = string.Empty;
-            if (values[0].Equals("csv", StringComparison.InvariantCultureIgnoreCase))
-            {
-                if (values[1].Contains('\\', StringComparison.InvariantCulture) && !values[1].EndsWith("/", StringComparison.InvariantCulture))
-                {
-                    pathDirectory = values[1].Substring(0, values[1].LastIndexOf("\\", StringComparison.InvariantCulture));
-                }
-
-                if (Directory.Exists(pathDirectory) || Path.GetExtension(values[1]) == ".csv")
-                {
-                    if (File.Exists(values[1]))
-                    {
-                        Console.WriteLine($"File is exist - rewrite {values[1]}? [y/n]");
-                    M:
-                        switch (Console.ReadLine())
-                        {
-                            case "y":
-                                using (StreamWriter writer = new StreamWriter(values[1]))
-                                {
-                                    Program.fileCabinetService.MakeSnapshot().SaveToCsv(writer);
-                                    Console.WriteLine($"All records are exported to file {values[1]}");
-                                }
-
-                                break;
-                            case "n":
-                                break;
-                            default:
-                                Console.WriteLine("Type 'y' or 'n' to continue.");
-                                goto M;
-                        }
-                    }
-                    else
-                    {
-                        using (StreamWriter writer = new StreamWriter(values[1]))
-                        {
-                            Program.fileCabinetService.MakeSnapshot().SaveToCsv(writer);
-                            Console.WriteLine($"All records are exported to file {values[1]}");
-                        }
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Directory not exists");
-                }
-            }
-            else if (values[0].Equals("xml", StringComparison.InvariantCultureIgnoreCase))
-            {
-                if (values[1].Contains('\\', StringComparison.InvariantCulture) && !values[1].EndsWith("/", StringComparison.InvariantCulture))
-                {
-                    pathDirectory = values[1].Substring(0, values[1].LastIndexOf("\\", StringComparison.InvariantCulture));
-                }
-
-                if (Directory.Exists(pathDirectory) || Path.GetExtension(values[1]) == ".xml")
-                {
-                    if (File.Exists(values[1]))
-                    {
-                        Console.WriteLine($"File is exist - rewrite {values[1]}? [y/n]");
-                    M:
-                        switch (Console.ReadLine())
-                        {
-                            case "y":
-                                using (XmlWriter writer = XmlWriter.Create(values[1]))
-                                {
-                                    Program.fileCabinetService.MakeSnapshot().SaveToXml(writer);
-                                    Console.WriteLine($"All records are exported to file {values[1]}");
-                                }
-
-                                break;
-                            case "n":
-                                break;
-                            default:
-                                Console.WriteLine("Type 'y' or 'n' to continue.");
-                                goto M;
-                        }
-                    }
-                    else
-                    {
-                        using (XmlWriter writer = XmlWriter.Create(values[1]))
-                        {
-                            Program.fileCabinetService.MakeSnapshot().SaveToXml(writer);
-                            Console.WriteLine($"All records are exported to file {values[1]}");
-                        }
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Directory not exists");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Error comand. There is only 'export csv' and 'export xml' available commands.");
-            }
-        }
-
-        private static void Import(string parameters)
-        {
-            if (parameters.Split(' ').Length < 2)
-            {
-                Console.WriteLine("Type type and path to export file.");
-                return;
-            }
-
-            string[] values = parameters.Split(' ', 2);
-            string pathDirectory = string.Empty;
-            if (values[0].Equals("csv", StringComparison.InvariantCultureIgnoreCase))
-            {
-                if (File.Exists(values[1]))
-                {
-                    using (FileStream fs = new FileStream(values[1], FileMode.Open))
-                    {
-                        List<FileCabinetRecord> list = new List<FileCabinetRecord>();
-                        FileCabinetServiceSnapshot snap = new FileCabinetServiceSnapshot(list);
-                        snap.LoadFromCsv(fs);
-                        fileCabinetService.Restore(snap);
-                        Console.WriteLine($"Notes has been imported from {values[1]}.");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("File not exists");
-                }
-            }
-            else if (values[0].Equals("xml", StringComparison.InvariantCultureIgnoreCase))
-            {
-                if (File.Exists(values[1]))
-                {
-                    using (FileStream fs = new FileStream(values[1], FileMode.Open))
-                    {
-                        List<FileCabinetRecord> list = new List<FileCabinetRecord>();
-                        FileCabinetServiceSnapshot snap = new FileCabinetServiceSnapshot(list);
-                        snap.LoadFromXml(fs);
-                        fileCabinetService.Restore(snap);
-                        Console.WriteLine($"Notes has been imported from {values[1]}.");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("File not exists");
-                }
-            }
-        }
-
-        private static void Remove(string parameters)
-        {
-            if (parameters.Split(' ').Length > 1)
-            {
-                Console.WriteLine("Error input.");
-                return;
-            }
-
-            string[] values = parameters.Split(' ', 1);
-            if (int.TryParse(values[0], out int number))
-            {
-                fileCabinetService.Remove(number);
-            }
-            else
-            {
-                Console.WriteLine("Error input");
-            }
-        }
-
-        private static void CreateOrEditCommands(out string firstName, out string lastName, out DateTime dateOfBirth, out decimal personalWage, out char favouriteNumeral, out short personalHeight)
-        {
-            personalWage = 0;
-            personalHeight = 0;
-            favouriteNumeral = ' ';
-            firstName = string.Empty;
-            lastName = string.Empty;
-            Console.WriteLine("Input Firstname");
-            firstName = ReadInput(StringConventer, StringValidator);
-            Console.WriteLine("Input Lastname");
-            lastName = ReadInput(StringConventer, StringValidator);
-            dateOfBirth = InputBirthDate();
-            Console.WriteLine("Input wage");
-            personalWage = ReadInput(DecimalConventer, DecimalValidator);
-            Console.WriteLine("Input height");
-            personalHeight = ReadInput(ShortConventer, ShortValidator);
-            Console.WriteLine("Input favourite numeral");
-            favouriteNumeral = ReadInput(CharConventer, CharValidator);
+            var createHandler = new CreateCommandHandler();
+            var editHandler = new EditCommandHandler();
+            var exitHandler = new ExitCommandHandler();
+            var exportHandler = new ExportCommandHandler();
+            var findHandler = new FindCommandHandler();
+            var helpHandler = new HelpCommandHandler();
+            var importHandler = new ImportCommandHandler();
+            var listHandler = new ListCommandHandler();
+            var purgeHandler = new PurgeCommandHandler();
+            var removeHandler = new RemoveCommandHandler();
+            var statHandler = new StatCommandHandler();
+            var defaultHandler = new DefaultHandler();
+            createHandler.SetNext(editHandler);
+            editHandler.SetNext(exitHandler);
+            exitHandler.SetNext(exportHandler);
+            exportHandler.SetNext(findHandler);
+            findHandler.SetNext(helpHandler);
+            helpHandler.SetNext(importHandler);
+            importHandler.SetNext(listHandler);
+            listHandler.SetNext(purgeHandler);
+            purgeHandler.SetNext(removeHandler);
+            removeHandler.SetNext(statHandler);
+            statHandler.SetNext(defaultHandler);
+            return createHandler;
         }
 
         private static DateTime InputBirthDate()
