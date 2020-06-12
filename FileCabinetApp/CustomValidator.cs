@@ -8,7 +8,7 @@ namespace FileCabinetApp
     /// <summary>
     /// Класс, представляющий измененный валидатор.
     /// </summary>
-    public class CustomValidator : IRecordValidator
+    public class CustomValidator : CompositeValidator
     {
         private const int MinLength = 2;
         private const int MaxLength = 15;
@@ -22,17 +22,19 @@ namespace FileCabinetApp
         private static readonly DateTime To = DateTime.Now;
 
         /// <summary>
-        /// Метод, выполняющий измененную валидацию.
+        /// Initializes a new instance of the <see cref="CustomValidator"/> class.
         /// </summary>
-        /// <param name="newRecord">Проверяемая запись.</param>
-        public void ValidateParameters(FileCabinetRecord newRecord)
+        public CustomValidator()
+            : base(new IRecordValidator[]
+            {
+                new FirstNameValidator(MinLength, MaxLength),
+                new LastNameValidator(MinLength, MaxLength),
+                new DateOfBirthValidator(From, To),
+                new WageValidator(MinWage),
+                new FavouriteNumeralValidator(MinNum, MaxNum, Four),
+                new HeightValidator(MinHeight, MaxHeight),
+            })
         {
-            new FirstNameValidator(MinLength, MaxLength).ValidateParameters(newRecord);
-            new LastNameValidator(MinLength, MaxLength).ValidateParameters(newRecord);
-            new DateOfBirthValidator(From, To).ValidateParameters(newRecord);
-            new WageValidator(MinWage).ValidateParameters(newRecord);
-            new FavouriteNumeralValidator(MinNum, MaxNum, Four).ValidateParameters(newRecord);
-            new HeightValidator(MinHeight, MaxHeight).ValidateParameters(newRecord);
         }
     }
 }

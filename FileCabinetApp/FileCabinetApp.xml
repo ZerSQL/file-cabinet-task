@@ -296,27 +296,42 @@
             </summary>
             <param name="request">Запрос.</param>
         </member>
+        <member name="T:FileCabinetApp.CompositeValidator">
+            <summary>
+            Компоновщик.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CompositeValidator.#ctor(System.Collections.Generic.IEnumerable{FileCabinetApp.IRecordValidator})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CompositeValidator"/> class.
+            </summary>
+            <param name="validators">Все валидаторы.</param>
+        </member>
+        <member name="M:FileCabinetApp.CompositeValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод производящий валидацию всех свойств.
+            </summary>
+            <param name="newRecord">Запись, подвергаемая валидации.</param>
+        </member>
         <member name="T:FileCabinetApp.CustomValidator">
             <summary>
             Класс, представляющий измененный валидатор.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CustomValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.CustomValidator.#ctor">
             <summary>
-            Метод, выполняющий измененную валидацию.
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CustomValidator"/> class.
             </summary>
-            <param name="newRecord">Проверяемая запись.</param>
         </member>
         <member name="T:FileCabinetApp.DefaultValidator">
             <summary>
             Класс, представляющий обычный валидатор.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.DefaultValidator.#ctor">
             <summary>
-            Метод, выполняющий обычную валидацию.
+            Initializes a new instance of the <see cref="T:FileCabinetApp.DefaultValidator"/> class.
             </summary>
-            <param name="newRecord">Проверяемая запись.</param>
         </member>
         <member name="T:FileCabinetApp.FileCabinetFilesystemService">
             <summary>
