@@ -802,5 +802,137 @@
             <param name="favouriteNumeral">Любимое число.</param>
             <param name="personalHeight">Рост.</param>
         </member>
+        <member name="T:FileCabinetApp.Validators.CustomDateOfBirthValidator">
+            <summary>
+            Класс измененной валидации даты рождения.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.CustomDateOfBirthValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, производящий валидацию.
+            </summary>
+            <param name="newRecord">Запись, подвергаемая валидации.</param>
+        </member>
+        <member name="T:FileCabinetApp.Validators.CustomFavouriteNumeralValidator">
+            <summary>
+            Класс измененной валидации любимого числа.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.CustomFavouriteNumeralValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, производящий валидацию.
+            </summary>
+            <param name="newRecord">Запись, подвергаемая валидации.</param>
+        </member>
+        <member name="T:FileCabinetApp.Validators.CustomFirstNameValidator">
+            <summary>
+            Класс измененной валидации имени.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.CustomFirstNameValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, производящий валидацию.
+            </summary>
+            <param name="newRecord">Запись, подвергаемая валидации.</param>
+        </member>
+        <member name="T:FileCabinetApp.Validators.CustomHeightValidator">
+            <summary>
+            Класс измененной валидации роста.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.CustomHeightValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, производящий валидацию.
+            </summary>
+            <param name="newRecord">Запись, подвергаемая валидации.</param>
+        </member>
+        <member name="T:FileCabinetApp.Validators.CustomLastNameValidator">
+            <summary>
+            Класс измененной валидации фамилии.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.CustomLastNameValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, производящий валидацию.
+            </summary>
+            <param name="newRecord">Запись, подвергаемая валидации.</param>
+        </member>
+        <member name="T:FileCabinetApp.Validators.CustomWageValidator">
+            <summary>
+            Класс измененной валидации заработной платы.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.CustomWageValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, производящий валидацию.
+            </summary>
+            <param name="newRecord">Запись, подвергаемая валидации.</param>
+        </member>
+        <member name="T:FileCabinetApp.Validators.DefaultDateOfBirthValidator">
+            <summary>
+            Класс обычной валидации даты рождения.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.DefaultDateOfBirthValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, производящий валидацию.
+            </summary>
+            <param name="newRecord">Запись, подвергаемая валидации.</param>
+        </member>
+        <member name="T:FileCabinetApp.Validators.DefaultFavouriteNumeralValidator">
+            <summary>
+            Класс обычной валидации любимого числа.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.DefaultFavouriteNumeralValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, производящий валидацию.
+            </summary>
+            <param name="newRecord">Запись, подвергаемая валидации.</param>
+        </member>
+        <member name="T:FileCabinetApp.Validators.DefaultFirstNameValidator">
+            <summary>
+            Класс обычной валидации имени.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.DefaultFirstNameValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, производящий валидацию.
+            </summary>
+            <param name="newRecord">Запись, подвергаемая валидации.</param>
+        </member>
+        <member name="T:FileCabinetApp.Validators.DefaultHeightValidator">
+            <summary>
+            Класс обычной валидации роста.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.DefaultHeightValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, производящий валидацию.
+            </summary>
+            <param name="newRecord">Запись, подвергаемая валидации.</param>
+        </member>
+        <member name="T:FileCabinetApp.Validators.DefaultLastNameValidator">
+            <summary>
+            Класс обычной валидации фамилии.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.DefaultLastNameValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, производящий валидацию.
+            </summary>
+            <param name="newRecord">Запись, подвергаемая валидации.</param>
+        </member>
+        <member name="T:FileCabinetApp.Validators.DefaultWageValidator">
+            <summary>
+            Класс обычной валидации заработной платы.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.DefaultWageValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, производящий валидацию.
+            </summary>
+            <param name="newRecord">Запись, подвергаемая валидации.</param>
+        </member>
     </members>
 </doc>
