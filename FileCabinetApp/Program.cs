@@ -10,11 +10,14 @@ namespace FileCabinetApp
     /// </summary>
     public static class Program
     {
+        /// <summary>
+        /// Проверка на продолжение работы программы.
+        /// </summary>
         public static bool isRunning = true;
-        public static IFileCabinetService fileCabinetService;
         private const string DeveloperName = "Andrei Drabliankou";
         private const string HintMessage = "Enter your command, or enter 'help' to get help.";
         private static bool isDefaultRules = true;
+        private static IFileCabinetService fileCabinetService;
 
         /// <summary>
         /// Точка входа в программу и вызов функционала в зависимости от введенной команды.
@@ -130,17 +133,17 @@ namespace FileCabinetApp
 
         private static ICommandHandler CreateCommandHandlers()
         {
-            var createHandler = new CreateCommandHandler();
-            var editHandler = new EditCommandHandler();
+            var createHandler = new CreateCommandHandler(Program.fileCabinetService);
+            var editHandler = new EditCommandHandler(Program.fileCabinetService);
             var exitHandler = new ExitCommandHandler();
-            var exportHandler = new ExportCommandHandler();
-            var findHandler = new FindCommandHandler();
+            var exportHandler = new ExportCommandHandler(Program.fileCabinetService);
+            var findHandler = new FindCommandHandler(Program.fileCabinetService);
             var helpHandler = new HelpCommandHandler();
-            var importHandler = new ImportCommandHandler();
-            var listHandler = new ListCommandHandler();
-            var purgeHandler = new PurgeCommandHandler();
-            var removeHandler = new RemoveCommandHandler();
-            var statHandler = new StatCommandHandler();
+            var importHandler = new ImportCommandHandler(Program.fileCabinetService);
+            var listHandler = new ListCommandHandler(Program.fileCabinetService);
+            var purgeHandler = new PurgeCommandHandler(Program.fileCabinetService);
+            var removeHandler = new RemoveCommandHandler(Program.fileCabinetService);
+            var statHandler = new StatCommandHandler(Program.fileCabinetService);
             var defaultHandler = new DefaultHandler();
             createHandler.SetNext(editHandler);
             editHandler.SetNext(exitHandler);

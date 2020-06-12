@@ -7,8 +7,17 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Класс, представляющий обработчик команды редактирования.
     /// </summary>
-    public class EditCommandHandler : CommandHandlerBase
+    public class EditCommandHandler : ServiceCommandHandlerBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditCommandHandler"/> class.
+        /// </summary>
+        /// <param name="service">Используемый сервис.</param>
+        public EditCommandHandler(IFileCabinetService service)
+            : base(service)
+        {
+        }
+
         /// <summary>
         /// Обработчкик команды редактирования.
         /// </summary>
@@ -19,7 +28,7 @@ namespace FileCabinetApp.CommandHandlers
             {
                 if (request.Command.Equals("Edit", comparisonType: StringComparison.InvariantCultureIgnoreCase))
                 {
-                    Edit(request.Parameters);
+                    this.Edit(request.Parameters);
                 }
                 else
                 {
@@ -28,7 +37,7 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private static void Edit(string parameters)
+        private void Edit(string parameters)
         {
             bool exact;
             int id;
@@ -38,7 +47,7 @@ namespace FileCabinetApp.CommandHandlers
                 exact = int.TryParse(Console.ReadLine(), out id);
                 if (exact)
                 {
-                    if (Program.fileCabinetService.GetStat() >= id)
+                    if (this.service.GetStat() >= id)
                     {
                         break;
                     }
@@ -56,7 +65,7 @@ namespace FileCabinetApp.CommandHandlers
 
             Program.CreateOrEditCommands(out string firstName, out string lastName, out DateTime dateOfBirth, out decimal personalWage, out char favouriteNumeral, out short personalHeight);
             FileCabinetRecord record = new FileCabinetRecord() { Id = id, FirstName = firstName, LastName = lastName, DateOfBirth = dateOfBirth, Wage = personalWage, FavouriteNumeral = favouriteNumeral, Height = personalHeight };
-            Program.fileCabinetService.EditRecord(record);
+            this.service.EditRecord(record);
         }
     }
 }

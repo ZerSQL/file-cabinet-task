@@ -7,8 +7,17 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Обработка команды создания.
     /// </summary>
-    public class CreateCommandHandler : CommandHandlerBase
+    public class CreateCommandHandler : ServiceCommandHandlerBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CreateCommandHandler"/> class.
+        /// </summary>
+        /// <param name="service">Используемый сервис.</param>
+        public CreateCommandHandler(IFileCabinetService service)
+            : base(service)
+        {
+        }
+
         /// <summary>
         /// Обработчкик команды создания.
         /// </summary>
@@ -19,7 +28,7 @@ namespace FileCabinetApp.CommandHandlers
             {
                 if (request.Command.Equals("Create", comparisonType: StringComparison.InvariantCultureIgnoreCase))
                 {
-                    Create(request.Parameters);
+                    this.Create(request.Parameters);
                 }
                 else
                 {
@@ -28,11 +37,11 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private static void Create(string parameters)
+        private void Create(string parameters)
         {
             Program.CreateOrEditCommands(out string firstName, out string lastName, out DateTime dateOfBirth, out decimal personalWage, out char favouriteNumeral, out short personalHeight);
             FileCabinetRecord newRecord = new FileCabinetRecord() { FirstName = firstName, LastName = lastName, DateOfBirth = dateOfBirth, Wage = personalWage, FavouriteNumeral = favouriteNumeral, Height = personalHeight };
-            Program.fileCabinetService.CreateRecord(newRecord);
+            this.service.CreateRecord(newRecord);
         }
     }
 }

@@ -8,8 +8,17 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Класс, представляющий обработчик команды импорта.
     /// </summary>
-    public class ImportCommandHandler : CommandHandlerBase
+    public class ImportCommandHandler : ServiceCommandHandlerBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImportCommandHandler"/> class.
+        /// </summary>
+        /// <param name="service">Используемый сервис.</param>
+        public ImportCommandHandler(IFileCabinetService service)
+            : base(service)
+        {
+        }
+
         /// <summary>
         /// Обработчкик команды импорта.
         /// </summary>
@@ -20,7 +29,7 @@ namespace FileCabinetApp.CommandHandlers
             {
                 if (request.Command.Equals("Import", comparisonType: StringComparison.InvariantCultureIgnoreCase))
                 {
-                    Import(request.Parameters);
+                    this.Import(request.Parameters);
                 }
                 else
                 {
@@ -29,7 +38,7 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private static void Import(string parameters)
+        private void Import(string parameters)
         {
             if (parameters.Split(' ').Length < 2)
             {
@@ -48,7 +57,7 @@ namespace FileCabinetApp.CommandHandlers
                         List<FileCabinetRecord> list = new List<FileCabinetRecord>();
                         FileCabinetServiceSnapshot snap = new FileCabinetServiceSnapshot(list);
                         snap.LoadFromCsv(fs);
-                        Program.fileCabinetService.Restore(snap);
+                        this.service.Restore(snap);
                         Console.WriteLine($"Notes has been imported from {values[1]}.");
                     }
                 }
@@ -66,7 +75,7 @@ namespace FileCabinetApp.CommandHandlers
                         List<FileCabinetRecord> list = new List<FileCabinetRecord>();
                         FileCabinetServiceSnapshot snap = new FileCabinetServiceSnapshot(list);
                         snap.LoadFromXml(fs);
-                        Program.fileCabinetService.Restore(snap);
+                        this.service.Restore(snap);
                         Console.WriteLine($"Notes has been imported from {values[1]}.");
                     }
                 }

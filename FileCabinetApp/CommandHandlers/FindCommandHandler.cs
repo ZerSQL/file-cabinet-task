@@ -8,8 +8,17 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Класс, представляющий обработчик команды поиска.
     /// </summary>
-    public class FindCommandHandler : CommandHandlerBase
+    public class FindCommandHandler : ServiceCommandHandlerBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FindCommandHandler"/> class.
+        /// </summary>
+        /// <param name="service">Используемый сервсис.</param>
+        public FindCommandHandler(IFileCabinetService service)
+            : base(service)
+        {
+        }
+
         /// <summary>
         /// Обработчкик команды поиска.
         /// </summary>
@@ -20,7 +29,7 @@ namespace FileCabinetApp.CommandHandlers
             {
                 if (request.Command.Equals("Find", comparisonType: StringComparison.InvariantCultureIgnoreCase))
                 {
-                    Find(request.Parameters);
+                    this.Find(request.Parameters);
                 }
                 else
                 {
@@ -29,7 +38,7 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private static void Find(string parameters)
+        private void Find(string parameters)
         {
             string[] propertyAndValue = parameters.Replace("\"", string.Empty, StringComparison.CurrentCultureIgnoreCase).Split(' ', 2);
             if (propertyAndValue.Length != 2)
@@ -40,21 +49,21 @@ namespace FileCabinetApp.CommandHandlers
 
             if (propertyAndValue[0].ToLower(CultureInfo.CurrentCulture) == "firstname")
             {
-                foreach (var note in Program.fileCabinetService.FindByFirstName(propertyAndValue[1]))
+                foreach (var note in this.service.FindByFirstName(propertyAndValue[1]))
                 {
                     Console.WriteLine($"#{note.Id}, {note.FirstName}, {note.LastName}, {note.DateOfBirth.ToShortDateString()}");
                 }
             }
             else if (propertyAndValue[0].ToLower(CultureInfo.CurrentCulture) == "lastname")
             {
-                foreach (var note in Program.fileCabinetService.FindByLastName(propertyAndValue[1]))
+                foreach (var note in this.service.FindByLastName(propertyAndValue[1]))
                 {
                     Console.WriteLine($"#{note.Id}, {note.FirstName}, {note.LastName}, {note.DateOfBirth.ToShortDateString()}");
                 }
             }
             else if (propertyAndValue[0].ToLower(CultureInfo.CurrentCulture) == "dateofbirth")
             {
-                foreach (var note in Program.fileCabinetService.FindByBirthDate(propertyAndValue[1]))
+                foreach (var note in this.service.FindByBirthDate(propertyAndValue[1]))
                 {
                     Console.WriteLine($"#{note.Id}, {note.FirstName}, {note.LastName}, {note.DateOfBirth.ToShortDateString()}");
                 }

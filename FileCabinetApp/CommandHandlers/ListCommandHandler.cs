@@ -7,8 +7,17 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Класс, представляющий обработик команды вывода записей.
     /// </summary>
-    public class ListCommandHandler : CommandHandlerBase
+    public class ListCommandHandler : ServiceCommandHandlerBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
+        /// </summary>
+        /// <param name="service">Используемый сервис.</param>
+        public ListCommandHandler(IFileCabinetService service)
+            : base(service)
+        {
+        }
+
         /// <summary>
         /// Обработчкик команды вывода записей.
         /// </summary>
@@ -19,7 +28,7 @@ namespace FileCabinetApp.CommandHandlers
             {
                 if (request.Command.Equals("List", comparisonType: StringComparison.InvariantCultureIgnoreCase))
                 {
-                    List(request.Parameters);
+                    this.List(request.Parameters);
                 }
                 else
                 {
@@ -28,11 +37,11 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private static void List(string parameters)
+        private void List(string parameters)
         {
-            if (Program.fileCabinetService.GetRecords().Count > 0)
+            if (this.service.GetRecords().Count > 0)
             {
-                foreach (var t in Program.fileCabinetService.GetRecords())
+                foreach (var t in this.service.GetRecords())
                 {
                     Console.WriteLine($"#{t.Id}, {t.FirstName}, {t.LastName}, {t.DateOfBirth.ToShortDateString()}, height: {t.Height}, wage: {t.Wage}, favourite numeral: {t.FavouriteNumeral}");
                 }

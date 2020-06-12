@@ -7,8 +7,17 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Класс, представляющий команду вывода количества записей.
     /// </summary>
-    public class StatCommandHandler : CommandHandlerBase
+    public class StatCommandHandler : ServiceCommandHandlerBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StatCommandHandler"/> class.
+        /// </summary>
+        /// <param name="service">Используемый сервис.</param>
+        public StatCommandHandler(IFileCabinetService service)
+            : base(service)
+        {
+        }
+
         /// <summary>
         /// Обработчкик команды вывода количества записей.
         /// </summary>
@@ -19,7 +28,7 @@ namespace FileCabinetApp.CommandHandlers
             {
                 if (request.Command.Equals("Stat", comparisonType: StringComparison.InvariantCultureIgnoreCase))
                 {
-                    Stat(request.Parameters);
+                    this.Stat(request.Parameters);
                 }
                 else
                 {
@@ -28,9 +37,9 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private static void Stat(string parameters)
+        private void Stat(string parameters)
         {
-            var recordsCount = Program.fileCabinetService.GetStat();
+            var recordsCount = this.service.GetStat();
             Console.WriteLine($"{recordsCount} record(s).");
         }
     }

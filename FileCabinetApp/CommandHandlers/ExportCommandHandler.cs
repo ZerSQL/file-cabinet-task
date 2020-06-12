@@ -9,8 +9,17 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Класс, представляющий обработчик команды экспорта.
     /// </summary>
-    public class ExportCommandHandler : CommandHandlerBase
+    public class ExportCommandHandler : ServiceCommandHandlerBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExportCommandHandler"/> class.
+        /// </summary>
+        /// <param name="service">Используемый сервис.</param>
+        public ExportCommandHandler(IFileCabinetService service)
+            : base(service)
+        {
+        }
+
         /// <summary>
         /// Обработчкик команды экспорта.
         /// </summary>
@@ -21,7 +30,7 @@ namespace FileCabinetApp.CommandHandlers
             {
                 if (request.Command.Equals("Export", comparisonType: StringComparison.InvariantCultureIgnoreCase))
                 {
-                    Export(request.Parameters);
+                    this.Export(request.Parameters);
                 }
                 else
                 {
@@ -30,7 +39,7 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private static void Export(string parameters)
+        private void Export(string parameters)
         {
             if (parameters.Split(' ').Length < 2)
             {
@@ -58,7 +67,7 @@ namespace FileCabinetApp.CommandHandlers
                             case "y":
                                 using (StreamWriter writer = new StreamWriter(values[1]))
                                 {
-                                    Program.fileCabinetService.MakeSnapshot().SaveToCsv(writer);
+                                    this.service.MakeSnapshot().SaveToCsv(writer);
                                     Console.WriteLine($"All records are exported to file {values[1]}");
                                 }
 
@@ -74,7 +83,7 @@ namespace FileCabinetApp.CommandHandlers
                     {
                         using (StreamWriter writer = new StreamWriter(values[1]))
                         {
-                            Program.fileCabinetService.MakeSnapshot().SaveToCsv(writer);
+                            this.service.MakeSnapshot().SaveToCsv(writer);
                             Console.WriteLine($"All records are exported to file {values[1]}");
                         }
                     }
@@ -102,7 +111,7 @@ namespace FileCabinetApp.CommandHandlers
                             case "y":
                                 using (XmlWriter writer = XmlWriter.Create(values[1]))
                                 {
-                                    Program.fileCabinetService.MakeSnapshot().SaveToXml(writer);
+                                    this.service.MakeSnapshot().SaveToXml(writer);
                                     Console.WriteLine($"All records are exported to file {values[1]}");
                                 }
 
@@ -118,7 +127,7 @@ namespace FileCabinetApp.CommandHandlers
                     {
                         using (XmlWriter writer = XmlWriter.Create(values[1]))
                         {
-                            Program.fileCabinetService.MakeSnapshot().SaveToXml(writer);
+                            this.service.MakeSnapshot().SaveToXml(writer);
                             Console.WriteLine($"All records are exported to file {values[1]}");
                         }
                     }

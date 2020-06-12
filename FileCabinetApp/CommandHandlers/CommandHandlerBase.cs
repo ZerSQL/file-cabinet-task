@@ -18,7 +18,9 @@ namespace FileCabinetApp.CommandHandlers
         /// Абстрактный метод(выполняет команду запроса).
         /// </summary>
         /// <param name="request">Запрос.</param>
-        public abstract void Handle(AppCommandRequest request);
+        public virtual void Handle(AppCommandRequest request)
+        {
+        }
 
         /// <summary>
         /// Метод перехода к следующему обработчику.

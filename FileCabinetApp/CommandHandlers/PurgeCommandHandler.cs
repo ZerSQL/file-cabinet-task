@@ -7,8 +7,17 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Класс, представляющий обработчик команды удаления пустот.
     /// </summary>
-    public class PurgeCommandHandler : CommandHandlerBase
+    public class PurgeCommandHandler : ServiceCommandHandlerBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PurgeCommandHandler"/> class.
+        /// </summary>
+        /// <param name="service">Используемый сервис.</param>
+        public PurgeCommandHandler(IFileCabinetService service)
+            : base(service)
+        {
+        }
+
         /// <summary>
         /// Обработчкик команды удаления пустот.
         /// </summary>
@@ -19,7 +28,7 @@ namespace FileCabinetApp.CommandHandlers
             {
                 if (request.Command.Equals("Purge", comparisonType: StringComparison.InvariantCultureIgnoreCase))
                 {
-                    Purge(request.Parameters);
+                    this.Purge(request.Parameters);
                 }
                 else
                 {
@@ -28,9 +37,9 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private static void Purge(string parameters)
+        private void Purge(string parameters)
         {
-            Program.fileCabinetService.Purge();
+            this.service.Purge();
         }
     }
 }

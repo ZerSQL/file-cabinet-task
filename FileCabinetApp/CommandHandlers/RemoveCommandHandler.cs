@@ -7,8 +7,17 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Класс, представляющий команду удаления записи.
     /// </summary>
-    public class RemoveCommandHandler : CommandHandlerBase
+    public class RemoveCommandHandler : ServiceCommandHandlerBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RemoveCommandHandler"/> class.
+        /// </summary>
+        /// <param name="service">Используемый сервис.</param>
+        public RemoveCommandHandler(IFileCabinetService service)
+            : base(service)
+        {
+        }
+
         /// <summary>
         /// Обработчкик команды удаления записи.
         /// </summary>
@@ -19,7 +28,7 @@ namespace FileCabinetApp.CommandHandlers
             {
                 if (request.Command.Equals("Remove", comparisonType: StringComparison.InvariantCultureIgnoreCase))
                 {
-                    Remove(request.Parameters);
+                    this.Remove(request.Parameters);
                 }
                 else
                 {
@@ -28,7 +37,7 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private static void Remove(string parameters)
+        private void Remove(string parameters)
         {
             if (parameters.Split(' ').Length > 1)
             {
@@ -39,7 +48,7 @@ namespace FileCabinetApp.CommandHandlers
             string[] values = parameters.Split(' ', 1);
             if (int.TryParse(values[0], out int number))
             {
-                Program.fileCabinetService.Remove(number);
+                this.service.Remove(number);
             }
             else
             {
