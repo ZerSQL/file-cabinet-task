@@ -10,15 +10,12 @@ namespace FileCabinetApp
     /// </summary>
     public static class Program
     {
-        /// <summary>
-        /// Проверка на продолжение работы программы.
-        /// </summary>
-        public static bool isRunning = true;
         private const string DeveloperName = "Andrei Drabliankou";
         private const string HintMessage = "Enter your command, or enter 'help' to get help.";
         private static bool isDefaultRules = true;
+        private static bool isRunning = true;
         private static IFileCabinetService fileCabinetService;
-
+        private static Action<bool> stopProgram = IsRunning;
         /// <summary>
         /// Точка входа в программу и вызов функционала в зависимости от введенной команды.
         /// </summary>
@@ -135,7 +132,7 @@ namespace FileCabinetApp
         {
             var createHandler = new CreateCommandHandler(Program.fileCabinetService);
             var editHandler = new EditCommandHandler(Program.fileCabinetService);
-            var exitHandler = new ExitCommandHandler();
+            var exitHandler = new ExitCommandHandler(stopProgram);
             var exportHandler = new ExportCommandHandler(Program.fileCabinetService);
             var findHandler = new FindCommandHandler(Program.fileCabinetService);
             var helpHandler = new HelpCommandHandler();
@@ -157,6 +154,11 @@ namespace FileCabinetApp
             removeHandler.SetNext(statHandler);
             statHandler.SetNext(defaultHandler);
             return createHandler;
+        }
+
+        private static void IsRunning(bool isRunning)
+        {
+            Program.isRunning = false;
         }
 
         private static DateTime InputBirthDate()

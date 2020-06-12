@@ -755,11 +755,6 @@
             Класс, содержащий основную информацию о программе.
             </summary>
         </member>
-        <member name="F:FileCabinetApp.Program.isRunning">
-            <summary>
-            Проверка на продолжение работы программы.
-            </summary>
-        </member>
         <member name="M:FileCabinetApp.Program.Main(System.String[])">
             <summary>
             Точка входа в программу и вызов функционала в зависимости от введенной команды.

@@ -9,6 +9,13 @@ namespace FileCabinetApp.CommandHandlers
     /// </summary>
     public class ExitCommandHandler : CommandHandlerBase
     {
+        private static Action<bool> action;
+
+        public ExitCommandHandler(Action<bool> isRunning)
+        {
+            action = isRunning;
+        }
+
         /// <summary>
         /// Обработчкик команды выхода.
         /// </summary>
@@ -31,7 +38,7 @@ namespace FileCabinetApp.CommandHandlers
         private static void Exit(string parameters)
         {
             Console.WriteLine("Exiting an application...");
-            Program.isRunning = false;
+            action(default(bool));
         }
     }
 }
