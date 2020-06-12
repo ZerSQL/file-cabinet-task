@@ -16,6 +16,7 @@ namespace FileCabinetApp
         private static bool isRunning = true;
         private static IFileCabinetService fileCabinetService;
         private static Action<bool> stopProgram = IsRunning;
+
         /// <summary>
         /// Точка входа в программу и вызов функционала в зависимости от введенной команды.
         /// </summary>
@@ -130,14 +131,17 @@ namespace FileCabinetApp
 
         private static ICommandHandler CreateCommandHandlers()
         {
+            var recordPrinter = new DefaultRecordPrinter();
             var createHandler = new CreateCommandHandler(Program.fileCabinetService);
             var editHandler = new EditCommandHandler(Program.fileCabinetService);
             var exitHandler = new ExitCommandHandler(stopProgram);
             var exportHandler = new ExportCommandHandler(Program.fileCabinetService);
-            var findHandler = new FindCommandHandler(Program.fileCabinetService);
+            var findHandler = new FindCommandHandler(
+                Program.fileCabinetService, recordPrinter);
             var helpHandler = new HelpCommandHandler();
             var importHandler = new ImportCommandHandler(Program.fileCabinetService);
-            var listHandler = new ListCommandHandler(Program.fileCabinetService);
+            var listHandler = new ListCommandHandler(
+                Program.fileCabinetService, recordPrinter);
             var purgeHandler = new PurgeCommandHandler(Program.fileCabinetService);
             var removeHandler = new RemoveCommandHandler(Program.fileCabinetService);
             var statHandler = new StatCommandHandler(Program.fileCabinetService);

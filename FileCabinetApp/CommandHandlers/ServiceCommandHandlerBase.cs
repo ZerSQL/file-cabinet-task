@@ -7,7 +7,7 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Суперкласс с сервисом.
     /// </summary>
-    public class ServiceCommandHandlerBase : CommandHandlerBase
+    public abstract class ServiceCommandHandlerBase : CommandHandlerBase
     {
         /// <summary>
         /// Используемый сервис.
@@ -18,7 +18,7 @@ namespace FileCabinetApp.CommandHandlers
         /// Initializes a new instance of the <see cref="ServiceCommandHandlerBase"/> class.
         /// </summary>
         /// <param name="service">Используемый сервис.</param>
-        public ServiceCommandHandlerBase(IFileCabinetService service)
+        protected ServiceCommandHandlerBase(IFileCabinetService service)
         {
             this.service = service;
         }

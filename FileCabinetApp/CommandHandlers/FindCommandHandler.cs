@@ -10,13 +10,17 @@ namespace FileCabinetApp.CommandHandlers
     /// </summary>
     public class FindCommandHandler : ServiceCommandHandlerBase
     {
+        private IRecordPrinter printer;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FindCommandHandler"/> class.
         /// </summary>
         /// <param name="service">Используемый сервсис.</param>
-        public FindCommandHandler(IFileCabinetService service)
+        /// <param name="printer">Используемый метод отображения.</param>
+        public FindCommandHandler(IFileCabinetService service, IRecordPrinter printer)
             : base(service)
         {
+            this.printer = printer;
         }
 
         /// <summary>
@@ -49,24 +53,15 @@ namespace FileCabinetApp.CommandHandlers
 
             if (propertyAndValue[0].ToLower(CultureInfo.CurrentCulture) == "firstname")
             {
-                foreach (var note in this.service.FindByFirstName(propertyAndValue[1]))
-                {
-                    Console.WriteLine($"#{note.Id}, {note.FirstName}, {note.LastName}, {note.DateOfBirth.ToShortDateString()}");
-                }
+                this.printer.Print(this.service.FindByFirstName(propertyAndValue[1]));
             }
             else if (propertyAndValue[0].ToLower(CultureInfo.CurrentCulture) == "lastname")
             {
-                foreach (var note in this.service.FindByLastName(propertyAndValue[1]))
-                {
-                    Console.WriteLine($"#{note.Id}, {note.FirstName}, {note.LastName}, {note.DateOfBirth.ToShortDateString()}");
-                }
+                this.printer.Print(this.service.FindByLastName(propertyAndValue[1]));
             }
             else if (propertyAndValue[0].ToLower(CultureInfo.CurrentCulture) == "dateofbirth")
             {
-                foreach (var note in this.service.FindByBirthDate(propertyAndValue[1]))
-                {
-                    Console.WriteLine($"#{note.Id}, {note.FirstName}, {note.LastName}, {note.DateOfBirth.ToShortDateString()}");
-                }
+                this.printer.Print(this.service.FindByBirthDate(propertyAndValue[1]));
             }
             else
             {

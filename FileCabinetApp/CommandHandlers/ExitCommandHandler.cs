@@ -11,6 +11,10 @@ namespace FileCabinetApp.CommandHandlers
     {
         private static Action<bool> action;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExitCommandHandler"/> class.
+        /// </summary>
+        /// <param name="isRunning">Делегат, выключающий программу.</param>
         public ExitCommandHandler(Action<bool> isRunning)
         {
             action = isRunning;
