@@ -817,6 +817,77 @@
             <param name="favouriteNumeral">Любимое число.</param>
             <param name="personalHeight">Рост.</param>
         </member>
+        <member name="T:FileCabinetApp.ValidatorBuilder">
+            <summary>
+            Класс для создания любых валидаторов.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.CreateDefault">
+            <summary>
+            Метод создания валидатора по умолчанию.
+            </summary>
+            <returns>Валидатор по умолчанию.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.CreateCustom">
+            <summary>
+            Метод создания измененного валидатора.
+            </summary>
+            <returns>Измененный валидатор.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.Create">
+            <summary>
+            Метод создания.
+            </summary>
+            <returns>Валидатор.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.ValidateFirstName(System.Int32,System.Int32)">
+            <summary>
+            Валидация имени.
+            </summary>
+            <param name="min">Мин.длина.</param>
+            <param name="max">Макс.длина.</param>
+            <returns>Этот же объект.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.ValidateLastName(System.Int32,System.Int32)">
+            <summary>
+            Валидация фамилии.
+            </summary>
+            <param name="min">Мин.длина.</param>
+            <param name="max">Макс.длина.</param>
+            <returns>Этот же объект.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.ValidateBirthDate(System.DateTime,System.DateTime)">
+            <summary>
+            Валидация даты рождения.
+            </summary>
+            <param name="from">Мин.дата.</param>
+            <param name="to">Макс.дата.</param>
+            <returns>Этот же объект.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.ValidateHeight(System.Int16,System.Int16)">
+            <summary>
+            Валидация роста.
+            </summary>
+            <param name="min">Мин.рост.</param>
+            <param name="max">Макс.рост.</param>
+            <returns>Этот же объект.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.ValidateWage(System.Decimal)">
+            <summary>
+            Валидация заработной платы.
+            </summary>
+            <param name="min">Мин.з/п.</param>
+            <returns>Этот же объект.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.ValidateNumeral(System.Char,System.Char,System.Char)">
+            <summary>
+            Валидация числа.
+            </summary>
+            <param name="min">Мин.число.</param>
+            <param name="max">Макс.число.</param>
+            <param name="four">Неожидаемое число.</param>
+            <returns>Этот же объект.</returns>
+        </member>
         <member name="T:FileCabinetApp.Validators.DateOfBirthValidator">
             <summary>
             Класс обычной валидации даты рождения.
