@@ -802,133 +802,109 @@
             <param name="favouriteNumeral">Любимое число.</param>
             <param name="personalHeight">Рост.</param>
         </member>
-        <member name="T:FileCabinetApp.Validators.CustomDateOfBirthValidator">
-            <summary>
-            Класс измененной валидации даты рождения.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Validators.CustomDateOfBirthValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
-            <summary>
-            Метод, производящий валидацию.
-            </summary>
-            <param name="newRecord">Запись, подвергаемая валидации.</param>
-        </member>
-        <member name="T:FileCabinetApp.Validators.CustomFavouriteNumeralValidator">
-            <summary>
-            Класс измененной валидации любимого числа.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Validators.CustomFavouriteNumeralValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
-            <summary>
-            Метод, производящий валидацию.
-            </summary>
-            <param name="newRecord">Запись, подвергаемая валидации.</param>
-        </member>
-        <member name="T:FileCabinetApp.Validators.CustomFirstNameValidator">
-            <summary>
-            Класс измененной валидации имени.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Validators.CustomFirstNameValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
-            <summary>
-            Метод, производящий валидацию.
-            </summary>
-            <param name="newRecord">Запись, подвергаемая валидации.</param>
-        </member>
-        <member name="T:FileCabinetApp.Validators.CustomHeightValidator">
-            <summary>
-            Класс измененной валидации роста.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Validators.CustomHeightValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
-            <summary>
-            Метод, производящий валидацию.
-            </summary>
-            <param name="newRecord">Запись, подвергаемая валидации.</param>
-        </member>
-        <member name="T:FileCabinetApp.Validators.CustomLastNameValidator">
-            <summary>
-            Класс измененной валидации фамилии.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Validators.CustomLastNameValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
-            <summary>
-            Метод, производящий валидацию.
-            </summary>
-            <param name="newRecord">Запись, подвергаемая валидации.</param>
-        </member>
-        <member name="T:FileCabinetApp.Validators.CustomWageValidator">
-            <summary>
-            Класс измененной валидации заработной платы.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Validators.CustomWageValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
-            <summary>
-            Метод, производящий валидацию.
-            </summary>
-            <param name="newRecord">Запись, подвергаемая валидации.</param>
-        </member>
-        <member name="T:FileCabinetApp.Validators.DefaultDateOfBirthValidator">
+        <member name="T:FileCabinetApp.Validators.DateOfBirthValidator">
             <summary>
             Класс обычной валидации даты рождения.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Validators.DefaultDateOfBirthValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.Validators.DateOfBirthValidator.#ctor(System.DateTime,System.DateTime)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.DateOfBirthValidator"/> class.
+            </summary>
+            <param name="from">Минимальная дата.</param>
+            <param name="to">Максимальная дата.</param>
+        </member>
+        <member name="M:FileCabinetApp.Validators.DateOfBirthValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
             <summary>
             Метод, производящий валидацию.
             </summary>
             <param name="newRecord">Запись, подвергаемая валидации.</param>
         </member>
-        <member name="T:FileCabinetApp.Validators.DefaultFavouriteNumeralValidator">
+        <member name="T:FileCabinetApp.Validators.FavouriteNumeralValidator">
             <summary>
-            Класс обычной валидации любимого числа.
+            Класс валидации любимого числа.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Validators.DefaultFavouriteNumeralValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.Validators.FavouriteNumeralValidator.#ctor(System.Char,System.Char,System.Char)">
             <summary>
-            Метод, производящий валидацию.
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.FavouriteNumeralValidator"/> class.
             </summary>
-            <param name="newRecord">Запись, подвергаемая валидации.</param>
+            <param name="min">Минимальное число.</param>
+            <param name="max">Максимальное число.</param>
+            <param name="four">ЧеТыРе.</param>
         </member>
-        <member name="T:FileCabinetApp.Validators.DefaultFirstNameValidator">
-            <summary>
-            Класс обычной валидации имени.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Validators.DefaultFirstNameValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.Validators.FavouriteNumeralValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
             <summary>
             Метод, производящий валидацию.
             </summary>
             <param name="newRecord">Запись, подвергаемая валидации.</param>
         </member>
-        <member name="T:FileCabinetApp.Validators.DefaultHeightValidator">
+        <member name="T:FileCabinetApp.Validators.FirstNameValidator">
             <summary>
-            Класс обычной валидации роста.
+            Класс валидации имени.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Validators.DefaultHeightValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.Validators.FirstNameValidator.#ctor(System.Int32,System.Int32)">
             <summary>
-            Метод, производящий валидацию.
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.FirstNameValidator"/> class.
             </summary>
-            <param name="newRecord">Запись, подвергаемая валидации.</param>
+            <param name="min">Минимальная длина.</param>
+            <param name="max">Максимальная длина.</param>
         </member>
-        <member name="T:FileCabinetApp.Validators.DefaultLastNameValidator">
-            <summary>
-            Класс обычной валидации фамилии.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Validators.DefaultLastNameValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.Validators.FirstNameValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
             <summary>
             Метод, производящий валидацию.
             </summary>
             <param name="newRecord">Запись, подвергаемая валидации.</param>
         </member>
-        <member name="T:FileCabinetApp.Validators.DefaultWageValidator">
+        <member name="T:FileCabinetApp.Validators.HeightValidator">
             <summary>
-            Класс обычной валидации заработной платы.
+            Класс валидации роста.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Validators.DefaultWageValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.Validators.HeightValidator.#ctor(System.Int16,System.Int16)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.HeightValidator"/> class.
+            </summary>
+            <param name="min">Минимальный рост.</param>
+            <param name="max">Максимальный рост.</param>
+        </member>
+        <member name="M:FileCabinetApp.Validators.HeightValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, производящий валидацию.
+            </summary>
+            <param name="newRecord">Запись, подвергаемая валидации.</param>
+        </member>
+        <member name="T:FileCabinetApp.Validators.LastNameValidator">
+            <summary>
+            Класс валидации фамилии.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.LastNameValidator.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.LastNameValidator"/> class.
+            </summary>
+            <param name="min">Минимальная длина.</param>
+            <param name="max">Максимальная длина.</param>
+        </member>
+        <member name="M:FileCabinetApp.Validators.LastNameValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, производящий валидацию.
+            </summary>
+            <param name="newRecord">Запись, подвергаемая валидации.</param>
+        </member>
+        <member name="T:FileCabinetApp.Validators.WageValidator">
+            <summary>
+            Класс, производящий валидацию з/п.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.WageValidator.#ctor(System.Decimal)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.WageValidator"/> class.
+            </summary>
+            <param name="min">Минимальная заработная плата.</param>
+        </member>
+        <member name="M:FileCabinetApp.Validators.WageValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
             <summary>
             Метод, производящий валидацию.
             </summary>

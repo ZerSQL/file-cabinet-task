@@ -5,11 +5,20 @@ using System.Text;
 namespace FileCabinetApp.Validators
 {
     /// <summary>
-    /// Класс измененной валидации даты рождения.
+    /// Класс, производящий валидацию з/п.
     /// </summary>
-    public class CustomDateOfBirthValidator : IRecordValidator
+    public class WageValidator : IRecordValidator
     {
-        private static readonly DateTime MinDateTime = new DateTime(1900, 1, 1);
+        private decimal min;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WageValidator"/> class.
+        /// </summary>
+        /// <param name="min">Минимальная заработная плата.</param>
+        public WageValidator(decimal min)
+        {
+            this.min = min;
+        }
 
         /// <summary>
         /// Метод, производящий валидацию.
@@ -22,9 +31,9 @@ namespace FileCabinetApp.Validators
                 throw new ArgumentNullException($"Record is empty.");
             }
 
-            if (newRecord.DateOfBirth > DateTime.Now || newRecord.DateOfBirth < MinDateTime)
+            if (newRecord.Wage < this.min)
             {
-                throw new ArgumentException($"DateOfBirth must be less than current time and more than {MinDateTime.ToShortDateString()}.");
+                throw new ArgumentException($"Wage must be more than {this.min}.");
             }
         }
     }
