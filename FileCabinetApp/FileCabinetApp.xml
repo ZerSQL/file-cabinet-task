@@ -4,27 +4,334 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.CommandHandlers.AppCommandRequest">
+            <summary>
+            Запрос.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.CommandHandlers.AppCommandRequest.Command">
+            <summary>
+            Gets or sets command.
+            </summary>
+            <value>
+            Искомая команда.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.CommandHandlers.AppCommandRequest.Parameters">
+            <summary>
+            Gets or sets parameters.
+            </summary>
+            <value>
+            Параметры.
+            </value>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.CommandHandlerBase">
+            <summary>
+            Абстрактный класс(цепочка обязанностей).
+            </summary>
+        </member>
+        <member name="F:FileCabinetApp.CommandHandlers.CommandHandlerBase.nextHandler">
+            <summary>
+            Текущий обработчик.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.CommandHandlerBase.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Абстрактный метод(выполняет команду запроса).
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.CommandHandlerBase.SetNext(FileCabinetApp.CommandHandlers.ICommandHandler)">
+            <summary>
+            Метод перехода к следующему обработчику.
+            </summary>
+            <param name="handler">Обработчик.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.CreateCommandHandler">
+            <summary>
+            Обработка команды создания.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.CreateCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.CreateCommandHandler"/> class.
+            </summary>
+            <param name="service">Используемый сервис.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.CreateCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Обработчкик команды создания.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.DefaultHandler">
+            <summary>
+            Класс обработчика по умолчанию.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.DefaultHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Стандартный обработчик.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.DefaultRecordPrinter">
+            <summary>
+            Класс, отображающий данные.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.DefaultRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord})">
+            <summary>
+            Метод, отображающий данные.
+            </summary>
+            <param name="records">Отображаемые записи.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.EditCommandHandler">
+            <summary>
+            Класс, представляющий обработчик команды редактирования.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.EditCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.EditCommandHandler"/> class.
+            </summary>
+            <param name="service">Используемый сервис.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.EditCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Обработчкик команды редактирования.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ExitCommandHandler">
+            <summary>
+            Класс, представляющий обработчик команды выхода.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ExitCommandHandler.#ctor(System.Action{System.Boolean})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ExitCommandHandler"/> class.
+            </summary>
+            <param name="isRunning">Делегат, выключающий программу.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ExitCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Обработчкик команды выхода.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ExportCommandHandler">
+            <summary>
+            Класс, представляющий обработчик команды экспорта.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ExportCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ExportCommandHandler"/> class.
+            </summary>
+            <param name="service">Используемый сервис.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ExportCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Обработчкик команды экспорта.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.FindCommandHandler">
+            <summary>
+            Класс, представляющий обработчик команды поиска.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Action{System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord}})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.FindCommandHandler"/> class.
+            </summary>
+            <param name="service">Используемый сервсис.</param>
+            <param name="printer">Используемый метод отображения.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Обработчкик команды поиска.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.HelpCommandHandler">
+            <summary>
+            Класс, представляющий обрабочик команды помощи.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.HelpCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Обработчкик команды помощи.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ICommandHandler">
+            <summary>
+            Интерфейс, представляющий цепочку.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ICommandHandler.SetNext(FileCabinetApp.CommandHandlers.ICommandHandler)">
+            <summary>
+            Переход к следующему обработчику.
+            </summary>
+            <param name="handler">Установка следующего обработчика.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ICommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Выполнение команды обработчика.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ImportCommandHandler">
+            <summary>
+            Класс, представляющий обработчик команды импорта.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ImportCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ImportCommandHandler"/> class.
+            </summary>
+            <param name="service">Используемый сервис.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ImportCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Обработчкик команды импорта.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.IRecordPrinter">
+            <summary>
+            Интерфейс для реализации стратегии.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.IRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord})">
+            <summary>
+            Метод для вывода записей.
+            </summary>
+            <param name="records">Записи.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ListCommandHandler">
+            <summary>
+            Класс, представляющий обработик команды вывода записей.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Action{System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord}})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ListCommandHandler"/> class.
+            </summary>
+            <param name="service">Используемый сервис.</param>
+            <param name="printer">Используемый метод отображения.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Обработчкик команды вывода записей.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.PurgeCommandHandler">
+            <summary>
+            Класс, представляющий обработчик команды удаления пустот.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.PurgeCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.PurgeCommandHandler"/> class.
+            </summary>
+            <param name="service">Используемый сервис.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.PurgeCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Обработчкик команды удаления пустот.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.RemoveCommandHandler">
+            <summary>
+            Класс, представляющий команду удаления записи.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.RemoveCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.RemoveCommandHandler"/> class.
+            </summary>
+            <param name="service">Используемый сервис.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.RemoveCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Обработчкик команды удаления записи.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase">
+            <summary>
+            Суперкласс с сервисом.
+            </summary>
+        </member>
+        <member name="F:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase.service">
+            <summary>
+            Используемый сервис.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase"/> class.
+            </summary>
+            <param name="service">Используемый сервис.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.StatCommandHandler">
+            <summary>
+            Класс, представляющий команду вывода количества записей.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.StatCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.StatCommandHandler"/> class.
+            </summary>
+            <param name="service">Используемый сервис.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.StatCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Обработчкик команды вывода количества записей.
+            </summary>
+            <param name="request">Запрос.</param>
+        </member>
+        <member name="T:FileCabinetApp.CompositeValidator">
+            <summary>
+            Компоновщик.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CompositeValidator.#ctor(System.Collections.Generic.IEnumerable{FileCabinetApp.IRecordValidator})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CompositeValidator"/> class.
+            </summary>
+            <param name="validators">Все валидаторы.</param>
+        </member>
+        <member name="M:FileCabinetApp.CompositeValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод производящий валидацию всех свойств.
+            </summary>
+            <param name="newRecord">Запись, подвергаемая валидации.</param>
+        </member>
         <member name="T:FileCabinetApp.CustomValidator">
             <summary>
             Класс, представляющий измененный валидатор.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CustomValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.CustomValidator.#ctor">
             <summary>
-            Метод, выполняющий измененную валидацию.
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CustomValidator"/> class.
             </summary>
-            <param name="newRecord">Проверяемая запись.</param>
         </member>
         <member name="T:FileCabinetApp.DefaultValidator">
             <summary>
             Класс, представляющий обычный валидатор.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.DefaultValidator.#ctor">
             <summary>
-            Метод, выполняющий обычную валидацию.
+            Initializes a new instance of the <see cref="T:FileCabinetApp.DefaultValidator"/> class.
             </summary>
-            <param name="newRecord">Проверяемая запись.</param>
         </member>
         <member name="T:FileCabinetApp.FileCabinetFilesystemService">
             <summary>
@@ -410,7 +717,7 @@
             Редактиование данных в словаре.
             </summary>
             <param name="dictionary">Словарь.</param>
-            <param name="property">Свойство для проверки необходимости создания нового значения ключ-значение.</param>
+            <param name="prop">Свойство для проверки необходимости создания нового значения ключ-значение.</param>
             <param name="id">Номер редактируемой записи.</param>
             <param name="current">Запись до редактирования.</param>
             <param name="propName">Название свойства для поиска.</param>
@@ -498,6 +805,196 @@
             Точка входа в программу и вызов функционала в зависимости от введенной команды.
             </summary>
             <param name="args">Переменная для передачи параметров при запуске через консоль.</param>
+        </member>
+        <member name="M:FileCabinetApp.Program.CreateOrEditCommands(System.String@,System.String@,System.DateTime@,System.Decimal@,System.Char@,System.Int16@)">
+            <summary>
+            Метод, выполняющий общие команды создания/редактирования записей.
+            </summary>
+            <param name="firstName">Имя.</param>
+            <param name="lastName">Фамилия.</param>
+            <param name="dateOfBirth">Дата рождения.</param>
+            <param name="personalWage">Заработная плата.</param>
+            <param name="favouriteNumeral">Любимое число.</param>
+            <param name="personalHeight">Рост.</param>
+        </member>
+        <member name="T:FileCabinetApp.ValidatorBuilder">
+            <summary>
+            Класс для создания любых валидаторов.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.CreateDefault">
+            <summary>
+            Метод создания валидатора по умолчанию.
+            </summary>
+            <returns>Валидатор по умолчанию.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.CreateCustom">
+            <summary>
+            Метод создания измененного валидатора.
+            </summary>
+            <returns>Измененный валидатор.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.Create">
+            <summary>
+            Метод создания.
+            </summary>
+            <returns>Валидатор.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.ValidateFirstName(System.Int32,System.Int32)">
+            <summary>
+            Валидация имени.
+            </summary>
+            <param name="min">Мин.длина.</param>
+            <param name="max">Макс.длина.</param>
+            <returns>Этот же объект.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.ValidateLastName(System.Int32,System.Int32)">
+            <summary>
+            Валидация фамилии.
+            </summary>
+            <param name="min">Мин.длина.</param>
+            <param name="max">Макс.длина.</param>
+            <returns>Этот же объект.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.ValidateBirthDate(System.DateTime,System.DateTime)">
+            <summary>
+            Валидация даты рождения.
+            </summary>
+            <param name="from">Мин.дата.</param>
+            <param name="to">Макс.дата.</param>
+            <returns>Этот же объект.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.ValidateHeight(System.Int16,System.Int16)">
+            <summary>
+            Валидация роста.
+            </summary>
+            <param name="min">Мин.рост.</param>
+            <param name="max">Макс.рост.</param>
+            <returns>Этот же объект.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.ValidateWage(System.Decimal)">
+            <summary>
+            Валидация заработной платы.
+            </summary>
+            <param name="min">Мин.з/п.</param>
+            <returns>Этот же объект.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.ValidateNumeral(System.Char,System.Char,System.Char)">
+            <summary>
+            Валидация числа.
+            </summary>
+            <param name="min">Мин.число.</param>
+            <param name="max">Макс.число.</param>
+            <param name="four">Неожидаемое число.</param>
+            <returns>Этот же объект.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Validators.DateOfBirthValidator">
+            <summary>
+            Класс обычной валидации даты рождения.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.DateOfBirthValidator.#ctor(System.DateTime,System.DateTime)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.DateOfBirthValidator"/> class.
+            </summary>
+            <param name="from">Минимальная дата.</param>
+            <param name="to">Максимальная дата.</param>
+        </member>
+        <member name="M:FileCabinetApp.Validators.DateOfBirthValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, производящий валидацию.
+            </summary>
+            <param name="newRecord">Запись, подвергаемая валидации.</param>
+        </member>
+        <member name="T:FileCabinetApp.Validators.FavouriteNumeralValidator">
+            <summary>
+            Класс валидации любимого числа.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.FavouriteNumeralValidator.#ctor(System.Char,System.Char,System.Char)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.FavouriteNumeralValidator"/> class.
+            </summary>
+            <param name="min">Минимальное число.</param>
+            <param name="max">Максимальное число.</param>
+            <param name="four">ЧеТыРе.</param>
+        </member>
+        <member name="M:FileCabinetApp.Validators.FavouriteNumeralValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, производящий валидацию.
+            </summary>
+            <param name="newRecord">Запись, подвергаемая валидации.</param>
+        </member>
+        <member name="T:FileCabinetApp.Validators.FirstNameValidator">
+            <summary>
+            Класс валидации имени.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.FirstNameValidator.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.FirstNameValidator"/> class.
+            </summary>
+            <param name="min">Минимальная длина.</param>
+            <param name="max">Максимальная длина.</param>
+        </member>
+        <member name="M:FileCabinetApp.Validators.FirstNameValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, производящий валидацию.
+            </summary>
+            <param name="newRecord">Запись, подвергаемая валидации.</param>
+        </member>
+        <member name="T:FileCabinetApp.Validators.HeightValidator">
+            <summary>
+            Класс валидации роста.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.HeightValidator.#ctor(System.Int16,System.Int16)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.HeightValidator"/> class.
+            </summary>
+            <param name="min">Минимальный рост.</param>
+            <param name="max">Максимальный рост.</param>
+        </member>
+        <member name="M:FileCabinetApp.Validators.HeightValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, производящий валидацию.
+            </summary>
+            <param name="newRecord">Запись, подвергаемая валидации.</param>
+        </member>
+        <member name="T:FileCabinetApp.Validators.LastNameValidator">
+            <summary>
+            Класс валидации фамилии.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.LastNameValidator.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.LastNameValidator"/> class.
+            </summary>
+            <param name="min">Минимальная длина.</param>
+            <param name="max">Максимальная длина.</param>
+        </member>
+        <member name="M:FileCabinetApp.Validators.LastNameValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, производящий валидацию.
+            </summary>
+            <param name="newRecord">Запись, подвергаемая валидации.</param>
+        </member>
+        <member name="T:FileCabinetApp.Validators.WageValidator">
+            <summary>
+            Класс, производящий валидацию з/п.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.WageValidator.#ctor(System.Decimal)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.WageValidator"/> class.
+            </summary>
+            <param name="min">Минимальная заработная плата.</param>
+        </member>
+        <member name="M:FileCabinetApp.Validators.WageValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Метод, производящий валидацию.
+            </summary>
+            <param name="newRecord">Запись, подвергаемая валидации.</param>
         </member>
     </members>
 </doc>

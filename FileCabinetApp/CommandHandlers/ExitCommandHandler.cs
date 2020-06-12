@@ -1,0 +1,48 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace FileCabinetApp.CommandHandlers
+{
+    /// <summary>
+    /// Класс, представляющий обработчик команды выхода.
+    /// </summary>
+    public class ExitCommandHandler : CommandHandlerBase
+    {
+        private static Action<bool> action;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExitCommandHandler"/> class.
+        /// </summary>
+        /// <param name="isRunning">Делегат, выключающий программу.</param>
+        public ExitCommandHandler(Action<bool> isRunning)
+        {
+            action = isRunning;
+        }
+
+        /// <summary>
+        /// Обработчкик команды выхода.
+        /// </summary>
+        /// <param name="request">Запрос.</param>
+        public override void Handle(AppCommandRequest request)
+        {
+            if (request != null)
+            {
+                if (request.Command.Equals("Exit", comparisonType: StringComparison.InvariantCultureIgnoreCase))
+                {
+                    Exit(request.Parameters);
+                }
+                else
+                {
+                    this.nextHandler.Handle(request);
+                }
+            }
+        }
+
+        private static void Exit(string parameters)
+        {
+            Console.WriteLine("Exiting an application...");
+            action(default(bool));
+        }
+    }
+}
