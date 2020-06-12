@@ -1,0 +1,54 @@
+{
+  "default": {
+    "dateOfBirth": {
+      "from": "1.1.1950",
+      "to": "12.06.2020"
+    },
+    "favouriteNumeral": {
+      "min": 0,
+      "max": 9,
+      "four": " "
+    },
+    "firstName": {
+      "min": 2,
+      "max": 60
+    },
+    "height": {
+      "min": 120,
+      "max": 250
+    },
+    "lastName": {
+      "min": 2,
+      "max": 60
+    },
+    "wage": {
+      "min": 300
+    }
+  },
+  "custom": {
+    "firstName": {
+      "min": 2,
+      "max": 15
+    },
+    "lastName": {
+      "min": 2,
+      "max": 15
+    },
+    "dateOfBirth": {
+      "from": "1.1.1900",
+      "to": "12.06.2020"
+    },
+    "wage": {
+      "min": 150
+    },
+    "favouriteNumeral": {
+      "min": 0,
+      "max": 9,
+      "four": 4
+    },
+    "height": {
+      "min": 135,
+      "max": 250
+    }
+  }
+}

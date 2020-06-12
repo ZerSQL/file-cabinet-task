@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using FileCabinetApp.CommandHandlers;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.FileExtensions;
+using Microsoft.Extensions.Configuration.Json;
 
 namespace FileCabinetApp
 {
@@ -91,21 +94,49 @@ namespace FileCabinetApp
 
         private static IFileCabinetService ChooseFileSystem(string[] args)
         {
+            bool useTicks = false;
+            foreach (var arg in args)
+            {
+                if (arg.Equals("use-stopwatch", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    useTicks = true;
+                }
+            }
+
             for (int i = 0; i < args.Length; i++)
             {
                 if (string.Equals(args[i], "--storage=file", StringComparison.InvariantCultureIgnoreCase) ||
                     (string.Equals(args[i], "-s", StringComparison.InvariantCultureIgnoreCase) && args[i + 1] != null && string.Equals(args[i + 1], "file", StringComparison.InvariantCultureIgnoreCase)))
                 {
-                    Console.WriteLine("Using filesystem service.");
-                    using (FileStream ftream = new FileStream("cabinet-records.db", FileMode.Append))
+                    if (useTicks)
                     {
-                        return new FileCabinetFilesystemService(ftream);
+                        Console.WriteLine("Using filesystem service with ticks.");
+                        using (FileStream ftream = new FileStream("cabinet-records.db", FileMode.Append))
+                        {
+                            return new ServiceMeter(new FileCabinetFilesystemService(ftream));
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Using filesystem service.");
+                        using (FileStream ftream = new FileStream("cabinet-records.db", FileMode.Append))
+                        {
+                            return new FileCabinetFilesystemService(ftream);
+                        }
                     }
                 }
             }
 
-            Console.WriteLine("Using memory service.");
-            return new FileCabinetMemoryService(ChooseService(args));
+            if (useTicks)
+            {
+                Console.WriteLine("Using memory service with ticks.");
+                return new ServiceMeter(new FileCabinetMemoryService(ChooseService(args)));
+            }
+            else
+            {
+                Console.WriteLine("Using memory service.");
+                return new FileCabinetMemoryService(ChooseService(args));
+            }
         }
 
         private static IRecordValidator ChooseService(string[] args)
