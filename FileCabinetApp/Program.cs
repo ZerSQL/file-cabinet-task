@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using FileCabinetApp.CommandHandlers;
@@ -131,17 +132,19 @@ namespace FileCabinetApp
 
         private static ICommandHandler CreateCommandHandlers()
         {
+            Action<IEnumerable<FileCabinetRecord>> printer;
+            printer = DefaultRecordPrint;
             var recordPrinter = new DefaultRecordPrinter();
             var createHandler = new CreateCommandHandler(Program.fileCabinetService);
             var editHandler = new EditCommandHandler(Program.fileCabinetService);
             var exitHandler = new ExitCommandHandler(stopProgram);
             var exportHandler = new ExportCommandHandler(Program.fileCabinetService);
             var findHandler = new FindCommandHandler(
-                Program.fileCabinetService, recordPrinter);
+                Program.fileCabinetService, printer);
             var helpHandler = new HelpCommandHandler();
             var importHandler = new ImportCommandHandler(Program.fileCabinetService);
             var listHandler = new ListCommandHandler(
-                Program.fileCabinetService, recordPrinter);
+                Program.fileCabinetService, printer);
             var purgeHandler = new PurgeCommandHandler(Program.fileCabinetService);
             var removeHandler = new RemoveCommandHandler(Program.fileCabinetService);
             var statHandler = new StatCommandHandler(Program.fileCabinetService);
@@ -158,6 +161,17 @@ namespace FileCabinetApp
             removeHandler.SetNext(statHandler);
             statHandler.SetNext(defaultHandler);
             return createHandler;
+        }
+
+        private static void DefaultRecordPrint(IEnumerable<FileCabinetRecord> records)
+        {
+            if (records != null)
+            {
+                foreach (var t in records)
+                {
+                    Console.WriteLine($"#{t.Id}, {t.FirstName}, {t.LastName}, {t.DateOfBirth.ToShortDateString()}, height: {t.Height}, wage: {t.Wage}, favourite numeral: {t.FavouriteNumeral}");
+                }
+            }
         }
 
         private static void IsRunning(bool isRunning)

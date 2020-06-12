@@ -10,14 +10,14 @@ namespace FileCabinetApp.CommandHandlers
     /// </summary>
     public class FindCommandHandler : ServiceCommandHandlerBase
     {
-        private IRecordPrinter printer;
+        private Action<IEnumerable<FileCabinetRecord>> printer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FindCommandHandler"/> class.
         /// </summary>
         /// <param name="service">Используемый сервсис.</param>
         /// <param name="printer">Используемый метод отображения.</param>
-        public FindCommandHandler(IFileCabinetService service, IRecordPrinter printer)
+        public FindCommandHandler(IFileCabinetService service, Action<IEnumerable<FileCabinetRecord>> printer)
             : base(service)
         {
             this.printer = printer;
@@ -53,15 +53,15 @@ namespace FileCabinetApp.CommandHandlers
 
             if (propertyAndValue[0].ToLower(CultureInfo.CurrentCulture) == "firstname")
             {
-                this.printer.Print(this.service.FindByFirstName(propertyAndValue[1]));
+                this.printer(this.service.FindByFirstName(propertyAndValue[1]));
             }
             else if (propertyAndValue[0].ToLower(CultureInfo.CurrentCulture) == "lastname")
             {
-                this.printer.Print(this.service.FindByLastName(propertyAndValue[1]));
+                this.printer(this.service.FindByLastName(propertyAndValue[1]));
             }
             else if (propertyAndValue[0].ToLower(CultureInfo.CurrentCulture) == "dateofbirth")
             {
-                this.printer.Print(this.service.FindByBirthDate(propertyAndValue[1]));
+                this.printer(this.service.FindByBirthDate(propertyAndValue[1]));
             }
             else
             {

@@ -9,14 +9,14 @@ namespace FileCabinetApp.CommandHandlers
     /// </summary>
     public class ListCommandHandler : ServiceCommandHandlerBase
     {
-        private IRecordPrinter printer;
+        private Action<IEnumerable<FileCabinetRecord>> printer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
         /// </summary>
         /// <param name="service">Используемый сервис.</param>
         /// <param name="printer">Используемый метод отображения.</param>
-        public ListCommandHandler(IFileCabinetService service, IRecordPrinter printer)
+        public ListCommandHandler(IFileCabinetService service, Action<IEnumerable<FileCabinetRecord>> printer)
             : base(service)
         {
             this.printer = printer;
@@ -45,7 +45,7 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (this.service.GetRecords().Count > 0)
             {
-                this.printer.Print(this.service.GetRecords());
+                this.printer(this.service.GetRecords());
             }
             else
             {
