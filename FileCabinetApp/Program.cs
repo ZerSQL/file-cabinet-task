@@ -95,11 +95,16 @@ namespace FileCabinetApp
         private static IFileCabinetService ChooseFileSystem(string[] args)
         {
             bool useTicks = false;
+            bool useLogger = false;
             foreach (var arg in args)
             {
                 if (arg.Equals("use-stopwatch", StringComparison.InvariantCultureIgnoreCase))
                 {
                     useTicks = true;
+                }
+                else if (arg.Equals("use-logger", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    useLogger = true;
                 }
             }
 
@@ -108,7 +113,15 @@ namespace FileCabinetApp
                 if (string.Equals(args[i], "--storage=file", StringComparison.InvariantCultureIgnoreCase) ||
                     (string.Equals(args[i], "-s", StringComparison.InvariantCultureIgnoreCase) && args[i + 1] != null && string.Equals(args[i + 1], "file", StringComparison.InvariantCultureIgnoreCase)))
                 {
-                    if (useTicks)
+                    if (useLogger)
+                    {
+                        Console.WriteLine("Using filesystem service with logging.");
+                        using (FileStream ftream = new FileStream("cabinet-records.db", FileMode.Append))
+                        {
+                            return new ServiceLogger(new ServiceMeter(new FileCabinetFilesystemService(ftream)));
+                        }
+                    }
+                    else if (useTicks)
                     {
                         Console.WriteLine("Using filesystem service with ticks.");
                         using (FileStream ftream = new FileStream("cabinet-records.db", FileMode.Append))
@@ -127,7 +140,15 @@ namespace FileCabinetApp
                 }
             }
 
-            if (useTicks)
+            if (useLogger)
+            {
+                Console.WriteLine("Using memory service with logging.");
+                using (FileStream ftream = new FileStream("cabinet-records.db", FileMode.Append))
+                {
+                    return new ServiceLogger(new ServiceMeter(new FileCabinetMemoryService(ChooseService(args))));
+                }
+            }
+            else if (useTicks)
             {
                 Console.WriteLine("Using memory service with ticks.");
                 return new ServiceMeter(new FileCabinetMemoryService(ChooseService(args)));
@@ -135,6 +156,7 @@ namespace FileCabinetApp
             else
             {
                 Console.WriteLine("Using memory service.");
+                return new ServiceLogger(new ServiceMeter(new FileCabinetMemoryService(ChooseService(args))));
                 return new FileCabinetMemoryService(ChooseService(args));
             }
         }
