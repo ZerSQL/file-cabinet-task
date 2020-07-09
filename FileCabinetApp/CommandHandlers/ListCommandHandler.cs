@@ -43,7 +43,7 @@ namespace FileCabinetApp.CommandHandlers
 
         private void List(string parameters)
         {
-            if (this.service.GetRecords().Count > 0)
+            if (this.service.GetRecords().GetEnumerator().Current != null)
             {
                 this.printer(this.service.GetRecords());
             }

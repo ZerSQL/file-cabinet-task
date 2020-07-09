@@ -210,7 +210,7 @@ namespace FileCabinetApp
         /// Получение списка записей.
         /// </summary>
         /// <returns>Список записей.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> GetRecords()
+        public IEnumerable<FileCabinetRecord> GetRecords()
         {
             return this.list.AsReadOnly();
         }
@@ -220,7 +220,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="firstName">Искомое имя.</param>
         /// <returns>Массив найденных записей с именем firstName.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
         {
             if (this.firstNameDictionary.TryGetValue(firstName, out List<FileCabinetRecord> keyList))
             {
@@ -238,7 +238,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="lastName">Искомая фамилия.</param>
         /// <returns>Массив найденных записей с фамилией lastName.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
         {
             if (this.lastNameDictionary.TryGetValue(lastName, out List<FileCabinetRecord> keyList))
             {
@@ -256,7 +256,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="birthDate">Искомая дата рождения.</param>
         /// <returns>Массив найденных записей с искомой датой рождения.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByBirthDate(string birthDate)
+        public IEnumerable<FileCabinetRecord> FindByBirthDate(string birthDate)
         {
             if (this.dateOfBirthDictionary.TryGetValue(birthDate, out List<FileCabinetRecord> keyList))
             {

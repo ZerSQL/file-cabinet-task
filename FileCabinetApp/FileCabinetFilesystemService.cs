@@ -41,7 +41,7 @@ namespace FileCabinetApp
 
             if (newRecord.Id == 0)
             {
-                if (this.GetRecords().Count != 0)
+                if (this.GetRecords().Any() != false)
                 {
                     newRecord.Id = this.GetRecords().Last().Id + 1;
                 }
@@ -117,11 +117,10 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="birthDate">Искомая дата рождения.</param>
         /// <returns>Массив найденных записей с искомой датой рождения.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByBirthDate(string birthDate)
+        public IEnumerable<FileCabinetRecord> FindByBirthDate(string birthDate)
         {
             using (FileStream fs = new FileStream(this.fileStream.Name, FileMode.Open, FileAccess.Read))
             {
-                List<FileCabinetRecord> records = new List<FileCabinetRecord>();
                 var recordBuffer = new byte[Size];
                 for (int i = 0; i < fs.Length / 278; i++)
                 {
@@ -130,12 +129,10 @@ namespace FileCabinetApp
                     long pos = fs.Position;
                     if (u1.DateOfBirth.ToShortDateString() == birthDate && this.RemovedCheck(u1, fs) == false)
                     {
-                        records.Add(u1);
+                        yield return u1;
                         fs.Position = pos;
                     }
                 }
-
-                return new ReadOnlyCollection<FileCabinetRecord>(records);
             }
         }
 
@@ -144,11 +141,10 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="firstName">Искомое имя.</param>
         /// <returns>Массив найденных записей с именем firstName.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
         {
             using (FileStream fs = new FileStream(this.fileStream.Name, FileMode.Open, FileAccess.Read))
             {
-                List<FileCabinetRecord> records = new List<FileCabinetRecord>();
                 var recordBuffer = new byte[Size];
                 for (int i = 0; i < fs.Length / 278; i++)
                 {
@@ -157,12 +153,10 @@ namespace FileCabinetApp
                     long pos = fs.Position;
                     if (u1.FirstName.Equals(firstName, StringComparison.InvariantCultureIgnoreCase) && this.RemovedCheck(u1, fs) == false)
                     {
-                        records.Add(u1);
+                        yield return u1;
                         fs.Position = pos;
                     }
                 }
-
-                return new ReadOnlyCollection<FileCabinetRecord>(records);
             }
         }
 
@@ -171,11 +165,10 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="lastName">Искомая фамилия.</param>
         /// <returns>Массив найденных записей с фамилией lastName.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
         {
             using (FileStream fs = new FileStream(this.fileStream.Name, FileMode.Open, FileAccess.Read))
             {
-                List<FileCabinetRecord> records = new List<FileCabinetRecord>();
                 var recordBuffer = new byte[Size];
                 for (int i = 0; i < fs.Length / 278; i++)
                 {
@@ -184,12 +177,10 @@ namespace FileCabinetApp
                     long pos = fs.Position;
                     if (u1.LastName.Equals(lastName, StringComparison.InvariantCultureIgnoreCase) && this.RemovedCheck(u1, fs) == false)
                     {
-                        records.Add(u1);
+                        yield return u1;
                         fs.Position = pos;
                     }
                 }
-
-                return new ReadOnlyCollection<FileCabinetRecord>(records);
             }
         }
 
@@ -197,20 +188,17 @@ namespace FileCabinetApp
         /// Получение списка записей.
         /// </summary>
         /// <returns>Список записей.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> GetRecords()
+        public IEnumerable<FileCabinetRecord> GetRecords()
         {
             using (FileStream fs = new FileStream(this.fileStream.Name, FileMode.Open, FileAccess.Read))
             {
-                List<FileCabinetRecord> records = new List<FileCabinetRecord>();
                 var recordBuffer = new byte[Size];
                 for (int i = 0; i < fs.Length / 278; i++)
                 {
                     fs.Read(recordBuffer, 0, Size);
                     var u1 = this.BytesToRecord(recordBuffer);
-                    records.Add(u1);
+                    yield return u1;
                 }
-
-                return new ReadOnlyCollection<FileCabinetRecord>(records);
             }
         }
 

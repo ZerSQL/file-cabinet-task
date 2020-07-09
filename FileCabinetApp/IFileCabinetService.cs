@@ -37,28 +37,28 @@ namespace FileCabinetApp
         /// Получение списка записей.
         /// </summary>
         /// <returns>Список записей.</returns>
-        ReadOnlyCollection<FileCabinetRecord> GetRecords();
+        IEnumerable<FileCabinetRecord> GetRecords();
 
         /// <summary>
         /// Поиск по имени.
         /// </summary>
         /// <param name="firstName">Искомое имя.</param>
         /// <returns>Массив найденных записей с именем firstName.</returns>
-        ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName);
+        IEnumerable<FileCabinetRecord> FindByFirstName(string firstName);
 
         /// <summary>
         /// Поиск по фамилии.
         /// </summary>
         /// <param name="lastName">Искомая фамилия.</param>
         /// <returns>Массив найденных записей с фамилией lastName.</returns>
-        ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName);
+        IEnumerable<FileCabinetRecord> FindByLastName(string lastName);
 
         /// <summary>
         /// Поиск по дате рождения.
         /// </summary>
         /// <param name="birthDate">Искомая дата рождения.</param>
         /// <returns>Массив найденных записей с искомой датой рождения.</returns>
-        ReadOnlyCollection<FileCabinetRecord> FindByBirthDate(string birthDate);
+        IEnumerable<FileCabinetRecord> FindByBirthDate(string birthDate);
 
         /// <summary>
         /// Получение числа записей.
